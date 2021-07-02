@@ -1,5 +1,6 @@
 package com.ss.eastcoderbank.userservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -17,15 +18,14 @@ public class UserRole {
 
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
     @Id
-    private Integer userRoleID;
+    private Integer id;
 
-    @Column(nullable = false, unique = true, length = 20)
-    private String userRoleTitle;
+    @Column(nullable = false, length = 20)
+    private String title;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "userRole", orphanRemoval = true)
+    @JsonIgnore
+    @OneToMany(mappedBy = "role", orphanRemoval = true)
     private Set<User> users;
 
 }

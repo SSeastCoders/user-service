@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -16,38 +16,36 @@ import java.sql.Date;
 public class User {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
     @Id
-    private Integer userID;
+    private Integer id;
 
     @JoinColumn
-    @ManyToOne
-    private UserRole userRole;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private UserRole role;
 
-    @Column(nullable = false, length = 20)
-    private String userFirstName;
+    @Column(length = 20, name = "first_name")
+    private String firstName;
 
-    @Column(nullable = false, length = 40)
-    private String userLastName;
+    @Column(length = 40, name = "last_name")
+    private String lastName;
 
-    @Column(nullable = false)
-    private Date userDOB;
+    private LocalDate dob;
 
     @Column(nullable = false, unique = true, length = 50)
-    private String userEmail;
+    private String email;
 
-    @Column(nullable = false, unique = true, length = 20)
-    private String userPhone;
-
-    @Embedded
-    private Address userAddress;
-
-    @Column(nullable = false)
-    private Date userDateJoined;
-
-    @Column(nullable = false)
-    private boolean userActiveStatus;
+    @Column(unique = true, length = 20)
+    private String phone;
 
     @Embedded
-    private Credential userCredential;
+    private Address address;
+
+    @Column(name = "date_joined")
+    private LocalDate dataJoined;
+
+    @Column(name = "active_status")
+    private boolean activeStatus;
+
+    @Embedded
+    private Credential credential;
 }
