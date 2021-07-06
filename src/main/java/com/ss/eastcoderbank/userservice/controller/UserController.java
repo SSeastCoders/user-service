@@ -1,34 +1,40 @@
 package com.ss.eastcoderbank.userservice.controller;
 
+import com.ss.eastcoderbank.userservice.dto.validationgroups.RegistrationGroup;
+import com.ss.eastcoderbank.userservice.model.UserRole;
+import com.ss.eastcoderbank.userservice.service.CustomExceptions.DuplicateConstraintsException;
 import com.ss.eastcoderbank.userservice.service.UserService;
 import com.ss.eastcoderbank.userservice.dto.RegistrationDto;
 import com.ss.eastcoderbank.userservice.model.User;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
 public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping
+    @GetMapping("/user")
     public List<User> getUsers() {
         return userService.getUsers();
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleConstraintViolation(Exception ex, WebRequest request) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
-    }
     @RequestMapping(path = "/register", method = RequestMethod.POST)
-    public void registration(@RequestBody RegistrationDto user) throws Exception{
+    @ResponseStatus(HttpStatus.CREATED)
+    public void registration(@Valid @RequestBody RegistrationDto user) throws DuplicateConstraintsException {
         userService.userRegistration(user);
+    }
+
+    @GetMapping("/admin/roles")
+    public List<UserRole> getRoles() {
+        return userService.getRoles();
     }
 
 }

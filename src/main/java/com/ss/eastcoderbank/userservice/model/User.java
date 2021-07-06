@@ -1,5 +1,7 @@
 package com.ss.eastcoderbank.userservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.ss.eastcoderbank.userservice.service.constraints.Constraints;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -13,14 +15,19 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @Setter
 @ToString
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = Constraints.EMAILANDUSERNAME, columnNames = {"email", "username"}),
+        @UniqueConstraint(name = Constraints.EMAIL, columnNames = {"email"}),
+        @UniqueConstraint(name = Constraints.USERNAME, columnNames = {"username"}),
+})
 public class User {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Integer id;
 
-    @JoinColumn
-    @ManyToOne(cascade = CascadeType.ALL)
+    @JsonBackReference
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private UserRole role;
 
     @Column(length = 20, name = "first_name")
@@ -31,10 +38,10 @@ public class User {
 
     private LocalDate dob;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(nullable = false, length = 50)
     private String email;
 
-    @Column(unique = true, length = 20)
+    @Column(length = 20)
     private String phone;
 
     @Embedded
