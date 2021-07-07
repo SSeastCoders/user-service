@@ -15,14 +15,17 @@ import org.springframework.stereotype.Service;
 public class RegistrationService {
 
     @Autowired
-    private UserService userService;
+    private final UserService userService;
     @Autowired
-    ModelMapper modelMapper;
-    private EmailValidator emailValidator;
+    private final ModelMapper modelMapper;
+    @Autowired
+    private final EmailValidator emailValidator;
 
-    public String manualRegister(RegistrationRequest request) throws Exception {
+    public User manualRegister(RegistrationRequest request) throws Exception {
+
         boolean isValidEmail = emailValidator.test(request.getEmail());
 
+        // checks if email is valid
         if (!isValidEmail) {
             throw new IllegalStateException("email not valid");
         }
@@ -43,7 +46,6 @@ public class RegistrationService {
         user.setAddress(address);
         user.setCredential(credential);
 
-        System.out.println(user);
         return userService.manuallyCreateUser(user);
 
     }

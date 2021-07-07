@@ -32,4 +32,6 @@ public class UserDTO {
     private boolean activeStatus;
 
     private Credential credential;
+
+
 }
