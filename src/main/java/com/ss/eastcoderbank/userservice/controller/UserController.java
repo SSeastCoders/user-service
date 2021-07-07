@@ -1,5 +1,6 @@
 package com.ss.eastcoderbank.userservice.controller;
 
+import com.ss.eastcoderbank.userservice.dto.Login;
 import com.ss.eastcoderbank.userservice.dto.validationgroups.RegistrationGroup;
 import com.ss.eastcoderbank.userservice.model.UserRole;
 import com.ss.eastcoderbank.userservice.service.CustomExceptions.DuplicateConstraintsException;
@@ -20,6 +21,13 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserService userService;
+
+    @PostMapping("/login")
+    @ResponseBody
+    public loginUser(@Valid @RequestBody Login login){
+
+    }
+
 
     @GetMapping("/user")
     public List<User> getUsers() {

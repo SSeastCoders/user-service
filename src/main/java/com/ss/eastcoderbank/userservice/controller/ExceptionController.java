@@ -11,10 +11,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
-public class ExceotionController {
+public class ExceptionController {
 
     @ExceptionHandler(DuplicateConstraintsException.class)
-    public ResponseEntity<Map<String, String>> duplicateContraints(DuplicateConstraintsException exception) {
+    public ResponseEntity<Map<String, String>> duplicateConstraints(DuplicateConstraintsException exception) {
         Map<String, String> error = new HashMap<>();
         error.put("status", "409");
         error.put("message", exception.getMessage());
@@ -23,14 +23,14 @@ public class ExceotionController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> userValidationError(MethodArgumentNotValidException exception) {
-        Map<String, String> erros = new HashMap<>();
-        erros.put("status", "400");
+        Map<String, String> errors = new HashMap<>();
+        errors.put("status", "400");
         exception.getFieldErrors().forEach(fieldError -> {
             String fieldName = fieldError.getField();
             String errorMessage = fieldError.getDefaultMessage();
-            erros.put(fieldName, errorMessage);
+            errors.put(fieldName, errorMessage);
         });
-        return new ResponseEntity<>(erros, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
 }
