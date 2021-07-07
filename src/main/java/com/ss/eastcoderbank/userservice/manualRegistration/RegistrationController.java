@@ -1,16 +1,21 @@
 package com.ss.eastcoderbank.userservice.manualRegistration;
 
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path ="/manualRegister")
+@RequestMapping(path ="admin/manualRegistration")
 @AllArgsConstructor
-public class manualRegistrationController {
+public class RegistrationController {
 
-    public String register(@RequestBody RegistrationRequest request) {
-        return registrationService.register(request);
+    @Autowired
+    private RegistrationService regService;
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    public String manualRegistration(@RequestBody RegistrationRequest request) throws Exception {
+        return regService.manualRegister(request);
     }
 }

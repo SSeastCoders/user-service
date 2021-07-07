@@ -54,4 +54,6 @@ public class User {
 
     @Embedded
     private Credential credential;
+
+
 }
