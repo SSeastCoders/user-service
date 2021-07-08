@@ -20,40 +20,38 @@ public class UserPrincipal implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-
+        // For now, each has one granted authority which is their role
         authorities.add(new SimpleGrantedAuthority(user.getRole().getTitle()));
-
         return authorities;
-
     }
 
     @Override
     public String getPassword() {
-        return this.user.getCredential().getPassword();
+        return user.getCredential().getPassword();
     }
 
     @Override
     public String getUsername() {
-        return this.user.getCredential().getUsername();
+        return user.getCredential().getUsername();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return user.isActiveStatus();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return user.isActiveStatus();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return user.isActiveStatus();
     }
 
     @Override
     public boolean isEnabled() {
-        return this.user.isActiveStatus();
+        return user.isActiveStatus();
     }
 }

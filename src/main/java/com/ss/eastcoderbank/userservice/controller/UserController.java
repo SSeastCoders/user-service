@@ -1,17 +1,13 @@
 package com.ss.eastcoderbank.userservice.controller;
 
-import com.ss.eastcoderbank.userservice.dto.Login;
-import com.ss.eastcoderbank.userservice.dto.validationgroups.RegistrationGroup;
+import com.ss.eastcoderbank.userservice.dto.LoginDto;
 import com.ss.eastcoderbank.userservice.model.UserRole;
 import com.ss.eastcoderbank.userservice.service.CustomExceptions.DuplicateConstraintsException;
 import com.ss.eastcoderbank.userservice.service.UserService;
 import com.ss.eastcoderbank.userservice.dto.RegistrationDto;
 import com.ss.eastcoderbank.userservice.model.User;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,7 +20,7 @@ public class UserController {
 
     @PostMapping("/login")
     @ResponseBody
-    public loginUser(@Valid @RequestBody Login login){
+    public void loginUser(@Valid @RequestBody LoginDto login){
 
     }
 

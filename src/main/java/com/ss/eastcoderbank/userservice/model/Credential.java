@@ -16,8 +16,8 @@ import javax.persistence.Embeddable;
 public class Credential {
     @Column(nullable = false, length = 20)
     private String username;
-
-    @Column(nullable = false, length = 20)
+// EDIT TO ALLOW FOR HASH LENGTH
+    @Column(nullable = false, length = 100)
     private String password;
 
 }
