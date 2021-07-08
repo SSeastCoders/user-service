@@ -33,4 +33,6 @@ public class RegistrationRequest {
     private final LocalDate dateJoined;
 
     private final Credential credential;
+
+
 }

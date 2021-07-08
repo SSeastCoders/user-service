@@ -1,4 +1,4 @@
-package com.ss.eastcoderbank.userservice.security;
+package com.ss.eastcoderbank.userservice.config;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

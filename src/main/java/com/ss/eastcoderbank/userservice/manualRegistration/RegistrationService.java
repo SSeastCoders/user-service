@@ -49,7 +49,7 @@ public class RegistrationService {
         return userService.manuallyCreateUser(user);
 
     }
-    private User registrationToUser(RegistrationRequest request) {
+    User registrationToUser(RegistrationRequest request) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         return modelMapper.map(request, User.class);
     }
