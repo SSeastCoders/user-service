@@ -1,6 +1,7 @@
 package com.ss.eastcoderbank.userservice.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.ss.eastcoderbank.userservice.service.constraints.Constraint;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -14,11 +15,12 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @Setter
 @ToString
-//@Table(uniqueConstraints = {
-//        @UniqueConstraint(name = Constraints.EMAILANDUSERNAME, columnNames = {"email", "username"}),
-//        @UniqueConstraint(name = SpringLayout.Constraints.EMAIL, columnNames = {"email"}),
-//        @UniqueConstraint(name = Constraints.USERNAME, columnNames = {"username"}),
-//})
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = Constraint.EMAILANDUSERNAME, columnNames = {"email", "username"}),
+        @UniqueConstraint(name = Constraint.EMAIL, columnNames = {"email"}),
+        @UniqueConstraint(name = Constraint.USERNAME, columnNames = {"username"}),
+        @UniqueConstraint(name = Constraint.PHONE, columnNames = {"phone"}),
+})
 public class User {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)

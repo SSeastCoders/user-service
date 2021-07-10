@@ -6,22 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ContextConfiguration(classes = {PasswordEncoder.class})
+@ContextConfiguration(classes = {ApplicationConfiguration.class})
 @ExtendWith(SpringExtension.class)
-public class PasswordEncoderTest {
+public class ApplicationConfigurationTest {
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private ApplicationConfiguration applicationConfiguration;
 
     @Test
-    public void testBCryptPasswordEncoder() {
+    public void testModelMapper() {
 
-        this.passwordEncoder.bCryptPasswordEncoder();
-    }
-
-    @Test
-    public void testBCryptPasswordEncoder2() {
-
-        this.passwordEncoder.bCryptPasswordEncoder();
+        this.applicationConfiguration.modelMapper();
     }
 }
 

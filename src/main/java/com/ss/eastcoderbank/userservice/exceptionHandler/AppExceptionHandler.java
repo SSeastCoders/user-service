@@ -11,10 +11,13 @@ public class AppExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> genericExceptionHandler(Exception e) {
-        System.out.printf("An unknown error occurred.", e);
+        System.out.printf("An unknown error occurred.",  e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(e.getMessage());
     }
+
+
+
 
 
 }
