@@ -1,16 +1,15 @@
 package com.ss.eastcoderbank.userservice.controller;
 
 import com.ss.eastcoderbank.userservice.dto.UserDTO;
+import com.ss.eastcoderbank.userservice.model.User;
 import com.ss.eastcoderbank.userservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-//@RequestMapping(path ="admin/register")
+import java.util.List;
+
 @RestController
 public class UserController {
 
@@ -19,9 +18,14 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path ="admin/register")
-    public Integer manualRegistration(@Valid @RequestBody UserDTO udto) {
+    public Integer manualRegister(@Valid @RequestBody UserDTO udto) {
+
         return userService.manuallyCreateUser(udto);
     }
 
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @GetMapping(path="admin/users")
+    public List<User> getAllUsers() {
 
+    }
 }

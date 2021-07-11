@@ -23,6 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 //import javax.validation.ConstraintViolationException;
 
@@ -39,6 +40,11 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private final ModelMapper modelMapper;
+
+    public List<User> getAllUsers() {
+        return userRepo.findAll();
+    }
+
 
     public Integer manuallyCreateUser(UserDTO userDTO) throws DuplicateEmailException, DuplicateUsernameException, DuplicatePhoneException {
 
@@ -89,6 +95,7 @@ public class UserService {
         else if (constraintLower.contains(Constraint.USERNAME)) throw new DuplicateUsernameException("duplicate username");
         else if (constraintLower.contains(Constraint.PHONE)) throw new DuplicatePhoneException("Phone number already associated with a registered user!");
     }
+
 
 }
 
