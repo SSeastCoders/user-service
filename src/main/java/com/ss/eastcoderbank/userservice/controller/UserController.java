@@ -26,6 +26,14 @@ public class UserController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @GetMapping(path="admin/users")
     public List<User> getAllUsers() {
-
+        return userService.getAllUsers();
     }
+
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @GetMapping(path="admin/admins")
+    public List<User> getAllAdmins() {
+        return userService.getAllAdmins();
+    }
+
+
 }
