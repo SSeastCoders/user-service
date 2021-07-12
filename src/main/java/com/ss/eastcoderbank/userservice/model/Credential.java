@@ -20,4 +20,5 @@ public class Credential {
     @Column(nullable = false, length = 250)
     public String password;
 
+
 }

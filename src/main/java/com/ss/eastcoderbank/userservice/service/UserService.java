@@ -19,11 +19,14 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 //import javax.validation.ConstraintViolationException;
 
@@ -84,7 +87,7 @@ public class UserService {
     }
 
     User userDTOToUser(UserDTO userDTO) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         return modelMapper.map(userDTO, User.class);
     }
 
@@ -94,6 +97,85 @@ public class UserService {
         else if (constraintLower.contains(Constraint.EMAIL)) throw new DuplicateEmailException("duplicate email");
         else if (constraintLower.contains(Constraint.USERNAME)) throw new DuplicateUsernameException("duplicate username");
         else if (constraintLower.contains(Constraint.PHONE)) throw new DuplicatePhoneException("Phone number already associated with a registered user!");
+    }
+
+
+
+    public User updateUserDetails(UserDTO userDTO) {
+        Optional<User> updatedUser = Optional.ofNullable(userRepo.findById(userDTO.getId()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find user with id = " + userDTO.getId())));
+        System.out.println("!!!userDTO ID!!!: " + userDTO.getId());
+        //System.out.println("!!!in USER SERVICE " + userDTO.getRole().getId());
+
+        System.out.println("!!!updated user line 110!!!: " + updatedUser.toString());
+        //UserRole role = userRoleRepo.findUserRoleByTitle("administrator").orElse(new UserRole("administrator"));
+
+        //userDTO.getRole().setTitle(role.getTitle());
+        User user = userDTOToUser(userDTO);
+
+        System.out.println("!!!updated user!!!: " + updatedUser.toString());
+
+
+        //System.out.println("USER ROLE " + updatedUser.get().getRole().getId());
+
+        String updatedFirstName = user.getFirstName();
+        String updatedLastName = user.getLastName();
+        String updatedEmail = user.getEmail();
+
+        //Integer updatedRole = user.getRole().getId();
+
+        String updatedStreetAddress = user.getAddress().getStreetAddress();
+        String updatedCity = user.getAddress().getCity();
+        String updatedState = user.getAddress().getState();
+        Integer updatedZip = user.getAddress().getZip();
+        String updatedPhone = user.getPhone();
+        LocalDate updatedDOB = user.getDob();
+        LocalDate updatedDateJoined = user.getDataJoined();
+        boolean updatedActiveStatus = user.isActiveStatus();
+
+        String updatedUsername = user.getCredential().getUsername();
+        String updatedPassword = user.getCredential().getPassword();
+
+        if (updatedUser.isPresent()) {
+            if (updatedFirstName != null && updatedFirstName.length() > 0) {
+                updatedUser.get().setFirstName(updatedFirstName);
+            }
+
+            if (updatedLastName != null && updatedLastName.length() > 0) {
+                updatedUser.get().setLastName(updatedLastName);
+            }
+
+            if (updatedEmail != null && updatedEmail.length() > 0) {
+                updatedUser.get().setEmail(updatedEmail);
+            }
+
+            if (updatedPhone != null && updatedPhone.length() > 0) {
+                updatedUser.get().setPhone(updatedPhone);
+            }
+
+            if (updatedStreetAddress != null && updatedStreetAddress.length() > 0) {
+                updatedUser.get().getAddress().setStreetAddress(updatedStreetAddress);
+            }
+
+            if (updatedCity != null && updatedCity.length() > 0) {
+                updatedUser.get().getAddress().setCity(updatedCity);
+            }
+
+            if (updatedState != null && updatedState.length() > 0) {
+                updatedUser.get().getAddress().setState(updatedState);
+            }
+
+            if (updatedZip != null) {
+                updatedUser.get().getAddress().setZip(updatedZip);
+            }
+
+            System.out.println(updatedUser + "before saving");
+            user = userRepo.save(updatedUser.get());
+        }
+
+        System.out.println(user + "after saving");
+        return user;
+       // return userRepo.save(user);
     }
 
 

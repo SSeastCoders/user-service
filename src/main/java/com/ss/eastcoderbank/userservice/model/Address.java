@@ -21,4 +21,5 @@ public class Address {
     private Integer zip;
     @Column(length = 2)
     private String state;
+
 }

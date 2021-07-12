@@ -29,10 +29,11 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    @GetMapping(path="admin/admins")
-    public List<User> getAllAdmins() {
-        return userService.getAllAdmins();
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping(path=("admin/users/{userId}"))
+    public User updateUserDetails(@Valid @RequestBody UserDTO userDTO) {
+        System.out.println("!!!in USER CONTROLLER " + userDTO.toString());
+        return userService.updateUserDetails(userDTO);
     }
 
 
