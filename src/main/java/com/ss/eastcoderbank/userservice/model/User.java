@@ -1,8 +1,11 @@
 package com.ss.eastcoderbank.userservice.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.ss.eastcoderbank.userservice.service.constraints.DbConstraints;
-import lombok.*;
+import com.ss.eastcoderbank.userservice.service.constraints.Constraints;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,10 +16,10 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @Table(uniqueConstraints = {
-        @UniqueConstraint(name = DbConstraints.EMAILANDUSERNAME, columnNames = {"email", "username"}),
-        @UniqueConstraint(name = DbConstraints.EMAIL, columnNames = {"email"}),
-        @UniqueConstraint(name = DbConstraints.USERNAME, columnNames = {"username"}),
-        @UniqueConstraint(name = DbConstraints.PHONE, columnNames = {"phone"}),
+        @UniqueConstraint(name = Constraints.EMAILANDUSERNAME, columnNames = {"email", "username"}),
+        @UniqueConstraint(name = Constraints.EMAIL, columnNames = {"email"}),
+        @UniqueConstraint(name = Constraints.USERNAME, columnNames = {"username"}),
+        @UniqueConstraint(name = Constraints.PHONE, columnNames = {"phone"}),
 })
 public class User {
 

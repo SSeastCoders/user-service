@@ -8,7 +8,7 @@ import com.ss.eastcoderbank.userservice.model.UserRole;
 import com.ss.eastcoderbank.userservice.repository.UserRepository;
 import com.ss.eastcoderbank.userservice.repository.UserRoleRepository;
 import com.ss.eastcoderbank.userservice.service.CustomExceptions.*;
-import com.ss.eastcoderbank.userservice.service.constraints.DbConstraints;
+import com.ss.eastcoderbank.userservice.service.constraints.Constraints;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
@@ -91,10 +91,10 @@ public class UserService {
 
     private void handleUniqueConstraints(String constraint) {
         String constraintLower = constraint.toLowerCase();
-        if (constraintLower.contains(DbConstraints.EMAILANDUSERNAME)) throw new DuplicateConstraintsException(ExceptionMessages.USERNAMEANDEMAIL);
-        else if (constraintLower.contains(DbConstraints.EMAIL)) throw new DuplicateEmailException(ExceptionMessages.EMAIL);
-        else if (constraintLower.contains(DbConstraints.USERNAME)) throw new DuplicateUsernameException(ExceptionMessages.USERNAME);
-        else if (constraintLower.contains(DbConstraints.PHONE)) throw new DuplicatePhoneException(ExceptionMessages.PHONE);
+        if (constraintLower.contains(Constraints.EMAILANDUSERNAME)) throw new DuplicateConstraintsException(ExceptionMessages.USERNAMEANDEMAIL);
+        else if (constraintLower.contains(Constraints.EMAIL)) throw new DuplicateEmailException(ExceptionMessages.EMAIL);
+        else if (constraintLower.contains(Constraints.USERNAME)) throw new DuplicateUsernameException(ExceptionMessages.USERNAME);
+        else if (constraintLower.contains(Constraints.PHONE)) throw new DuplicatePhoneException(ExceptionMessages.PHONE);
     }
 
 
