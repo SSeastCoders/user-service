@@ -1,4 +1,4 @@
-package com.ss.eastcoderbank.userservice.exceptions;
+package com.ss.eastcoderbank.userservice.service.CustomExceptions;
 
 public class DuplicateConstraintsException  extends RuntimeException {
     public DuplicateConstraintsException(String message) {

@@ -1,17 +1,14 @@
 package com.ss.eastcoderbank.userservice.service;
 
 import com.ss.eastcoderbank.userservice.dto.UserDTO;
-import com.ss.eastcoderbank.userservice.exceptions.DuplicateConstraintsException;
-import com.ss.eastcoderbank.userservice.exceptions.DuplicateEmailException;
-import com.ss.eastcoderbank.userservice.exceptions.DuplicatePhoneException;
-import com.ss.eastcoderbank.userservice.exceptions.DuplicateUsernameException;
 import com.ss.eastcoderbank.userservice.model.Address;
 import com.ss.eastcoderbank.userservice.model.Credential;
 import com.ss.eastcoderbank.userservice.model.User;
 import com.ss.eastcoderbank.userservice.model.UserRole;
 import com.ss.eastcoderbank.userservice.repository.UserRepository;
 import com.ss.eastcoderbank.userservice.repository.UserRoleRepository;
-import com.ss.eastcoderbank.userservice.service.constraints.Constraint;
+import com.ss.eastcoderbank.userservice.service.CustomExceptions.*;
+import com.ss.eastcoderbank.userservice.service.constraints.DbConstraints;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
@@ -38,7 +35,7 @@ public class UserService {
     @Autowired
     private final UserRoleRepository userRoleRepo;
     @Autowired
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private final ModelMapper modelMapper;
 
@@ -71,7 +68,7 @@ public class UserService {
         user.setRole(role);
         user.setDataJoined(LocalDate.now());
 
-        String encodedPassword = bCryptPasswordEncoder.encode(user.getCredential().getPassword());
+        String encodedPassword = passwordEncoder.encode(user.getCredential().getPassword());
         user.getCredential().setPassword(encodedPassword);
 
         try {
@@ -94,16 +91,16 @@ public class UserService {
 
     private void handleUniqueConstraints(String constraint) {
         String constraintLower = constraint.toLowerCase();
-        if (constraintLower.contains(Constraint.EMAILANDUSERNAME)) throw new DuplicateConstraintsException("duplicate username and email");
-        else if (constraintLower.contains(Constraint.EMAIL)) throw new DuplicateEmailException("duplicate email");
-        else if (constraintLower.contains(Constraint.USERNAME)) throw new DuplicateUsernameException("duplicate username");
-        else if (constraintLower.contains(Constraint.PHONE)) throw new DuplicatePhoneException("Phone number already associated with a registered user!");
+        if (constraintLower.contains(DbConstraints.EMAILANDUSERNAME)) throw new DuplicateConstraintsException(ExceptionMessages.USERNAMEANDEMAIL);
+        else if (constraintLower.contains(DbConstraints.EMAIL)) throw new DuplicateEmailException(ExceptionMessages.EMAIL);
+        else if (constraintLower.contains(DbConstraints.USERNAME)) throw new DuplicateUsernameException(ExceptionMessages.USERNAME);
+        else if (constraintLower.contains(DbConstraints.PHONE)) throw new DuplicatePhoneException(ExceptionMessages.PHONE);
     }
 
 
 
     public Integer updateUserDetails(UserDTO userDTO) {
-        userDTO.getCredential().setPassword(bCryptPasswordEncoder.encode(userDTO.getCredential().getPassword()));
+        userDTO.getCredential().setPassword(passwordEncoder.encode(userDTO.getCredential().getPassword()));
         Optional<User> savedUser = userRepo.findById(userDTO.getId());
 
         User user = null;
@@ -165,9 +162,9 @@ public class UserService {
 
         if(deactivatedUser.isPresent()) {
             user = deactivatedUser.get();
-            if(user.isActiveStatus()) {
-                user.setActiveStatus(false);
-            }
+
+            user.setActiveStatus(false);
+
 
             userRepo.saveAndFlush(user);
         }

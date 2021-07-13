@@ -17,7 +17,7 @@ public class Credential {
 
     @Column(nullable = false, unique = true, length = 50)
     public String username;
-    @Column(nullable = false, length = 250)
+    @Column(nullable = false, length = 250) //had to change length to higher limit for BCrypt
     public String password;
 
 
