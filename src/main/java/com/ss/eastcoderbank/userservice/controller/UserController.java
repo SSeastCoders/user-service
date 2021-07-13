@@ -23,16 +23,15 @@ public class UserController {
         return userService.manuallyCreateUser(udto);
     }
 
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping(path="admin/users")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping(path=("admin/users/{userId}"))
-    public User updateUserDetails(@Valid @RequestBody UserDTO userDTO) {
-        System.out.println("!!!in USER CONTROLLER " + userDTO.toString());
+    public Integer updateUserDetails(@Valid @RequestBody UserDTO userDTO) {
         return userService.updateUserDetails(userDTO);
     }
 

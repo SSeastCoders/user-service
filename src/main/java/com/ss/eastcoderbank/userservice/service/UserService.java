@@ -19,10 +19,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -49,7 +47,7 @@ public class UserService {
     }
 
 
-    public Integer manuallyCreateUser(UserDTO userDTO) throws DuplicateEmailException, DuplicateUsernameException, DuplicatePhoneException {
+    public Integer manuallyCreateUser(UserDTO userDTO) {
 
         User user = userDTOToUser(userDTO);
         //        sets user's address
@@ -101,85 +99,61 @@ public class UserService {
 
 
 
-    public User updateUserDetails(UserDTO userDTO) {
-        Optional<User> updatedUser = Optional.ofNullable(userRepo.findById(userDTO.getId()).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find user with id = " + userDTO.getId())));
-        System.out.println("!!!userDTO ID!!!: " + userDTO.getId());
-        //System.out.println("!!!in USER SERVICE " + userDTO.getRole().getId());
+    public Integer updateUserDetails(UserDTO userDTO) {
+        userDTO.getCredential().setPassword(bCryptPasswordEncoder.encode(userDTO.getCredential().getPassword()));
+        Optional<User> savedUser = userRepo.findById(userDTO.getId());
 
-        System.out.println("!!!updated user line 110!!!: " + updatedUser.toString());
-        //UserRole role = userRoleRepo.findUserRoleByTitle("administrator").orElse(new UserRole("administrator"));
+        User user = null;
 
-        //userDTO.getRole().setTitle(role.getTitle());
-        User user = userDTOToUser(userDTO);
+        if(savedUser.isPresent()){
+            user = savedUser.get();
 
-        System.out.println("!!!updated user!!!: " + updatedUser.toString());
-
-
-        //System.out.println("USER ROLE " + updatedUser.get().getRole().getId());
-
-        String updatedFirstName = user.getFirstName();
-        String updatedLastName = user.getLastName();
-        String updatedEmail = user.getEmail();
-
-        //Integer updatedRole = user.getRole().getId();
-
-        String updatedStreetAddress = user.getAddress().getStreetAddress();
-        String updatedCity = user.getAddress().getCity();
-        String updatedState = user.getAddress().getState();
-        Integer updatedZip = user.getAddress().getZip();
-        String updatedPhone = user.getPhone();
-        LocalDate updatedDOB = user.getDob();
-        LocalDate updatedDateJoined = user.getDataJoined();
-        boolean updatedActiveStatus = user.isActiveStatus();
-
-        String updatedUsername = user.getCredential().getUsername();
-        String updatedPassword = user.getCredential().getPassword();
-
-        if (updatedUser.isPresent()) {
-            if (updatedFirstName != null && updatedFirstName.length() > 0) {
-                updatedUser.get().setFirstName(updatedFirstName);
+            if(!user.getFirstName().equals(userDTO.getFirstName()) && userDTO.getFirstName() != null){
+                user.setFirstName(userDTO.getFirstName());
+            }
+            if(!user.getLastName().equals(userDTO.getLastName()) && userDTO.getLastName() != null){
+                user.setLastName(userDTO.getLastName());
+            }
+            if(!user.getAddress().equals(userDTO.getAddress()) && userDTO.getAddress() != null){
+                user.setAddress(userDTO.getAddress());
+            }
+            if(!user.getCredential().equals(userDTO.getCredential()) && userDTO.getCredential() != null){
+                user.setCredential(userDTO.getCredential());
+            }
+            if(!user.getDataJoined().equals(userDTO.getDateJoined()) && userDTO.getDateJoined() != null){
+                user.setDataJoined(userDTO.getDateJoined());
+            }
+            if(user.isActiveStatus() != userDTO.isActiveStatus()) {
+                user.setActiveStatus(userDTO.isActiveStatus());
+            }
+            if(!user.getDob().equals(userDTO.getDob()) && userDTO.getDob() != null){
+                user.setDob(userDTO.getDob());
             }
 
-            if (updatedLastName != null && updatedLastName.length() > 0) {
-                updatedUser.get().setLastName(updatedLastName);
+            if(!user.getEmail().equals(userDTO.getEmail()) && userDTO.getEmail() != null){
+                user.setEmail(userDTO.getEmail());
+            }
+            if(!user.getPhone().equals(userDTO.getPhone()) && userDTO.getPhone() != null){
+                user.setPhone(userDTO.getPhone());
+            }
+            try {
+                userRepo.saveAndFlush(user);
+            } catch(DataIntegrityViolationException dive) {
+                log.error(dive.getMessage());
+                Throwable thr = dive.getCause();
+                if (thr instanceof ConstraintViolationException) {
+                    handleUniqueConstraints(((ConstraintViolationException) thr).getConstraintName());
+                }
+                throw dive;
             }
 
-            if (updatedEmail != null && updatedEmail.length() > 0) {
-                updatedUser.get().setEmail(updatedEmail);
-            }
-
-            if (updatedPhone != null && updatedPhone.length() > 0) {
-                updatedUser.get().setPhone(updatedPhone);
-            }
-
-            if (updatedStreetAddress != null && updatedStreetAddress.length() > 0) {
-                updatedUser.get().getAddress().setStreetAddress(updatedStreetAddress);
-            }
-
-            if (updatedCity != null && updatedCity.length() > 0) {
-                updatedUser.get().getAddress().setCity(updatedCity);
-            }
-
-            if (updatedState != null && updatedState.length() > 0) {
-                updatedUser.get().getAddress().setState(updatedState);
-            }
-
-            if (updatedZip != null) {
-                updatedUser.get().getAddress().setZip(updatedZip);
-            }
-
-            System.out.println(updatedUser + "before saving");
-            user = userRepo.save(updatedUser.get());
+        } else {
+            user = new User();
         }
+        return user.getId();
 
-        System.out.println(user + "after saving");
-        return user;
-       // return userRepo.save(user);
     }
 
 
 }
-
-
 
