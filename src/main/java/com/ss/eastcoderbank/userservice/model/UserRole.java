@@ -1,15 +1,15 @@
 package com.ss.eastcoderbank.userservice.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Getter
+@EqualsAndHashCode
 @Setter
 @RequiredArgsConstructor
 @ToString
@@ -17,15 +17,18 @@ public class UserRole {
 
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
     @Id
-    private Integer userRoleID;
+    private Integer id;
 
-    @Column(nullable = false, unique = true, length = 20)
-    private String userRoleTitle;
+    @Column(nullable = false, unique = true, length = 20) // title must be unique
+    private String title;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "userRole", orphanRemoval = true)
-    private Set<User> users;
+    public UserRole(String title) {
+        this.title = title;
+    }
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "role", orphanRemoval = true)
+    private Set<User> users = new HashSet<>();
 
 }

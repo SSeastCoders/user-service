@@ -1,53 +1,57 @@
 package com.ss.eastcoderbank.userservice.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.ss.eastcoderbank.userservice.service.constraints.Constraints;
+import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 @Setter
 @ToString
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = Constraints.EMAILANDUSERNAME, columnNames = {"email", "username"}),
+        @UniqueConstraint(name = Constraints.EMAIL, columnNames = {"email"}),
+        @UniqueConstraint(name = Constraints.USERNAME, columnNames = {"username"}),
+})
 public class User {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
     @Id
-    private Integer userID;
+    private Integer id;
 
-    @JoinColumn
-    @ManyToOne
-    private UserRole userRole;
+    @JsonBackReference
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private UserRole role;
 
-    @Column(nullable = false, length = 20)
-    private String userFirstName;
+    @Column(length = 20, name = "first_name")
+    private String firstName;
 
-    @Column(nullable = false, length = 40)
-    private String userLastName;
+    @Column(length = 40, name = "last_name")
+    private String lastName;
 
-    @Column(nullable = false)
-    private Date userDOB;
+    private LocalDate dob;
 
-    @Column(nullable = false, unique = true, length = 50)
-    private String userEmail;
+    @Column(nullable = false, length = 50)
+    private String email;
 
-    @Column(nullable = false, unique = true, length = 20)
-    private String userPhone;
-
-    @Embedded
-    private Address userAddress;
-
-    @Column(nullable = false)
-    private Date userDateJoined;
-
-    @Column(nullable = false)
-    private boolean userActiveStatus;
+    @Column(length = 20)
+    private String phone;
 
     @Embedded
-    private Credential userCredential;
+    private Address address;
+
+    @Column(name = "date_joined")
+    private LocalDate dataJoined;
+
+    @Column(name = "active_status")
+    private boolean activeStatus;
+
+    @Embedded
+    private Credential credential;
 }
