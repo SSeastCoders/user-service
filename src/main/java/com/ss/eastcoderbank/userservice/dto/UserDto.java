@@ -4,13 +4,15 @@ package com.ss.eastcoderbank.userservice.dto;
 import com.ss.eastcoderbank.userservice.model.Address;
 import com.ss.eastcoderbank.userservice.model.Credential;
 import com.ss.eastcoderbank.userservice.model.UserRole;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 public class UserDto {
     private Integer id;
 

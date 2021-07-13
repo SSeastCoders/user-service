@@ -2,6 +2,7 @@ package com.ss.eastcoderbank.userservice.service;
 
 import com.ss.eastcoderbank.userservice.dto.RegistrationDto;
 import com.ss.eastcoderbank.userservice.dto.UserDto;
+import com.ss.eastcoderbank.userservice.model.Credential;
 import com.ss.eastcoderbank.userservice.model.User;
 import com.ss.eastcoderbank.userservice.model.UserRole;
 import com.ss.eastcoderbank.userservice.repository.UserRepository;
@@ -9,12 +10,14 @@ import com.ss.eastcoderbank.userservice.repository.UserRoleRepository;
 import com.ss.eastcoderbank.userservice.service.CustomExceptions.DuplicateConstraintsException;
 import com.ss.eastcoderbank.userservice.service.CustomExceptions.DuplicateEmailException;
 import com.ss.eastcoderbank.userservice.service.CustomExceptions.DuplicateUsernameException;
+import com.ss.eastcoderbank.userservice.service.CustomExceptions.ExceptionMessages;
 import com.ss.eastcoderbank.userservice.service.constraints.Constraints;
 import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,18 +29,24 @@ public class UserService {
     UserRepository userRepository;
 
     @Autowired
+    ModelMapper modelMapper;
+
+    @Autowired
     UserRoleRepository userRoleRepository;
 
     @Autowired
-    ModelMapper modelMapper;
+    PasswordEncoder passwordEncoder;
 
-    public void userRegistration(RegistrationDto registrationDto) throws DuplicateConstraintsException {
+    public Integer userRegistration(RegistrationDto registrationDto) throws DuplicateConstraintsException {
+        String password = passwordEncoder.encode(registrationDto.getPassword());
+        registrationDto.setPassword(password);
         User user = registrationToUser(registrationDto);
         UserRole role = userRoleRepository.findUserRoleByTitle("customer").orElse(new UserRole("customer"));
         user.setRole(role);
         user.setDataJoined(LocalDate.now());
         try {
-            userRepository.saveAndFlush(user);
+            userRepository.save(user);
+            return user.getId();
         } catch (DataIntegrityViolationException e) {
             Throwable t = e.getCause();
             if (t instanceof ConstraintViolationException) {
@@ -47,6 +56,8 @@ public class UserService {
         }
     }
 
+
+
     public List<User> getUsers() {
         return userRepository.findAll();
     }
@@ -55,20 +66,22 @@ public class UserService {
         return userRoleRepository.findAll();
     }
 
-    private User convertToEntity(UserDto userDto) {
+    protected User convertToEntity(UserDto userDto) {
         return modelMapper.map(userDto, User.class);
     }
 
     //Needs to be tested
-    private User registrationToUser(RegistrationDto registrationDto) {
+    protected User registrationToUser(RegistrationDto registrationDto) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
-        return modelMapper.map(registrationDto, User.class);
+        User user = modelMapper.map(registrationDto, User.class);
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
+        return user;
     }
 
-    private void handleUniqueConstraints(String constraint) throws DuplicateConstraintsException, DuplicateEmailException, DuplicateUsernameException {
+    protected void handleUniqueConstraints(String constraint) throws DuplicateConstraintsException, DuplicateEmailException, DuplicateUsernameException {
         String constraintLower = constraint.toLowerCase();
-        if (constraintLower.contains(Constraints.EMAILANDUSERNAME)) throw new DuplicateConstraintsException("duplicate username and email");
-        else if (constraintLower.contains(Constraints.EMAIL)) throw new DuplicateEmailException("duplicate email");
-        else if (constraintLower.contains(Constraints.USERNAME)) throw new DuplicateUsernameException("duplicate username");
+        if (constraintLower.contains(Constraints.EMAILANDUSERNAME)) throw new DuplicateConstraintsException(ExceptionMessages.USERNAMEANDEMAIL);
+        else if (constraintLower.contains(Constraints.EMAIL)) throw new DuplicateEmailException(ExceptionMessages.EMAIL);
+        else if (constraintLower.contains(Constraints.USERNAME)) throw new DuplicateUsernameException(ExceptionMessages.USERNAME);
     }
 }

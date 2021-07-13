@@ -2,17 +2,16 @@ package com.ss.eastcoderbank.userservice.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ss.eastcoderbank.userservice.service.constraints.Constraints;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 @Setter
 @ToString
 @Table(uniqueConstraints = {

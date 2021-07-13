@@ -1,13 +1,15 @@
 package com.ss.eastcoderbank.userservice.dto;
 
 import com.ss.eastcoderbank.userservice.model.Credential;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 public class RegistrationDto {
     @Pattern(regexp = "[a-z0-9A-Z]+", message = "username can have only alphanumeric characters")
     @Size(min = 1, max = 20, message = "username must not be blank and contain no more than 20 characters")

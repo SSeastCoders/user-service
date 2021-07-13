@@ -1,10 +1,7 @@
 package com.ss.eastcoderbank.userservice.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -12,6 +9,7 @@ import java.util.Set;
 
 @Entity
 @Getter
+@EqualsAndHashCode
 @Setter
 @RequiredArgsConstructor
 @ToString
