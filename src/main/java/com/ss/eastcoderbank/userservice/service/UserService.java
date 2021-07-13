@@ -46,6 +46,9 @@ public class UserService {
         return userRepo.findAll();
     }
 
+    public List<User> getAllAdmins() {
+        return userRepo.findAllAdmins(1);
+    }
 
     public Integer manuallyCreateUser(UserDTO userDTO) {
 
@@ -167,7 +170,6 @@ public class UserService {
             }
 
             userRepo.saveAndFlush(user);
-            System.out.println("THIS IS THE NEW USER =====>>>>");
         }
         return user.getId();
     }

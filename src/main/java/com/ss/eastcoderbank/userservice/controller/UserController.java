@@ -38,8 +38,14 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping(path="admin/users/{userId}")
     public Integer deactivateUser(@RequestBody UserDTO userDTO) {
+
         return userService.deactivateUser(userDTO);
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(path="admin/administrators")
+    public List<User> getAllAdmins() {
+        return userService.getAllAdmins();
+    }
 
 }

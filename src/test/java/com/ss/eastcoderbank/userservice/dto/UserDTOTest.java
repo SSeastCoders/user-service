@@ -1,15 +1,18 @@
 package com.ss.eastcoderbank.userservice.dto;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.ss.eastcoderbank.userservice.model.Address;
 import com.ss.eastcoderbank.userservice.model.Credential;
 import com.ss.eastcoderbank.userservice.model.User;
 import com.ss.eastcoderbank.userservice.model.UserRole;
-import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class UserDTOTest {
     @Test
@@ -55,6 +58,12 @@ public class UserDTOTest {
         assertEquals("4105551212", actualUserDTO.getPhone());
         assertSame(userRole, actualUserDTO.getRole());
         assertTrue(actualUserDTO.isActiveStatus());
+        assertEquals(
+                "UserDTO{id=1, role=UserRole(id=1, title=Dr, users=[]), firstName='Jane', lastName='Doe', dob=1970-01-02,"
+                        + " email='jane.doe@example.org', phone='4105551212', address=Address(streetAddress=42 Main St, city=Oxford,"
+                        + " zip=1, state=MD), dateJoined=1970-01-02, activeStatus=true, credential=Credential(username=janedoe,"
+                        + " password=iloveyou)}",
+                actualUserDTO.toString());
     }
 }
 

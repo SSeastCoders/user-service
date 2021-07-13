@@ -14,12 +14,11 @@ public class PasswordEncoderTest {
 
     @Test
     public void testBCryptPasswordEncoder() {
-
-        this.passwordEncoder.bCryptPasswordEncoder();
-    }
-
-    @Test
-    public void testBCryptPasswordEncoder2() {
+        // TODO: This test is incomplete.
+        //   Reason: No meaningful assertions found.
+        //   To help Diffblue Cover to find assertions, please add getters to the
+        //   class under test that return fields written by the method under test.
+        //   See https://diff.blue/R004
 
         this.passwordEncoder.bCryptPasswordEncoder();
     }

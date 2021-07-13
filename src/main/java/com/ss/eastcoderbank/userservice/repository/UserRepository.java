@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -22,4 +23,6 @@ public interface UserRepository extends JpaRepository <User, Integer> {
     @Query("FROM User WHERE phone = ?1")
     Optional<User> findByPhone(String phone);
 
+    @Query("FROM User WHERE role_id = ?1")
+    List<User> findAllAdmins(Integer role_id);
 }
