@@ -16,5 +16,4 @@ public enum JwtUtil {
         this.tokenPrefix = tokenPrefix;
         this.header = header;
     }
-
 }

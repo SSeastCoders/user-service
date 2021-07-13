@@ -3,6 +3,7 @@ package com.ss.eastcoderbank.userservice.security;
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ss.eastcoderbank.userservice.dto.LoginDto;
+import com.ss.eastcoderbank.userservice.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,13 +12,18 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.naming.directory.InvalidAttributeIdentifierException;
+import javax.persistence.Access;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.Claims;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
@@ -26,10 +32,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private UserRepository userRepository;
+
     //@Value("${jwt.secret}")
     private final String jwtSecret;
 
-    @Autowired
+    //@Autowired
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, @Value("${jwt.secret}") String jwtSecret){
         this.authenticationManager = authenticationManager;
         this.jwtSecret = jwtSecret;
@@ -64,11 +73,36 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // Create JWT Token
         String token = JWT.create()
-                .withSubject(principal.getUsername())
+
+                .withSubject(String.valueOf(principal.getId()))
+                .withClaim("username", principal.getUsername())
+                .withClaim("role", principal.getRole().getTitle())
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtUtil.JWT_UTIL.getExpirationTime()))
                 .sign(HMAC512(jwtSecret.getBytes()));
 
         // Add token in response
         response.addHeader(JwtUtil.JWT_UTIL.getHeader(), JwtUtil.JWT_UTIL.getTokenPrefix() + token);
+    }
+
+    //rename exception hazel
+    public UserPrincipal parseJWTToken(String jwtToken) throws InvalidAttributeIdentifierException{
+
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecret.getBytes())
+                .parseClaimsJws(jwtToken).getBody();
+
+        return new UserPrincipal(userRepository.findById(Integer.valueOf(claims.getSubject())).orElseThrow(InvalidAttributeIdentifierException::new));
+
+        //String[] jwtChunks = jwtToken.split("\\.");
+        //Base64.Decoder decoder = Base64.getDecoder();
+
+        //JWT.decode(jwtToken);
+
+        //String header = new String(jwtChunks[0]);
+        //String payload = new String(jwtChunks[1]);
+
+        //JWT.decode(jwtToken);
+
+
     }
 }
