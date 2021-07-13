@@ -3,6 +3,7 @@ package com.ss.eastcoderbank.userservice.security;
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ss.eastcoderbank.userservice.dto.LoginDto;
+import com.ss.eastcoderbank.userservice.model.User;
 import com.ss.eastcoderbank.userservice.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,13 +86,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     //rename exception hazel
-    public UserPrincipal parseJWTToken(String jwtToken) throws InvalidAttributeIdentifierException{
+    public Optional<User> parseJWTToken(String jwtToken) throws InvalidAttributeIdentifierException{
 
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtSecret.getBytes())
                 .parseClaimsJws(jwtToken).getBody();
 
-        return new UserPrincipal(userRepository.findById(Integer.valueOf(claims.getSubject())).orElseThrow(InvalidAttributeIdentifierException::new));
+        //return new UserPrincipal(userRepository.findById(Integer.valueOf(claims.getSubject())).orElseThrow(InvalidAttributeIdentifierException::new));
+        return userRepository.findById(Integer.valueOf(claims.getSubject()));
 
         //String[] jwtChunks = jwtToken.split("\\.");
         //Base64.Decoder decoder = Base64.getDecoder();
