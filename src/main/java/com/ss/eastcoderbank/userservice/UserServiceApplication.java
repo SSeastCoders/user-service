@@ -2,13 +2,10 @@ package com.ss.eastcoderbank.userservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-<<<<<<< HEAD
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-=======
 import org.springframework.context.annotation.Bean;
 
 import java.sql.SQLException;
->>>>>>> 311b4d2a759ef07ba5dded3b171e46ab8344ddbd
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class UserServiceApplication {
