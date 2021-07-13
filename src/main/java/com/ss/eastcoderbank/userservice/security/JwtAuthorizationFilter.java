@@ -3,6 +3,7 @@ package com.ss.eastcoderbank.userservice.security;
 import com.auth0.jwt.JWT;
 import com.ss.eastcoderbank.userservice.model.User;
 import com.ss.eastcoderbank.userservice.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,23 +23,27 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private UserRepository userRepository;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint, UserRepository userRepository){
+    private final String jwtSecret;
+
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint, UserRepository userRepository, @Value("${jwt.secret}") String jwtSecret){
         super(authenticationManager, authenticationEntryPoint);
         this.userRepository = userRepository;
+        this.jwtSecret = jwtSecret;
     }
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository){
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository, @Value("${jwt.secret}") String jwtSecret){
         super(authenticationManager);
         this.userRepository = userRepository;
+        this.jwtSecret = jwtSecret;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         // Read the Authorization header, where the JWT token should be
-        String header = request.getHeader(JwtUtil.HEADER_STRING);
+        String header = request.getHeader(JwtUtil.JWT_UTIL.getHeader());
 
         // If header does not contain BEARER or is null delegate to Spring impl and exit
-        if (header == null || !header.startsWith(JwtUtil.TOKEN_PREFIX)) {
+        if (header == null || !header.startsWith(JwtUtil.JWT_UTIL.getTokenPrefix())) {
             chain.doFilter(request, response);
             return;
         }
@@ -51,12 +56,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         chain.doFilter(request, response);
     }
     private Authentication getUsernamePasswordAuthentication(HttpServletRequest request) {
-        String token = request.getHeader(JwtUtil.HEADER_STRING)
-                .replace(JwtUtil.TOKEN_PREFIX,"");
+        String token = request.getHeader(JwtUtil.JWT_UTIL.getHeader())
+                .replace(JwtUtil.JWT_UTIL.getTokenPrefix(), "");
 
         if (token != null) {
             // parse the token and validate it
-            String userName = JWT.require(HMAC512(JwtUtil.SECRET.getBytes()))
+            String userName = JWT.require(HMAC512(jwtSecret.getBytes()))
                     .build()
                     .verify(token)
                     .getSubject();

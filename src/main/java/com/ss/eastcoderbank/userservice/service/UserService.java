@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -62,6 +63,11 @@ public class UserService {
 
     public List<User> getUsers() {
         return userRepository.findAll();
+    }
+
+    //Hypotethical for hazel's authorize example
+    public Optional<User> getUserById(Integer id) {
+        return userRepository.findById(id);
     }
 
     public List<UserRole> getRoles() {

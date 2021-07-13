@@ -7,6 +7,7 @@ import com.ss.eastcoderbank.userservice.model.UserRole;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
 import java.time.LocalDate;
 
 @Getter
@@ -22,6 +23,7 @@ public class UserDto {
 
     private LocalDate dob;
 
+    @Email
     private String email;
 
     private String phone;

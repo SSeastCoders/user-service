@@ -1,10 +1,12 @@
 package com.ss.eastcoderbank.userservice.security;
 
 import com.ss.eastcoderbank.userservice.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -16,14 +18,17 @@ import java.security.SecureRandom;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private UserRepository userRepository;
     private UserPrincipalService userPrincipalService;
+    private final String jwtSecret;
 
-    public SecurityConfiguration(UserRepository userRepository, UserPrincipalService userPrincipalService) {
+    public SecurityConfiguration(UserRepository userRepository, UserPrincipalService userPrincipalService, @Value("${jwt.secret}") String jwtSecret) {
         this.userRepository = userRepository;
         this.userPrincipalService = userPrincipalService;
+        this.jwtSecret = jwtSecret;
     }
 
     @Override
@@ -32,8 +37,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.userRepository))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtSecret))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.userRepository, jwtSecret))
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .anyRequest().authenticated();
