@@ -35,5 +35,11 @@ public class UserController {
         return userService.updateUserDetails(userDTO);
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping(path="admin/users/{userId}")
+    public Integer deactivateUser(@RequestBody UserDTO userDTO) {
+        return userService.deactivateUser(userDTO);
+    }
+
 
 }

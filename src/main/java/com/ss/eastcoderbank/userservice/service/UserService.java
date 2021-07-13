@@ -154,6 +154,24 @@ public class UserService {
 
     }
 
+    public Integer deactivateUser(UserDTO userDTO) {
+
+        Optional<User> deactivatedUser = userRepo.findById(userDTO.getId());
+
+        User user = null;
+
+        if(deactivatedUser.isPresent()) {
+            user = deactivatedUser.get();
+            if(user.isActiveStatus()) {
+                user.setActiveStatus(false);
+            }
+
+            userRepo.saveAndFlush(user);
+            System.out.println("THIS IS THE NEW USER =====>>>>");
+        }
+        return user.getId();
+    }
+
 
 }
 
