@@ -22,17 +22,16 @@ import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
+    private final String jwtSecret;
     private UserRepository userRepository;
 
-    private final String jwtSecret;
-
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint, UserRepository userRepository, @Value("${jwt.secret}") String jwtSecret){
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint, UserRepository userRepository, @Value("${jwt.secret}") String jwtSecret) {
         super(authenticationManager, authenticationEntryPoint);
         this.userRepository = userRepository;
         this.jwtSecret = jwtSecret;
     }
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository, @Value("${jwt.secret}") String jwtSecret){
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository, @Value("${jwt.secret}") String jwtSecret) {
         super(authenticationManager);
         this.userRepository = userRepository;
         this.jwtSecret = jwtSecret;
@@ -56,6 +55,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         // Continue filter execution
         chain.doFilter(request, response);
     }
+
     private Authentication getUsernamePasswordAuthentication(HttpServletRequest request) {
         String token = request.getHeader(JwtUtil.JWT_UTIL.getHeader())
                 .replace(JwtUtil.JWT_UTIL.getTokenPrefix(), "");
@@ -75,7 +75,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                     UserPrincipal principal = new UserPrincipal(user);
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userName, null, principal.getAuthorities());
                     return auth;
-                }catch(UsernameNotFoundException e){
+                } catch (UsernameNotFoundException e) {
                     return null;
                 }
             }

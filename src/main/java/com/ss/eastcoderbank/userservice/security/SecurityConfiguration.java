@@ -23,9 +23,9 @@ import java.security.SecureRandom;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    private final String jwtSecret;
     private UserRepository userRepository;
     private UserPrincipalService userPrincipalService;
-    private final String jwtSecret;
 
     public SecurityConfiguration(UserRepository userRepository, UserPrincipalService userPrincipalService, @Value("${jwt.secret}") String jwtSecret) {
         this.userRepository = userRepository;
@@ -61,7 +61,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    DaoAuthenticationProvider authenticationProvider () {
+    DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         daoAuthenticationProvider.setUserDetailsService(this.userPrincipalService);

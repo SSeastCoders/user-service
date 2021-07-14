@@ -1,22 +1,18 @@
 package com.ss.eastcoderbank.userservice.security;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.ss.eastcoderbank.userservice.model.Address;
 import com.ss.eastcoderbank.userservice.model.Credential;
 import com.ss.eastcoderbank.userservice.model.User;
 import com.ss.eastcoderbank.userservice.model.UserRole;
+import org.junit.jupiter.api.Test;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.security.core.GrantedAuthority;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UserPrincipalTest {
     @Test

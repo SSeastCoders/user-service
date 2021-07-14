@@ -24,13 +24,12 @@ public class UserRole {
 
     @Column(nullable = false, unique = true, length = 20) // title must be unique
     private String title;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "role", orphanRemoval = true)
+    private Set<User> users = new HashSet<>();
 
     public UserRole(String title) {
         this.title = title;
     }
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "role", orphanRemoval = true)
-    private Set<User> users = new HashSet<>();
 
 }

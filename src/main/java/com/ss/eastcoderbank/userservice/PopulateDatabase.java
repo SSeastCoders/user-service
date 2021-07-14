@@ -17,56 +17,56 @@ import java.util.Arrays;
 public class PopulateDatabase implements ApplicationRunner {
 
 
-        private UserRepository userRepository;
-        private UserRoleRepository userRoleRepository;
-        private PasswordEncoder passwordEncoder;
+    private UserRepository userRepository;
+    private UserRoleRepository userRoleRepository;
+    private PasswordEncoder passwordEncoder;
 
-        @Autowired
-        public PopulateDatabase(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder) {
-            this.userRepository = userRepository;
-            this.userRoleRepository = userRoleRepository;
-            this.passwordEncoder = passwordEncoder;
-        }
+    @Autowired
+    public PopulateDatabase(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
-        public void run(ApplicationArguments args) {
-            UserRole userRoleAdmin = new UserRole();
-            userRoleAdmin.setId(1);
-            userRoleAdmin.setTitle("Administrator");
+    public void run(ApplicationArguments args) {
+        UserRole userRoleAdmin = new UserRole();
+        userRoleAdmin.setId(1);
+        userRoleAdmin.setTitle("Administrator");
 
-            UserRole userRoleCust = new UserRole();
-            userRoleCust.setId(2);
-            userRoleCust.setTitle("Customer");
+        UserRole userRoleCust = new UserRole();
+        userRoleCust.setId(2);
+        userRoleCust.setTitle("Customer");
 
-            userRoleRepository.saveAll(Arrays.asList(userRoleAdmin, userRoleCust));
+        userRoleRepository.saveAll(Arrays.asList(userRoleAdmin, userRoleCust));
 
-            User user = new User();
-            user.setActiveStatus(true);
-            user.setId(1);
-            user.setEmail("hazel@smoothstack.com");
-            user.setFirstName("hazel");
-            Credential cred = new Credential();
-            cred.setUsername("hazel");
-            cred.setPassword(passwordEncoder.encode("hazel"));
-            user.setCredential(cred);
-            user.setRole(userRoleAdmin);
+        User user = new User();
+        user.setActiveStatus(true);
+        user.setId(1);
+        user.setEmail("hazel@smoothstack.com");
+        user.setFirstName("hazel");
+        Credential cred = new Credential();
+        cred.setUsername("hazel");
+        cred.setPassword(passwordEncoder.encode("hazel"));
+        user.setCredential(cred);
+        user.setRole(userRoleAdmin);
 
-            userRepository.save(user);
+        userRepository.save(user);
 
-            User userCust = new User();
-            userCust.setActiveStatus(true);
-            userCust.setId(2);
-            userCust.setEmail("customer@smoothstack.com");
-            userCust.setFirstName("customer");
-            Credential credCust = new Credential();
-            credCust.setUsername("customer");
-            credCust.setPassword(passwordEncoder.encode("customer"));
-            userCust.setCredential(credCust);
-            userCust.setRole(userRoleCust);
+        User userCust = new User();
+        userCust.setActiveStatus(true);
+        userCust.setId(2);
+        userCust.setEmail("customer@smoothstack.com");
+        userCust.setFirstName("customer");
+        Credential credCust = new Credential();
+        credCust.setUsername("customer");
+        credCust.setPassword(passwordEncoder.encode("customer"));
+        userCust.setCredential(credCust);
+        userCust.setRole(userRoleCust);
 
-            userRepository.save(userCust);
+        userRepository.save(userCust);
 
-            //(1, TRUE, 'Boston', 'MA', '41 Bothwell Road', 02135, 'tempPass', 'hazel', '2021-07-07', '1996-06-28', 'hazel.baker-harvey@smoothstack.com', 'Hazel', 'Baker-Harvey', '(206) 557-0334', 1);
+        //(1, TRUE, 'Boston', 'MA', '41 Bothwell Road', 02135, 'tempPass', 'hazel', '2021-07-07', '1996-06-28', 'hazel.baker-harvey@smoothstack.com', 'Hazel', 'Baker-Harvey', '(206) 557-0334', 1);
 
 
-        }
+    }
 }

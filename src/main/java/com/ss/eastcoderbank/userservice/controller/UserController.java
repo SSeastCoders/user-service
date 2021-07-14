@@ -1,10 +1,10 @@
 package com.ss.eastcoderbank.userservice.controller;
 
+import com.ss.eastcoderbank.userservice.dto.RegistrationDto;
+import com.ss.eastcoderbank.userservice.model.User;
 import com.ss.eastcoderbank.userservice.model.UserRole;
 import com.ss.eastcoderbank.userservice.service.CustomExceptions.DuplicateConstraintsException;
 import com.ss.eastcoderbank.userservice.service.UserService;
-import com.ss.eastcoderbank.userservice.dto.RegistrationDto;
-import com.ss.eastcoderbank.userservice.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class UserController {

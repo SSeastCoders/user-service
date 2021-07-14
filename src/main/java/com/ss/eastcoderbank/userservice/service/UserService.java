@@ -21,20 +21,16 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
+    private final PasswordEncoder passwordEncoder;
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     UserRoleRepository userRoleRepository;
-
     @Autowired
     ModelMapper modelMapper;
-
-    private final PasswordEncoder passwordEncoder;
 
     public UserService(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -86,8 +82,10 @@ public class UserService {
 
     private void handleUniqueConstraints(String constraint) throws DuplicateConstraintsException, DuplicateEmailException, DuplicateUsernameException {
         String constraintLower = constraint.toLowerCase();
-        if (constraintLower.contains(Constraints.EMAILANDUSERNAME)) throw new DuplicateConstraintsException("duplicate username and email");
+        if (constraintLower.contains(Constraints.EMAILANDUSERNAME))
+            throw new DuplicateConstraintsException("duplicate username and email");
         else if (constraintLower.contains(Constraints.EMAIL)) throw new DuplicateEmailException("duplicate email");
-        else if (constraintLower.contains(Constraints.USERNAME)) throw new DuplicateUsernameException("duplicate username");
+        else if (constraintLower.contains(Constraints.USERNAME))
+            throw new DuplicateUsernameException("duplicate username");
     }
 }

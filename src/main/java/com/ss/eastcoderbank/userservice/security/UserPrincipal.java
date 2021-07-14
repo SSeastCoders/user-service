@@ -1,7 +1,6 @@
 package com.ss.eastcoderbank.userservice.security;
 
 import com.ss.eastcoderbank.userservice.model.User;
-import com.ss.eastcoderbank.userservice.model.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,22 +1,6 @@
 package com.ss.eastcoderbank.userservice.security;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
 import com.ss.eastcoderbank.userservice.repository.UserRepository;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-
 import org.apache.catalina.connector.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -24,6 +8,15 @@ import org.springframework.security.access.intercept.RunAsImplAuthenticationProv
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class JwtAuthorizationFilterTest {
     @Test

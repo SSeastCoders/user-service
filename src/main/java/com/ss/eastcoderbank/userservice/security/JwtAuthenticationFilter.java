@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ss.eastcoderbank.userservice.dto.LoginDto;
 import com.ss.eastcoderbank.userservice.model.User;
 import com.ss.eastcoderbank.userservice.repository.UserRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,26 +20,23 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.Claims;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Optional;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 @Slf4j
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+    //@Value("${jwt.secret}")
+    private final String jwtSecret;
     private AuthenticationManager authenticationManager;
-
     @Autowired
     private UserRepository userRepository;
 
-    //@Value("${jwt.secret}")
-    private final String jwtSecret;
-
     //@Autowired
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, @Value("${jwt.secret}") String jwtSecret){
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, @Value("${jwt.secret}") String jwtSecret) {
         this.authenticationManager = authenticationManager;
         this.jwtSecret = jwtSecret;
     }
@@ -83,7 +82,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     //rename exception hazel
-    public Optional<User> parseJWTToken(String jwtToken){
+    public Optional<User> parseJWTToken(String jwtToken) {
 
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtSecret.getBytes())
