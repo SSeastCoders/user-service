@@ -46,6 +46,7 @@ public class UserController {
         return userService.getRoles();
     }
 
+    @PreAuthorize("permitAll()")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path ="admin/register")
     public Integer manualRegister(UserDto udto) {
@@ -53,18 +54,21 @@ public class UserController {
         return userService.manuallyCreateUser(udto);
     }
 
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path="admin/users")
     public List<User> getAllUsers() {
         return userService.getUsers();
     }
 
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(path=("admin/users/{userId}"))
     public Integer updateUserDetails(UserDto userDTO) {
         return userService.updateUserDetails(userDTO);
     }
 
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping(path="admin/users/{userId}")
     public Integer deactivateUser(UserDto userDTO) {
@@ -72,6 +76,7 @@ public class UserController {
         return userService.deactivateUser(userDTO);
     }
 
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path="admin/administrators")
     public List<User> getAllAdmins() {
