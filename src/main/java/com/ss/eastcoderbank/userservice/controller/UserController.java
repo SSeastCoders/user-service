@@ -19,17 +19,17 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @GetMapping("/users")
     public List<User> getUsers() {
         return userService.getUsers();
     }
 
     //HYPOTHETICAL BASED ON USER ID
-    @PreAuthorize("hasAuthority('ADMINISTRATOR') or principal == #id")
+    @PreAuthorize("#id == principal or hasAuthority('Administrator')")
     @GetMapping(value = "/user/{id}")
-    public Optional<User> getUserById(@PathVariable Integer id) {
-        return userService.getUserById(id);
+    public User getUserByUsername(@PathVariable String id) {
+        return userService.getUserByUsername(id);
     }
 
     @PreAuthorize("permitAll()")
@@ -39,7 +39,7 @@ public class UserController {
         userService.userRegistration(user);
     }
 
-    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @GetMapping("/admin/roles")
     public List<UserRole> getRoles() {
         return userService.getRoles();

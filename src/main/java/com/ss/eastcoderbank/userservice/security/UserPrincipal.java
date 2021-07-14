@@ -14,15 +14,8 @@ public class UserPrincipal implements UserDetails {
 
     private User user;
 
-    private String email;
-    private UserRole role;
-    private Integer id;
-
     public UserPrincipal(User user) {
         this.user = user;
-        this.email = user.getEmail();
-        this.role = user.getRole();
-        this.id = user.getId();
     }
 
     @Override
@@ -61,30 +54,6 @@ public class UserPrincipal implements UserDetails {
     @Override
     public boolean isEnabled() {
         return user.isActiveStatus();
-    }
-
-    public UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public User getUser() {

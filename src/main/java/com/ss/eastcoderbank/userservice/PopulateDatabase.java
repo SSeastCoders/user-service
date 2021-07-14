@@ -52,6 +52,19 @@ public class PopulateDatabase implements ApplicationRunner {
 
             userRepository.save(user);
 
+            User userCust = new User();
+            userCust.setActiveStatus(true);
+            userCust.setId(2);
+            userCust.setEmail("customer@smoothstack.com");
+            userCust.setFirstName("customer");
+            Credential credCust = new Credential();
+            credCust.setUsername("customer");
+            credCust.setPassword(passwordEncoder.encode("customer"));
+            userCust.setCredential(credCust);
+            userCust.setRole(userRoleCust);
+
+            userRepository.save(userCust);
+
             //(1, TRUE, 'Boston', 'MA', '41 Bothwell Road', 02135, 'tempPass', 'hazel', '2021-07-07', '1996-06-28', 'hazel.baker-harvey@smoothstack.com', 'Hazel', 'Baker-Harvey', '(206) 557-0334', 1);
 
 

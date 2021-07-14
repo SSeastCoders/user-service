@@ -66,8 +66,8 @@ public class UserService {
     }
 
     //Hypotethical for hazel's authorize example
-    public Optional<User> getUserById(Integer id) {
-        return userRepository.findById(id);
+    public User getUserByUsername(String id) {
+        return userRepository.findByCredentialUsername(id);
     }
 
     public List<UserRole> getRoles() {

@@ -75,9 +75,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // Create JWT Token
         String token = JWT.create()
 
-                .withSubject(String.valueOf(principal.getId()))
+                .withSubject(String.valueOf(principal.getUser().getId()))
                 .withClaim("username", principal.getUsername())
-                .withClaim("role", principal.getRole().getTitle())
+                .withClaim("role", principal.getUser().getRole().getTitle())
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtUtil.JWT_UTIL.getExpirationTime()))
                 .sign(HMAC512(jwtSecret.getBytes()));
 
@@ -86,25 +86,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     //rename exception hazel
-    public Optional<User> parseJWTToken(String jwtToken) throws InvalidAttributeIdentifierException{
+    public Optional<User> parseJWTToken(String jwtToken){
 
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtSecret.getBytes())
                 .parseClaimsJws(jwtToken).getBody();
 
-        //return new UserPrincipal(userRepository.findById(Integer.valueOf(claims.getSubject())).orElseThrow(InvalidAttributeIdentifierException::new));
         return userRepository.findById(Integer.valueOf(claims.getSubject()));
-
-        //String[] jwtChunks = jwtToken.split("\\.");
-        //Base64.Decoder decoder = Base64.getDecoder();
-
-        //JWT.decode(jwtToken);
-
-        //String header = new String(jwtChunks[0]);
-        //String payload = new String(jwtChunks[1]);
-
-        //JWT.decode(jwtToken);
-
-
     }
 }
