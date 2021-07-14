@@ -13,7 +13,6 @@ import javax.persistence.Embeddable;
 @Setter
 @ToString
 public class Address {
-
     @Column(length = 50)
     private String streetAddress;
     @Column(length = 50)

@@ -2,9 +2,13 @@ package com.ss.eastcoderbank.userservice.controller;
 
 
 import com.ss.eastcoderbank.userservice.dto.RegistrationDto;
+import com.ss.eastcoderbank.userservice.dto.UpdateProfileDto;
 import com.ss.eastcoderbank.userservice.dto.UserDto;
 import com.ss.eastcoderbank.userservice.model.User;
 import com.ss.eastcoderbank.userservice.model.UserRole;
+import com.ss.eastcoderbank.userservice.security.JwtAuthenticationFilter;
+import com.ss.eastcoderbank.userservice.security.JwtParser;
+import com.ss.eastcoderbank.userservice.security.JwtUtil;
 import com.ss.eastcoderbank.userservice.service.CustomExceptions.DuplicateConstraintsException;
 import com.ss.eastcoderbank.userservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -28,10 +33,21 @@ public class UserController {
     }
 
     //HYPOTHETICAL BASED ON USER ID
-    @PreAuthorize("#id == principal or hasAuthority('Administrator')")
-    @GetMapping(value = "/user/{id}")
-    public User getUserByUsername(@PathVariable String id) {
-        return userService.getUserByUsername(id);
+    @PreAuthorize("hasAnyAuthority('Administrator', 'Customer')")
+    @GetMapping(value = "/user")
+    public User getUserByUsername(HttpServletRequest request) {
+        String token =  request.getHeader("Authorization").replace(JwtUtil.JWT_UTIL.getTokenPrefix(), "");
+        Integer id =  JwtParser.parseId(token);
+        return userService.getUserById(id);
+    }
+
+    @PreAuthorize("hasAnyAuthority('Adminstrator', 'Customer')")
+    @PutMapping("/user")
+    public Integer updateUserProfile(@Valid @RequestBody UpdateProfileDto updateProfileDto, HttpServletRequest request) {
+        String token =  request.getHeader("Authorization").replace(JwtUtil.JWT_UTIL.getTokenPrefix(), "");
+        Integer id =  JwtParser.parseId(token);
+        return userService.updateUser(updateProfileDto, id);
+
     }
 
     @PreAuthorize("permitAll()")

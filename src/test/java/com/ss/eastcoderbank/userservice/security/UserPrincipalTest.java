@@ -39,7 +39,7 @@ public class UserPrincipalTest {
         user.setId(1);
         user.setPhone("4105551212");
         user.setFirstName("Jane");
-        user.setDataJoined(LocalDate.ofEpochDay(1L));
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setActiveStatus(true);
         user.setRole(userRole);
         actualUserPrincipal.setUser(user);
@@ -86,7 +86,7 @@ public class UserPrincipalTest {
         user.setId(1);
         user.setPhone("4105551212");
         user.setFirstName("Jane");
-        user.setDataJoined(LocalDate.ofEpochDay(1L));
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setActiveStatus(true);
         user.setRole(userRole);
 
@@ -134,7 +134,7 @@ public class UserPrincipalTest {
         user.setId(1);
         user.setPhone("4105551212");
         user.setFirstName("Jane");
-        user.setDataJoined(LocalDate.ofEpochDay(1L));
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setActiveStatus(true);
         user.setRole(userRole);
 
@@ -180,7 +180,7 @@ public class UserPrincipalTest {
         user.setId(1);
         user.setPhone("4105551212");
         user.setFirstName("Jane");
-        user.setDataJoined(LocalDate.ofEpochDay(1L));
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setActiveStatus(true);
         user.setRole(userRole);
 
@@ -220,7 +220,7 @@ public class UserPrincipalTest {
         user.setId(1);
         user.setPhone("4105551212");
         user.setFirstName("Jane");
-        user.setDataJoined(LocalDate.ofEpochDay(1L));
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setActiveStatus(true);
         user.setRole(userRole);
 
@@ -260,7 +260,7 @@ public class UserPrincipalTest {
         user.setId(1);
         user.setPhone("4105551212");
         user.setFirstName("Jane");
-        user.setDataJoined(LocalDate.ofEpochDay(1L));
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setActiveStatus(true);
         user.setRole(userRole);
 
@@ -300,7 +300,7 @@ public class UserPrincipalTest {
         user.setId(1);
         user.setPhone("4105551212");
         user.setFirstName("Jane");
-        user.setDataJoined(LocalDate.ofEpochDay(1L));
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setActiveStatus(true);
         user.setRole(userRole);
 
@@ -340,7 +340,7 @@ public class UserPrincipalTest {
         user.setId(1);
         user.setPhone("4105551212");
         user.setFirstName("Jane");
-        user.setDataJoined(LocalDate.ofEpochDay(1L));
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setActiveStatus(true);
         user.setRole(userRole);
 

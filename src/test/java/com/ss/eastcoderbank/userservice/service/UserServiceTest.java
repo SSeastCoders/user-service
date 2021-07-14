@@ -127,7 +127,7 @@ public class UserServiceTest {
         user.setId(1);
         user.setPhone("4105551212");
         user.setFirstName("Jane");
-        user.setDataJoined(LocalDate.ofEpochDay(1L));
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setActiveStatus(true);
         user.setRole(userRole1);
 
@@ -160,7 +160,7 @@ public class UserServiceTest {
         user1.setId(1);
         user1.setPhone("4105551212");
         user1.setFirstName("Jane");
-        user1.setDataJoined(LocalDate.ofEpochDay(1L));
+        user1.setDateJoined(LocalDate.ofEpochDay(1L));
         user1.setActiveStatus(true);
         user1.setRole(userRole2);
         when(this.modelMapper.map((Object) any(), (Class<Object>) any())).thenReturn(user1);
@@ -280,7 +280,7 @@ public class UserServiceTest {
         user.setId(1);
         user.setPhone("4105551212");
         user.setFirstName("Jane");
-        user.setDataJoined(LocalDate.ofEpochDay(1L));
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setActiveStatus(true);
         user.setRole(userRole);
         when(this.modelMapper.map((Object) any(), (Class<Object>) any())).thenReturn(user);
@@ -344,7 +344,7 @@ public class UserServiceTest {
         user.setId(1);
         user.setPhone("4105551212");
         user.setFirstName("Jane");
-        user.setDataJoined(LocalDate.ofEpochDay(1L));
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setActiveStatus(true);
         user.setRole(userRole);
         Optional<User> ofResult = Optional.<User>of(user);
@@ -373,7 +373,7 @@ public class UserServiceTest {
         user1.setId(1);
         user1.setPhone("4105551212");
         user1.setFirstName("Jane");
-        user1.setDataJoined(LocalDate.ofEpochDay(1L));
+        user1.setDateJoined(LocalDate.ofEpochDay(1L));
         user1.setActiveStatus(true);
         user1.setRole(userRole1);
         when(this.userRepository.saveAndFlush((User) any())).thenReturn(user1);
@@ -438,7 +438,7 @@ public class UserServiceTest {
         user.setId(1);
         user.setPhone("4105551212");
         user.setFirstName("Jane");
-        user.setDataJoined(LocalDate.ofEpochDay(1L));
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setActiveStatus(true);
         user.setRole(userRole);
         Optional<User> ofResult = Optional.<User>of(user);
@@ -467,7 +467,7 @@ public class UserServiceTest {
         user1.setId(1);
         user1.setPhone("4105551212");
         user1.setFirstName("Jane");
-        user1.setDataJoined(LocalDate.ofEpochDay(1L));
+        user1.setDateJoined(LocalDate.ofEpochDay(1L));
         user1.setActiveStatus(true);
         user1.setRole(userRole1);
         when(this.userRepository.saveAndFlush((User) any())).thenReturn(user1);
@@ -534,7 +534,7 @@ public class UserServiceTest {
         user.setId(1);
         user.setPhone("4105551212");
         user.setFirstName("Jane");
-        user.setDataJoined(LocalDate.ofEpochDay(1L));
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setActiveStatus(true);
         user.setRole(userRole);
         when(this.userRepository.saveAndFlush((User) any())).thenReturn(user);
@@ -599,7 +599,7 @@ public class UserServiceTest {
         user.setId(1);
         user.setPhone("4105551212");
         user.setFirstName("Jane");
-        user.setDataJoined(LocalDate.ofEpochDay(1L));
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setActiveStatus(true);
         user.setRole(userRole);
         Optional<User> ofResult = Optional.<User>of(user);
@@ -628,7 +628,7 @@ public class UserServiceTest {
         user1.setId(1);
         user1.setPhone("4105551212");
         user1.setFirstName("Jane");
-        user1.setDataJoined(LocalDate.ofEpochDay(1L));
+        user1.setDateJoined(LocalDate.ofEpochDay(1L));
         user1.setActiveStatus(true);
         user1.setRole(userRole1);
         when(this.userRepository.saveAndFlush((User) any())).thenReturn(user1);
@@ -692,7 +692,7 @@ public class UserServiceTest {
         user.setId(1);
         user.setPhone("4105551212");
         user.setFirstName("Jane");
-        user.setDataJoined(LocalDate.ofEpochDay(1L));
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setActiveStatus(false);
         user.setRole(userRole);
         Optional<User> ofResult = Optional.<User>of(user);
@@ -721,7 +721,7 @@ public class UserServiceTest {
         user1.setId(1);
         user1.setPhone("4105551212");
         user1.setFirstName("Jane");
-        user1.setDataJoined(LocalDate.ofEpochDay(1L));
+        user1.setDateJoined(LocalDate.ofEpochDay(1L));
         user1.setActiveStatus(true);
         user1.setRole(userRole1);
         when(this.userRepository.saveAndFlush((User) any())).thenReturn(user1);
@@ -785,7 +785,7 @@ public class UserServiceTest {
         user.setId(1);
         user.setPhone("4105551212");
         user.setFirstName("Jane");
-        user.setDataJoined(LocalDate.ofEpochDay(1L));
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setActiveStatus(true);
         user.setRole(userRole);
         Optional<User> ofResult = Optional.<User>of(user);
@@ -814,7 +814,7 @@ public class UserServiceTest {
         user1.setId(1);
         user1.setPhone("4105551212");
         user1.setFirstName("Jane");
-        user1.setDataJoined(LocalDate.ofEpochDay(1L));
+        user1.setDateJoined(LocalDate.ofEpochDay(1L));
         user1.setActiveStatus(true);
         user1.setRole(userRole1);
         when(this.userRepository.saveAndFlush((User) any())).thenReturn(user1);
@@ -931,7 +931,7 @@ public class UserServiceTest {
         user.setId(1);
         user.setPhone("4105551212");
         user.setFirstName("Jane");
-        user.setDataJoined(LocalDate.ofEpochDay(1L));
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setActiveStatus(true);
         user.setRole(userRole1);
         when(this.modelMapper.map((Object) any(), (Class<Object>) any())).thenReturn(user);

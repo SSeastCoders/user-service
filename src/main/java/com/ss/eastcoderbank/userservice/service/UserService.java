@@ -1,6 +1,7 @@
 package com.ss.eastcoderbank.userservice.service;
 
 import com.ss.eastcoderbank.userservice.dto.RegistrationDto;
+import com.ss.eastcoderbank.userservice.dto.UpdateProfileDto;
 import com.ss.eastcoderbank.userservice.dto.UserDto;
 import com.ss.eastcoderbank.userservice.model.Address;
 import com.ss.eastcoderbank.userservice.model.Credential;
@@ -14,14 +15,12 @@ import com.ss.eastcoderbank.userservice.service.CustomExceptions.DuplicateUserna
 import com.ss.eastcoderbank.userservice.service.CustomExceptions.ExceptionMessages;
 
 import com.ss.eastcoderbank.userservice.service.constraints.DbConstraints;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +56,7 @@ public class UserService {
         User user = registrationToUser(registrationDto);
         UserRole role = userRoleRepository.findUserRoleByTitle("Customer").orElse(new UserRole("Customer"));
         user.setRole(role);
-        user.setDataJoined(LocalDate.now());
+        user.setDateJoined(LocalDate.now());
 
         // ADDED TO ENSURE LOGIN
         user.setActiveStatus(true);
@@ -73,13 +72,69 @@ public class UserService {
         }
     }
 
+    public Integer updateUser(UpdateProfileDto updateProfileDto, Integer id) {
+        if (updateProfileDto.getPassword() != null) {
+            updateProfileDto.setPassword(passwordEncoder.encode(updateProfileDto.getPassword()));
+        }
+        Optional<User> savedUser = userRepository.findById(id);
+
+        User convertedUser = updateDtoToUser(updateProfileDto);
+        User user = null;
+
+        if (savedUser.isPresent()) {
+            user = savedUser.get();
+
+            if (convertedUser.getFirstName() != null) {
+                user.setFirstName(convertedUser.getFirstName());
+            }
+            if (convertedUser.getLastName() != null ) {
+                user.setLastName(convertedUser.getLastName());
+            }
+            if (convertedUser.getAddress() != null ) {
+                user.setAddress(convertedUser.getAddress());
+            }
+            if (convertedUser.getCredential() != null ) {
+                user.getCredential().setPassword(convertedUser.getCredential().getPassword());
+            }
+            if (convertedUser.getDateJoined() != null ) {
+                user.setDateJoined(convertedUser.getDateJoined());
+            }
+            if (user.isActiveStatus() != convertedUser.isActiveStatus()) {
+                user.setActiveStatus(convertedUser.isActiveStatus());
+            }
+            if (convertedUser.getDob() != null ) {
+                user.setDob(convertedUser.getDob());
+            }
+
+            if (convertedUser.getEmail() != null ) {
+                user.setEmail(convertedUser.getEmail());
+            }
+            if (convertedUser.getPhone() != null ) {
+                user.setPhone(convertedUser.getPhone());
+            }
+            try {
+                userRepository.save(user);
+            } catch (DataIntegrityViolationException dive) {
+                Throwable thr = dive.getCause();
+                if (thr instanceof ConstraintViolationException) {
+                    handleUniqueConstraints(((ConstraintViolationException) thr).getConstraintName());
+                }
+                throw dive;
+            }
+
+        } else {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return user.getId();
+    }
+
     public List<User> getUsers() {
         return userRepository.findAll();
     }
 
-    //Hypotethical for hazel's authorize example
-    public User getUserByUsername(String id) {
-        return userRepository.findByCredentialUsername(id);
+
+    public User getUserById(Integer id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     public List<UserRole> getRoles() {
@@ -87,6 +142,7 @@ public class UserService {
     }
 
     protected User convertToEntity(UserDto userDto) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
         return modelMapper.map(userDto, User.class);
     }
 
@@ -116,7 +172,7 @@ public class UserService {
         UserRole role = userRoleRepository.findUserRoleByTitle("Administrator").orElse(new UserRole("Administrator"));
 
         user.setRole(role);
-        user.setDataJoined(LocalDate.now());
+        user.setDateJoined(LocalDate.now());
 
         String encodedPassword = passwordEncoder.encode(user.getCredential().getPassword());
         user.getCredential().setPassword(encodedPassword);
@@ -137,9 +193,14 @@ public class UserService {
         return user.getId();
     }
 
-    User userDTOToUser(UserDto userDTO) {
+    public User userDTOToUser(UserDto userDTO) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         return modelMapper.map(userDTO, User.class);
+    }
+
+    public User updateDtoToUser(UpdateProfileDto updateProfileDto) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+        return modelMapper.map(updateProfileDto, User.class);
     }
 
     protected void handleUniqueConstraints(String constraint) {
@@ -181,8 +242,8 @@ public class UserService {
             if(!user.getCredential().equals(userDTO.getCredential()) && userDTO.getCredential() != null){
                 user.setCredential(userDTO.getCredential());
             }
-            if(!user.getDataJoined().equals(userDTO.getDateJoined()) && userDTO.getDateJoined() != null){
-                user.setDataJoined(userDTO.getDateJoined());
+            if(!user.getDateJoined().equals(userDTO.getDateJoined()) && userDTO.getDateJoined() != null){
+                user.setDateJoined(userDTO.getDateJoined());
             }
             if(user.isActiveStatus() != userDTO.isActiveStatus()) {
                 user.setActiveStatus(userDTO.isActiveStatus());

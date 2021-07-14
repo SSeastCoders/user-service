@@ -49,7 +49,7 @@ public class User {
     private Address address;
 
     @Column(name = "date_joined")
-    private LocalDate dataJoined;
+    private LocalDate dateJoined;
 
     @Column(name = "active_status")
     private boolean activeStatus;

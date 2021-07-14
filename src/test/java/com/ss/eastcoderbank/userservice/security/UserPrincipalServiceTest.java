@@ -54,7 +54,7 @@ public class UserPrincipalServiceTest {
         user.setId(1);
         user.setPhone("4105551212");
         user.setFirstName("Jane");
-        user.setDataJoined(LocalDate.ofEpochDay(1L));
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setActiveStatus(true);
         user.setRole(userRole);
         when(this.userRepository.findByCredentialUsername(anyString())).thenReturn(user);

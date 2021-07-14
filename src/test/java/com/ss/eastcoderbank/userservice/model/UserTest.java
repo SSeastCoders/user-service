@@ -25,7 +25,7 @@ public class UserTest {
         credential.setUsername("janedoe");
         actualUser.setCredential(credential);
         LocalDate ofEpochDayResult = LocalDate.ofEpochDay(1L);
-        actualUser.setDataJoined(ofEpochDayResult);
+        actualUser.setDateJoined(ofEpochDayResult);
         LocalDate ofEpochDayResult1 = LocalDate.ofEpochDay(1L);
         actualUser.setDob(ofEpochDayResult1);
         actualUser.setEmail("jane.doe@example.org");
@@ -40,7 +40,7 @@ public class UserTest {
         actualUser.setRole(userRole);
         assertSame(address, actualUser.getAddress());
         assertSame(credential, actualUser.getCredential());
-        LocalDate dataJoined = actualUser.getDataJoined();
+        LocalDate dataJoined = actualUser.getDateJoined();
         assertSame(ofEpochDayResult, dataJoined);
         LocalDate dob = actualUser.getDob();
         assertEquals(dob, dataJoined);
