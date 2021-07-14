@@ -14,7 +14,7 @@ import javax.persistence.Embeddable;
 @ToString
 public class Credential {
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(nullable = false, length = 50)
     public String username;
     @Column(nullable = false, length = 250)
     public String password;

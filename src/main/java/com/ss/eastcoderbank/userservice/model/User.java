@@ -18,8 +18,7 @@ import java.time.LocalDate;
 @Table(uniqueConstraints = {
         @UniqueConstraint(name = DbConstraints.EMAILANDUSERNAME, columnNames = {"email", "username"}),
         @UniqueConstraint(name = DbConstraints.EMAIL, columnNames = {"email"}),
-        @UniqueConstraint(name = DbConstraints.USERNAME, columnNames = {"username"}),
-
+        @UniqueConstraint(name = DbConstraints.USERNAME, columnNames = {"username"})
 })
 public class User {
 
