@@ -67,19 +67,19 @@ public class UserControllerTest {
     }
     @Test
     public void testGetAllUsers() throws Exception {
-        when(this.userService.getAllUsers()).thenReturn(new ArrayList<User>());
+        when(this.userService.getUsers()).thenReturn(new ArrayList<User>());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/admin/users");
         MockMvcBuilders.standaloneSetup(this.userController)
                 .build()
                 .perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(content().string("[]"));
     }
 
     @Test
     public void testGetAllUsers2() throws Exception {
-        when(this.userService.getAllUsers()).thenReturn(new ArrayList<User>());
+        when(this.userService.getUsers()).thenReturn(new ArrayList<User>());
         MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/admin/users");
 
         getResult.contentType("Not all who wander are lost");

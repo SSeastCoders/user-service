@@ -15,6 +15,7 @@ import com.ss.eastcoderbank.userservice.service.CustomExceptions.ExceptionMessag
 
 import com.ss.eastcoderbank.userservice.service.constraints.DbConstraints;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
@@ -32,7 +33,6 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-@AllArgsConstructor
 public class UserService {
     private final PasswordEncoder passwordEncoder;
     @Autowired
