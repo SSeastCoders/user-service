@@ -310,46 +310,6 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testHandleUniqueConstraints4() throws DuplicateConstraintsException {
-        assertThrows(DuplicateUsernameException.class,
-                () -> this.userService.handleUniqueConstraints("usernameconstraint"));
-
-
-        Credential credential1 = new Credential();
-        credential1.setPassword("iloveyou");
-        credential1.setUsername("janedoe");
-
-        Address address1 = new Address();
-        address1.setZip(1);
-        address1.setCity("Oxford");
-        address1.setStreetAddress("42 Main St");
-        address1.setState("MD");
-
-        UserRole userRole2 = new UserRole();
-        userRole2.setUsers(new HashSet<User>());
-        userRole2.setId(1);
-        userRole2.setTitle("Dr");
-
-        UserDto userDTO = new UserDto();
-        userDTO.setLastName("Doe");
-        userDTO.setCredential(credential1);
-        userDTO.setEmail("jane.doe@example.org");
-        userDTO.setAddress(address1);
-        userDTO.setDob(LocalDate.ofEpochDay(1L));
-        userDTO.setId(1);
-        userDTO.setPhone("4105551212");
-        userDTO.setFirstName("Jane");
-        userDTO.setDateJoined(LocalDate.ofEpochDay(1L));
-        userDTO.setActiveStatus(true);
-        userDTO.setRole(userRole2);
-        assertThrows(DataIntegrityViolationException.class, () -> this.userService.manuallyCreateUser(userDTO));
-        verify(this.userRoleRepository).findUserRoleByTitle(anyString());
-        verify(this.userRepository).saveAndFlush((User) any());
-        verify(this.modelMapper).getConfiguration();
-        verify(this.modelMapper).map((Object) any(), (Class<Object>) any());
-    }
-
-    @Test
     public void testUserDTOToUser() {
         when(this.modelMapper.map((Object) any(), (Class<Object>) any()))
                 .thenThrow(new DuplicateUsernameException("An error occurred"));

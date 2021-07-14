@@ -1,5 +1,6 @@
 package com.ss.eastcoderbank.userservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.*;
@@ -30,7 +31,7 @@ public class UserRole {
         this.title = title;
     }
 
-    @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "role", orphanRemoval = true)
     private Set<User> users = new HashSet<>();
 
