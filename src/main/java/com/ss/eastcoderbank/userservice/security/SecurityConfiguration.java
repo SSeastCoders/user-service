@@ -70,8 +70,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        int strength = 10;
-        return new BCryptPasswordEncoder(strength, new SecureRandom());
+        //int strength = 10;
+        return new BCryptPasswordEncoder();//strength, new SecureRandom());
     }
 
 }

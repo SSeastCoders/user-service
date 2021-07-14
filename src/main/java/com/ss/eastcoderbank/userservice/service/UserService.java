@@ -34,16 +34,17 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class UserService {
-    private final PasswordEncoder passwordEncoder;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    UserRoleRepository userRoleRepository;
-    @Autowired
-    ModelMapper modelMapper;
 
-    public UserService(PasswordEncoder passwordEncoder) {
+    private UserRepository userRepository;
+    private UserRoleRepository userRoleRepository;
+    private PasswordEncoder passwordEncoder;
+    private ModelMapper modelMapper;
+
+    public UserService(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
+        this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.modelMapper = modelMapper;
     }
 
     public List<User> getAllAdmins() {
@@ -51,12 +52,15 @@ public class UserService {
     }
 
     public Integer userRegistration(RegistrationDto registrationDto) throws DuplicateConstraintsException {
-        String password = passwordEncoder.encode(registrationDto.getPassword());
-        registrationDto.setPassword(password);
+        //credCust.setPassword(passwordEncoder.encode("customer"));
+        registrationDto.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
         User user = registrationToUser(registrationDto);
-        UserRole role = userRoleRepository.findUserRoleByTitle("customer").orElse(new UserRole("customer"));
+        UserRole role = userRoleRepository.findUserRoleByTitle("Customer").orElse(new UserRole("Customer"));
         user.setRole(role);
         user.setDataJoined(LocalDate.now());
+
+        // ADDED TO ENSURE LOGIN
+        user.setActiveStatus(true);
         try {
             userRepository.save(user);
             return user.getId();
@@ -109,13 +113,16 @@ public class UserService {
         credential.setPassword(userDTO.getCredential().getPassword());
         user.setCredential(credential);
 
-        UserRole role = userRoleRepository.findUserRoleByTitle("administrator").orElse(new UserRole("administrator"));
+        UserRole role = userRoleRepository.findUserRoleByTitle("Administrator").orElse(new UserRole("Administrator"));
 
         user.setRole(role);
         user.setDataJoined(LocalDate.now());
 
         String encodedPassword = passwordEncoder.encode(user.getCredential().getPassword());
         user.getCredential().setPassword(encodedPassword);
+
+        // ADDED TO ENSURE LOGIN
+        user.setActiveStatus(true);
 
         try {
             userRepository.save(user);
