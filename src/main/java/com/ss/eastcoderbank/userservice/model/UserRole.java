@@ -23,7 +23,6 @@ public class UserRole {
     @Id
     private Integer id;
 
-
     @Column(nullable = false, unique = true, length = 20) // title must be unique
     private String title;
 
@@ -34,7 +33,5 @@ public class UserRole {
     @JsonIgnore
     @OneToMany(mappedBy = "role", orphanRemoval = true)
     private Set<User> users = new HashSet<>();
-
-
 
 }

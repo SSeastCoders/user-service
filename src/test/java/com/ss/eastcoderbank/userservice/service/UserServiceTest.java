@@ -71,7 +71,7 @@ public class UserServiceTest {
     public void testGetAllUsers() {
         ArrayList<User> userList = new ArrayList<User>();
         when(this.userRepository.findAll()).thenReturn(userList);
-        List<User> actualAllUsers = this.userService.getAllUsers();
+        List<User> actualAllUsers = this.userService.getUsers();
         assertSame(userList, actualAllUsers);
         assertTrue(actualAllUsers.isEmpty());
         verify(this.userRepository).findAll();
@@ -86,7 +86,7 @@ public class UserServiceTest {
         assertSame(userList, actualAllAdmins);
         assertTrue(actualAllAdmins.isEmpty());
         verify(this.userRepository).findUserByRoleId((Integer) any());
-        assertTrue(this.userService.getAllUsers().isEmpty());
+        assertTrue(this.userService.getUsers().isEmpty());
     }
 
 

@@ -15,6 +15,7 @@ import com.ss.eastcoderbank.userservice.service.CustomExceptions.ExceptionMessag
 
 import com.ss.eastcoderbank.userservice.service.constraints.DbConstraints;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
@@ -30,121 +31,128 @@ import java.util.Optional;
 
 //import javax.validation.ConstraintViolationException;
 
-        @Service
-        @Slf4j
-        @AllArgsConstructor
-        public class UserService {
+@Service
+@Slf4j
+public class UserService {
 
-            @Autowired
-            private final UserRepository userRepository;
-            @Autowired
-            private final UserRoleRepository userRoleRepository;
-            @Autowired
-            private final PasswordEncoder passwordEncoder;
-            @Autowired
-            private final ModelMapper modelMapper;
+    private UserRepository userRepository;
+    private UserRoleRepository userRoleRepository;
+    private PasswordEncoder passwordEncoder;
+    private ModelMapper modelMapper;
 
-            public List<User> getAllUsers() {
-                return userRepository.findAll();
+    public UserService(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
+        this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.modelMapper = modelMapper;
+    }
+
+    public List<User> getAllAdmins() {
+        return userRepository.findUserByRoleId(1);
+    }
+
+    public Integer userRegistration(RegistrationDto registrationDto) throws DuplicateConstraintsException {
+        //credCust.setPassword(passwordEncoder.encode("customer"));
+        registrationDto.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
+        User user = registrationToUser(registrationDto);
+        UserRole role = userRoleRepository.findUserRoleByTitle("Customer").orElse(new UserRole("Customer"));
+        user.setRole(role);
+        user.setDataJoined(LocalDate.now());
+
+        // ADDED TO ENSURE LOGIN
+        user.setActiveStatus(true);
+        try {
+            userRepository.save(user);
+            return user.getId();
+        } catch (DataIntegrityViolationException e) {
+            Throwable t = e.getCause();
+            if (t instanceof ConstraintViolationException) {
+                handleUniqueConstraints(((ConstraintViolationException) t).getConstraintName());
             }
+            throw e; // something went wrong.
+        }
+    }
 
-            public List<User> getAllAdmins() {
-                return userRepository.findUserByRoleId(1);
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
+
+    //Hypotethical for hazel's authorize example
+    public User getUserByUsername(String id) {
+        return userRepository.findByCredentialUsername(id);
+    }
+
+    public List<UserRole> getRoles() {
+        return userRoleRepository.findAll();
+    }
+
+    protected User convertToEntity(UserDto userDto) {
+        return modelMapper.map(userDto, User.class);
+    }
+
+    //Needs to be tested
+    protected User registrationToUser(RegistrationDto registrationDto) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+        User user = modelMapper.map(registrationDto, User.class);
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
+        return user;
+    }
+    public Integer manuallyCreateUser(UserDto userDTO) {
+
+        User user = userDTOToUser(userDTO);
+        //        sets user's address
+        Address address = new Address();
+        address.setStreetAddress(userDTO.getAddress().getStreetAddress());
+        address.setCity(userDTO.getAddress().getCity());
+        address.setState(userDTO.getAddress().getState());
+        address.setZip(userDTO.getAddress().getZip());
+        user.setAddress(address);
+        //        sets user's credential
+        Credential credential = new Credential();
+        credential.setUsername(userDTO.getCredential().getUsername());
+        credential.setPassword(userDTO.getCredential().getPassword());
+        user.setCredential(credential);
+
+        UserRole role = userRoleRepository.findUserRoleByTitle("Administrator").orElse(new UserRole("Administrator"));
+
+        user.setRole(role);
+        user.setDataJoined(LocalDate.now());
+
+        String encodedPassword = passwordEncoder.encode(user.getCredential().getPassword());
+        user.getCredential().setPassword(encodedPassword);
+
+        // ADDED TO ENSURE LOGIN
+        user.setActiveStatus(true);
+
+        try {
+            userRepository.save(user);
+        } catch (DataIntegrityViolationException dive) {
+            log.error(dive.getMessage());
+            Throwable thr = dive.getCause();
+            if (thr instanceof ConstraintViolationException) {
+                handleUniqueConstraints(((ConstraintViolationException) thr).getConstraintName());
             }
+            throw dive;
+        }
+        return user.getId();
+    }
 
-            public Integer userRegistration(RegistrationDto registrationDto) throws DuplicateConstraintsException {
-                String password = passwordEncoder.encode(registrationDto.getPassword());
-                registrationDto.setPassword(password);
-                User user = registrationToUser(registrationDto);
-                UserRole role = userRoleRepository.findUserRoleByTitle("customer").orElse(new UserRole("customer"));
-                user.setRole(role);
-                user.setDataJoined(LocalDate.now());
-                try {
-                    userRepository.save(user);
-                    return user.getId();
-                } catch (DataIntegrityViolationException e) {
-                    Throwable t = e.getCause();
-                    if (t instanceof ConstraintViolationException) {
-                        handleUniqueConstraints(((ConstraintViolationException) t).getConstraintName());
-                    }
-                    throw e; // smothing went wrong.
-                }
-            }
+    User userDTOToUser(UserDto userDTO) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        return modelMapper.map(userDTO, User.class);
+    }
 
+    protected void handleUniqueConstraints(String constraint) {
 
+        String constraintLower = constraint.toLowerCase();
+        if (constraintLower.contains(DbConstraints.EMAILANDUSERNAME))
+            throw new DuplicateConstraintsException(ExceptionMessages.USERNAMEANDEMAIL);
+        else if (constraintLower.contains(DbConstraints.EMAIL))
+            throw new DuplicateEmailException(ExceptionMessages.EMAIL);
+        else if (constraintLower.contains(DbConstraints.USERNAME))
+            throw new DuplicateUsernameException(ExceptionMessages.USERNAME);
 
-            public List<User> getUsers() {
-                return userRepository.findAll();
-            }
-
-            public List<UserRole> getRoles() {
-                return userRoleRepository.findAll();
-            }
-
-            protected User convertToEntity(UserDto userDto) {
-                return modelMapper.map(userDto, User.class);
-            }
-
-            //Needs to be tested
-            protected User registrationToUser(RegistrationDto registrationDto) {
-                modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
-                User user = modelMapper.map(registrationDto, User.class);
-                modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
-                return user;
-            }
-            public Integer manuallyCreateUser(UserDto userDTO) {
-
-                User user = userDTOToUser(userDTO);
-                //        sets user's address
-                Address address = new Address();
-                address.setStreetAddress(userDTO.getAddress().getStreetAddress());
-                address.setCity(userDTO.getAddress().getCity());
-                address.setState(userDTO.getAddress().getState());
-                address.setZip(userDTO.getAddress().getZip());
-                user.setAddress(address);
-                //        sets user's credential
-                Credential credential = new Credential();
-                credential.setUsername(userDTO.getCredential().getUsername());
-                credential.setPassword(userDTO.getCredential().getPassword());
-                user.setCredential(credential);
-
-                UserRole role = userRoleRepository.findUserRoleByTitle("administrator").orElse(new UserRole("administrator"));
-
-                user.setRole(role);
-                user.setDataJoined(LocalDate.now());
-
-                String encodedPassword = passwordEncoder.encode(user.getCredential().getPassword());
-                user.getCredential().setPassword(encodedPassword);
-
-                try {
-                    userRepository.saveAndFlush(user);
-                } catch (DataIntegrityViolationException dive) {
-                    log.error(dive.getMessage());
-                    Throwable thr = dive.getCause();
-                    if (thr instanceof ConstraintViolationException) {
-                        handleUniqueConstraints(((ConstraintViolationException) thr).getConstraintName());
-                    }
-                    throw dive;
-                }
-                return user.getId();
-            }
-
-            User userDTOToUser(UserDto userDTO) {
-                modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-                return modelMapper.map(userDTO, User.class);
-            }
-
-            protected void handleUniqueConstraints(String constraint) {
-
-                String constraintLower = constraint.toLowerCase();
-                if (constraintLower.contains(DbConstraints.EMAILANDUSERNAME))
-                    throw new DuplicateConstraintsException(ExceptionMessages.USERNAMEANDEMAIL);
-                else if (constraintLower.contains(DbConstraints.EMAIL))
-                    throw new DuplicateEmailException(ExceptionMessages.EMAIL);
-                else if (constraintLower.contains(DbConstraints.USERNAME))
-                    throw new DuplicateUsernameException(ExceptionMessages.USERNAME);
-
-            }
+    }
 
 
 
