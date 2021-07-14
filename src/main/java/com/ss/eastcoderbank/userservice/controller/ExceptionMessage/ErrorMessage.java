@@ -10,4 +10,8 @@ import lombok.Setter;
 public class ErrorMessage {
     private String status;
     private String message;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> ECB-66-feature/deleteUser

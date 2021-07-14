@@ -13,10 +13,12 @@ import javax.persistence.Embeddable;
 @Getter
 @ToString
 public class Credential {
-    @Column(nullable = false, length = 20)
-    private String username;
 
-    @Column(nullable = false, length = 20)
-    private String password;
+    @Column(nullable = false, unique = true, length = 50)
+    public String username;
+    @Column(nullable = false, length = 250)
+    public String password;
+
+
 
 }

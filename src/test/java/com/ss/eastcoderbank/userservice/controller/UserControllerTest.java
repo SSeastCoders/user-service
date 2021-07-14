@@ -1,10 +1,5 @@
 package com.ss.eastcoderbank.userservice.controller;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasKey;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ss.eastcoderbank.userservice.controller.ExceptionMessage.ErrorMessage;
@@ -15,9 +10,6 @@ import com.ss.eastcoderbank.userservice.service.CustomExceptions.DuplicateEmailE
 import com.ss.eastcoderbank.userservice.service.CustomExceptions.DuplicateUsernameException;
 import com.ss.eastcoderbank.userservice.service.CustomExceptions.ExceptionMessages;
 import com.ss.eastcoderbank.userservice.service.UserService;
-
-import java.util.ArrayList;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +27,28 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.ArrayList;
+
+import static org.hamcrest.Matchers.hasKey;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+
 @SpringBootTest()
 @AutoConfigureMockMvc
+
+@ContextConfiguration(classes = {UserController.class})
+@ExtendWith(SpringExtension.class)
+
 public class UserControllerTest {
     @Autowired
     private UserController userController;
 
     @MockBean
     private UserService userService;
+
 
     @Autowired
     private MockMvc mockMvc;
@@ -63,10 +69,29 @@ public class UserControllerTest {
     public void testGetUsers2() throws Exception {
         when(this.userService.getUsers()).thenReturn(new ArrayList<User>());
         MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/user");
+    }
+    @Test
+    public void testGetAllUsers() throws Exception {
+        when(this.userService.getAllUsers()).thenReturn(new ArrayList<User>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/admin/users");
+        MockMvcBuilders.standaloneSetup(this.userController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
+    }
+
+    @Test
+    public void testGetAllUsers2() throws Exception {
+        when(this.userService.getAllUsers()).thenReturn(new ArrayList<User>());
+        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/admin/users");
+
         getResult.contentType("Not all who wander are lost");
         MockMvcBuilders.standaloneSetup(this.userController)
                 .build()
                 .perform(getResult)
+
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(content().string("[]"));
@@ -190,7 +215,24 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(contentShortPassword))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$").value(hasKey("password")));
+                .andExpect(jsonPath("$").value(hasKey("password")))
+
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
+    }
+
+    @Test
+    public void testGetAllAdmins() throws Exception {
+        when(this.userService.getAllAdmins()).thenReturn(new ArrayList<User>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/admin/administrators");
+        MockMvcBuilders.standaloneSetup(this.userController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
+
     }
 }
 
