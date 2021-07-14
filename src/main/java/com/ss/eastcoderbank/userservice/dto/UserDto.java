@@ -1,6 +1,5 @@
 package com.ss.eastcoderbank.userservice.dto;
 
-
 import com.ss.eastcoderbank.userservice.model.Address;
 import com.ss.eastcoderbank.userservice.model.Credential;
 import com.ss.eastcoderbank.userservice.model.UserRole;
@@ -17,13 +16,13 @@ public class UserDto {
 
     private UserRole role;
 
-    private String firstname;
+    private String firstName;
 
-    private String lastname;
+    private String lastName;
 
     private LocalDate dob;
 
-    @Email
+    @Email(regexp="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+[.][a-zA-Z]{2,4}$", message="Please provide a valid email address")
     private String email;
 
     private String phone;

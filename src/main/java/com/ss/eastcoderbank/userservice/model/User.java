@@ -1,24 +1,25 @@
 package com.ss.eastcoderbank.userservice.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.ss.eastcoderbank.userservice.service.constraints.Constraints;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+
+import com.ss.eastcoderbank.userservice.service.constraints.DbConstraints;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 @Setter
 @ToString
 @Table(uniqueConstraints = {
-        @UniqueConstraint(name = Constraints.EMAILANDUSERNAME, columnNames = {"email", "username"}),
-        @UniqueConstraint(name = Constraints.EMAIL, columnNames = {"email"}),
-        @UniqueConstraint(name = Constraints.USERNAME, columnNames = {"username"}),
+        @UniqueConstraint(name = DbConstraints.EMAILANDUSERNAME, columnNames = {"email", "username"}),
+        @UniqueConstraint(name = DbConstraints.EMAIL, columnNames = {"email"}),
+        @UniqueConstraint(name = DbConstraints.USERNAME, columnNames = {"username"}),
+
 })
 public class User {
 
