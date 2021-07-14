@@ -19,6 +19,7 @@ import org.modelmapper.internal.InheritingConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -38,8 +39,8 @@ public class UserServiceTest {
 
 
 
-    @MockBean
 
+    @MockBean
     private ModelMapper modelMapper;
 
     @MockBean
@@ -50,6 +51,9 @@ public class UserServiceTest {
 
     @Autowired
     private UserService userService;
+
+    @MockBean
+    private PasswordEncoder passwordEncoder;
 
     @Test
 
@@ -213,44 +217,6 @@ public class UserServiceTest {
         assertTrue(this.userService.getUsers().isEmpty());
     }
 
-    @Test
-    public void testUserRegistration3() throws DuplicateConstraintsException {
-
-
-        Credential credential2 = new Credential();
-        credential2.setPassword("iloveyou");
-        credential2.setUsername("janedoe");
-
-        Address address2 = new Address();
-        address2.setZip(1);
-        address2.setCity("Oxford");
-        address2.setStreetAddress("42 Main St");
-        address2.setState("MD");
-
-        UserRole userRole3 = new UserRole();
-        userRole3.setUsers(new HashSet<User>());
-        userRole3.setId(1);
-        userRole3.setTitle("Dr");
-
-        UserDto userDTO = new UserDto();
-        userDTO.setLastName("Doe");
-        userDTO.setCredential(credential2);
-        userDTO.setEmail("jane.doe@example.org");
-        userDTO.setAddress(address2);
-        userDTO.setDob(LocalDate.ofEpochDay(1L));
-        userDTO.setId(1);
-        userDTO.setPhone("4105551212");
-        userDTO.setFirstName("Jane");
-        userDTO.setDateJoined(LocalDate.ofEpochDay(1L));
-        userDTO.setActiveStatus(true);
-        userDTO.setRole(userRole3);
-        assertEquals(1, this.userService.manuallyCreateUser(userDTO).intValue());
-        verify(this.userRoleRepository).findUserRoleByTitle(anyString());
-        verify(this.userRepository).saveAndFlush((User) any());
-        verify(this.modelMapper).getConfiguration();
-        verify(this.modelMapper).map((Object) any(), (Class<Object>) any());
-
-    }
 
     @Test
     public void testManuallyCreateUser3() {

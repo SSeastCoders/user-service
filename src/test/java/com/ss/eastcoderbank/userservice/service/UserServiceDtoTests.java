@@ -6,22 +6,15 @@ import com.ss.eastcoderbank.userservice.model.Address;
 import com.ss.eastcoderbank.userservice.model.Credential;
 import com.ss.eastcoderbank.userservice.model.User;
 import com.ss.eastcoderbank.userservice.model.UserRole;
-import com.ss.eastcoderbank.userservice.repository.UserRepository;
-import com.ss.eastcoderbank.userservice.service.UserService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class UserServiceDtoTests {
@@ -58,8 +51,8 @@ class UserServiceDtoTests {
         userDto.setDob(LocalDate.ofEpochDay(1L));
         userDto.setId(1);
         userDto.setPhone("4105551212");
-        userDto.setFirstname("Jane");
-        userDto.setLastname("Doe");
+        userDto.setFirstName("Jane");
+        userDto.setLastName("Doe");
         userDto.setDateJoined(LocalDate.ofEpochDay(1L));
         userDto.setActiveStatus(true);
         userDto.setRole(userRole);
@@ -100,8 +93,8 @@ class UserServiceDtoTests {
         userDto.setDob(LocalDate.ofEpochDay(1L));
         userDto.setId(1);
         userDto.setPhone("4105551212");
-        userDto.setFirstname("Jane");
-        userDto.setLastname("Doe");
+        userDto.setFirstName("Jane");
+        userDto.setLastName("Doe");
         userDto.setDateJoined(LocalDate.ofEpochDay(1L));
         userDto.setActiveStatus(true);
         userDto.setRole(userRole);
@@ -142,8 +135,8 @@ class UserServiceDtoTests {
         userDto.setDob(LocalDate.ofEpochDay(1L));
         userDto.setId(1);
         userDto.setPhone("4105551212");
-        userDto.setFirstname("Jane");
-        userDto.setLastname("Doe");
+        userDto.setFirstName("Jane");
+        userDto.setLastName("Doe");
         userDto.setDateJoined(LocalDate.ofEpochDay(1L));
         userDto.setActiveStatus(true);
         userDto.setRole(userRole);
@@ -184,8 +177,8 @@ class UserServiceDtoTests {
         userDto.setDob(null);
         userDto.setId(1);
         userDto.setPhone("4105551212");
-        userDto.setFirstname("Jane");
-        userDto.setLastname("Doe");
+        userDto.setFirstName("Jane");
+        userDto.setLastName("Doe");
         userDto.setDateJoined(LocalDate.ofEpochDay(1L));
         userDto.setActiveStatus(true);
         userDto.setRole(userRole);
