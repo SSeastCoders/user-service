@@ -35,13 +35,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
-@SpringBootTest()
-@AutoConfigureMockMvc
-
-@ContextConfiguration(classes = {UserController.class})
-@ExtendWith(SpringExtension.class)
-
+@SpringBootTest
+@AutoConfigureMockMvc(addFilters = false)
 public class UserControllerTest {
     @Autowired
     private UserController userController;
@@ -215,11 +210,7 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(contentShortPassword))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$").value(hasKey("password")))
-
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
+                .andExpect(jsonPath("$").value(hasKey("password")));
     }
 
     @Test
