@@ -195,7 +195,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$").value(hasKey("username")));
 
         // username pattern contains a non Alphanumeric symbol
-        RegistrationDto badUserNameSymbol = new RegistrationDto("gegr&&&", "password", "ss@gmail.com");
+        RegistrationDto badUserNameSymbol = new RegistrationDto("gegr&&&", "password", "ss@gmail.com", null);
         String contentBadUsernameSymbol = map.writeValueAsString(badUserNameSymbol);
         mockMvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -204,7 +204,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$").value(hasKey("username")));
 
         // short password test bad request
-        RegistrationDto passwordShort = new RegistrationDto("johnny", "hge", "ss@gmail.com");
+        RegistrationDto passwordShort = new RegistrationDto("johnny", "hge", "ss@gmail.com", null);
         String contentShortPassword = map.writeValueAsString(passwordShort);
         mockMvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON)

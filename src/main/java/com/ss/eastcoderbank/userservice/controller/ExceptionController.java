@@ -10,6 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +32,19 @@ public class ExceptionController {
         exception.getFieldErrors().forEach(fieldError -> {
             String fieldName = fieldError.getField();
             String errorMessage = fieldError.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        logger.info(errors.toString());
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Map<String, String>> constraintValidation(ConstraintViolationException exception) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("status", HttpStatus.BAD_REQUEST.toString());
+        exception.getConstraintViolations().forEach(fieldError -> {
+            String fieldName = fieldError.getPropertyPath().toString();
+            String errorMessage = fieldError.getMessage();
             errors.put(fieldName, errorMessage);
         });
         logger.info(errors.toString());

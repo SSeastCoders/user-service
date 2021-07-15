@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ss.eastcoderbank.userservice.dto.LoginDto;
 import com.ss.eastcoderbank.userservice.model.User;
 import com.ss.eastcoderbank.userservice.repository.UserRepository;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -79,15 +77,5 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // Add token in response
         response.addHeader(JwtUtil.JWT_UTIL.getHeader(), JwtUtil.JWT_UTIL.getTokenPrefix() + token);
-    }
-
-    //rename exception hazel
-    public Optional<User> parseJWTToken(String jwtToken) {
-
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret.getBytes())
-                .parseClaimsJws(jwtToken).getBody();
-
-        return userRepository.findById(Integer.valueOf(claims.getSubject()));
     }
 }

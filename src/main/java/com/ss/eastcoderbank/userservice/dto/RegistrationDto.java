@@ -1,6 +1,7 @@
 package com.ss.eastcoderbank.userservice.dto;
 
 import com.ss.eastcoderbank.userservice.model.Credential;
+import com.ss.eastcoderbank.userservice.validation.annotation.ValidPhoneNumber;
 import lombok.*;
 
 import javax.validation.constraints.*;
@@ -23,4 +24,7 @@ public class RegistrationDto {
     @Email(message = "not a valid email")
     @NotNull(message = "email must be entered")
     private String email;
+
+    @ValidPhoneNumber
+    private String phone;
 }
