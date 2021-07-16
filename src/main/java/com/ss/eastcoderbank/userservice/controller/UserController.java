@@ -63,7 +63,7 @@ public class UserController {
         return userService.getRoles();
     }
 
-    @PreAuthorize("hasAuthority('Admin')")
+    @PreAuthorize("principal == #id or hasAuthority('Admin')")
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping(path = "/users/{id}")
     public ResponseEntity<String> deactivateUser(@PathVariable Integer id) {
