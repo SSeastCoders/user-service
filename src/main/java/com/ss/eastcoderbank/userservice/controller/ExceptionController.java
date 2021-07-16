@@ -1,24 +1,26 @@
 package com.ss.eastcoderbank.userservice.controller;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.ss.eastcoderbank.userservice.model.User;
 import com.ss.eastcoderbank.userservice.service.CustomExceptions.DuplicateConstraintsException;
 import com.ss.eastcoderbank.userservice.controller.ExceptionMessage.ErrorMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
+import com.ss.eastcoderbank.userservice.service.CustomExceptions.UserNotFoundException;
 
+@Slf4j
 @ControllerAdvice
 public class ExceptionController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ExceptionController.class);
 
     @ExceptionHandler(DuplicateConstraintsException.class)
     public ResponseEntity<ErrorMessage> duplicateConstraints(DuplicateConstraintsException exception) {
@@ -34,7 +36,7 @@ public class ExceptionController {
             String errorMessage = fieldError.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        logger.info(errors.toString());
+        log.info(errors.toString());
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
@@ -47,8 +49,23 @@ public class ExceptionController {
             String errorMessage = fieldError.getMessage();
             errors.put(fieldName, errorMessage);
         });
-        logger.info(errors.toString());
+        log.info(errors.toString());
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorMessage> forbidden(AccessDeniedException exception) {
+        return new ResponseEntity<>(new ErrorMessage(HttpStatus.FORBIDDEN.toString(), exception.getMessage()), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(JsonParseException.class)
+    public ResponseEntity<ErrorMessage> jsonParseFailure(JsonParseException exception) {
+        return new ResponseEntity<>(new ErrorMessage(HttpStatus.BAD_REQUEST.toString(), "Not valid json. " +  exception.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorMessage> noUserFound(UserNotFoundException exception) {
+        return new ResponseEntity<>(new ErrorMessage(HttpStatus.NOT_FOUND.toString(), exception.getMessage()), HttpStatus.NOT_FOUND);
     }
 
 }

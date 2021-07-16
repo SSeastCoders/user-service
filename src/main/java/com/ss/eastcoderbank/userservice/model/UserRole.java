@@ -15,7 +15,8 @@ import java.util.Set;
 @Getter
 @EqualsAndHashCode
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class UserRole {
 
@@ -31,7 +32,7 @@ public class UserRole {
     }
 
     @JsonIgnore
-    @OneToMany(mappedBy = "role", orphanRemoval = true)
+    @OneToMany(mappedBy = "role", orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
 }

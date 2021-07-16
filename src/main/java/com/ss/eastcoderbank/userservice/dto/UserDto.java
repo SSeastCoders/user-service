@@ -14,7 +14,6 @@ import java.time.LocalDate;
 public class UserDto {
     private Integer id;
 
-    @NotBlank(message = "must have a role")
     private UserRole role;
 
     private String firstName;
@@ -23,12 +22,9 @@ public class UserDto {
 
     private LocalDate dob;
 
-    @Email(regexp="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+[.][a-zA-Z]{2,4}$", message="Please provide a valid email address")
-    @NotNull(message = "email must be entered")
     private String email;
 
 
-    @Size(min = 12, max = 12, message = "Please provide a 10 digit phone number")
     private String phone;
 
     private Address address;
@@ -37,5 +33,5 @@ public class UserDto {
 
     private boolean activeStatus;
 
-    private Credential credential;
+    private String username;
 }
