@@ -1,18 +1,13 @@
 package com.ss.eastcoderbank.userservice.service;
 
-import com.ss.eastcoderbank.userservice.dto.RegistrationDto;
+import com.ss.eastcoderbank.userservice.dto.CreateUserDto;
 import com.ss.eastcoderbank.userservice.dto.UpdateProfileDto;
 import com.ss.eastcoderbank.userservice.dto.UserDto;
-import com.ss.eastcoderbank.userservice.model.Address;
-import com.ss.eastcoderbank.userservice.model.Credential;
 import com.ss.eastcoderbank.userservice.model.User;
 import com.ss.eastcoderbank.userservice.model.UserRole;
 import com.ss.eastcoderbank.userservice.repository.UserRepository;
 import com.ss.eastcoderbank.userservice.repository.UserRoleRepository;
-import com.ss.eastcoderbank.userservice.service.CustomExceptions.DuplicateConstraintsException;
-import com.ss.eastcoderbank.userservice.service.CustomExceptions.DuplicateEmailException;
-import com.ss.eastcoderbank.userservice.service.CustomExceptions.DuplicateUsernameException;
-import com.ss.eastcoderbank.userservice.service.CustomExceptions.ExceptionMessages;
+import com.ss.eastcoderbank.userservice.service.CustomExceptions.*;
 
 import com.ss.eastcoderbank.userservice.service.constraints.DbConstraints;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +18,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 //import javax.validation.ConstraintViolationException;
 
@@ -37,24 +36,22 @@ public class UserService {
     private UserRepository userRepository;
     private UserRoleRepository userRoleRepository;
     private PasswordEncoder passwordEncoder;
-    private ModelMapper modelMapper;
 
-    public UserService(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
+    public UserService(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.modelMapper = modelMapper;
     }
 
-    public List<User> getAllAdmins() {
-        return userRepository.findUserByRoleId(1);
+    public List<UserDto> getUsersByRole(String title) {
+        List<User> users = userRepository.findUserByRoleTitle(title);
+        return users.stream().map(this::userEntityToDto).collect(Collectors.toList());
     }
 
-    public Integer userRegistration(RegistrationDto registrationDto) throws DuplicateConstraintsException {
-        //credCust.setPassword(passwordEncoder.encode("customer"));
-        registrationDto.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
-        User user = registrationToUser(registrationDto);
-        UserRole role = userRoleRepository.findUserRoleByTitle("Customer").orElse(new UserRole("Customer"));
+    public Integer createUser(CreateUserDto createUserDto) throws DuplicateConstraintsException {
+        createUserDto.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
+        User user = createDtoToUser(createUserDto);
+        UserRole role = userRoleRepository.findUserRoleByTitle(createUserDto.getRole()).orElse(userRoleRepository.getById(2));
         user.setRole(role);
         user.setDateJoined(LocalDate.now());
 
@@ -72,69 +69,69 @@ public class UserService {
         }
     }
 
+
+    // TODO implement proper transaction as there are multiple reads
+    @Transactional(propagation = Propagation.NESTED, isolation = Isolation.READ_COMMITTED)
     public Integer updateUser(UpdateProfileDto updateProfileDto, Integer id) {
         if (updateProfileDto.getPassword() != null) {
             updateProfileDto.setPassword(passwordEncoder.encode(updateProfileDto.getPassword()));
         }
         Optional<User> savedUser = userRepository.findById(id);
 
+        User user = savedUser.orElseThrow(UserNotFoundException::new);
         User convertedUser = updateDtoToUser(updateProfileDto);
-        User user = null;
 
-        if (savedUser.isPresent()) {
-            user = savedUser.get();
-
-            if (convertedUser.getFirstName() != null) {
-                user.setFirstName(convertedUser.getFirstName());
-            }
-            if (convertedUser.getLastName() != null ) {
-                user.setLastName(convertedUser.getLastName());
-            }
-            if (convertedUser.getAddress() != null ) {
-                user.setAddress(convertedUser.getAddress());
-            }
-            if (convertedUser.getCredential() != null ) {
-                user.getCredential().setPassword(convertedUser.getCredential().getPassword());
-            }
-            if (convertedUser.getDateJoined() != null ) {
-                user.setDateJoined(convertedUser.getDateJoined());
-            }
-            if (user.isActiveStatus() != convertedUser.isActiveStatus()) {
-                user.setActiveStatus(convertedUser.isActiveStatus());
-            }
-            if (convertedUser.getDob() != null ) {
-                user.setDob(convertedUser.getDob());
-            }
-
-            if (convertedUser.getEmail() != null ) {
-                user.setEmail(convertedUser.getEmail());
-            }
-            if (convertedUser.getPhone() != null ) {
-                user.setPhone(convertedUser.getPhone());
-            }
-            try {
-                userRepository.save(user);
-            } catch (DataIntegrityViolationException dive) {
-                Throwable thr = dive.getCause();
-                if (thr instanceof ConstraintViolationException) {
-                    handleUniqueConstraints(((ConstraintViolationException) thr).getConstraintName());
-                }
-                throw dive;
-            }
-
-        } else {
-            throw new UsernameNotFoundException("User not found");
+        if (convertedUser.getFirstName() != null) {
+            user.setFirstName(convertedUser.getFirstName());
         }
+        if (convertedUser.getRole() != null) {
+            userRoleRepository.findUserRoleByTitle(convertedUser.getRole().getTitle()).ifPresent(user::setRole);
+        }
+        if (convertedUser.getLastName() != null ) {
+            user.setLastName(convertedUser.getLastName());
+        }
+        if (convertedUser.getAddress() != null ) {
+            user.setAddress(convertedUser.getAddress());
+        }
+        if (convertedUser.getCredential() != null ) {
+            user.getCredential().setPassword(convertedUser.getCredential().getPassword());
+        }
+        if (convertedUser.getDateJoined() != null ) {
+            user.setDateJoined(convertedUser.getDateJoined());
+        }
+        if (user.isActiveStatus() != convertedUser.isActiveStatus()) {
+            user.setActiveStatus(convertedUser.isActiveStatus());
+        }
+        if (convertedUser.getDob() != null ) {
+            user.setDob(convertedUser.getDob());
+        }
+
+        if (convertedUser.getEmail() != null ) {
+            user.setEmail(convertedUser.getEmail());
+        }
+        if (convertedUser.getPhone() != null ) {
+            user.setPhone(convertedUser.getPhone());
+        }
+        try {
+            userRepository.save(user);
+        } catch (DataIntegrityViolationException dive) {
+            Throwable thr = dive.getCause();
+            if (thr instanceof ConstraintViolationException) {
+                handleUniqueConstraints(((ConstraintViolationException) thr).getConstraintName());
+            }
+            throw dive;
+        }
+
         return user.getId();
     }
 
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    public List<UserDto> getUsers() {
+        return userRepository.findAll().stream().map(this::userEntityToDto).collect(Collectors.toList());
     }
 
 
-    public User getUserById(Integer id) {
-        return userRepository.findById(id).orElse(null);
+    public UserDto getUserById(Integer id) {
+        return userEntityToDto(userRepository.findById(id).orElseThrow(UserNotFoundException::new));
     }
 
     public List<UserRole> getRoles() {
@@ -142,64 +139,37 @@ public class UserService {
     }
 
     protected User convertToEntity(UserDto userDto) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
+        ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(userDto, User.class);
     }
 
     //Needs to be tested
-    protected User registrationToUser(RegistrationDto registrationDto) {
+    protected User createDtoToUser(CreateUserDto createUserDto) {
+        ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
-        User user = modelMapper.map(registrationDto, User.class);
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
+        User user = modelMapper.map(createUserDto, User.class);
         return user;
     }
-    public Integer manuallyCreateUser(UserDto userDTO) {
 
-        User user = userDTOToUser(userDTO);
-        //        sets user's address
-        Address address = new Address();
-        address.setStreetAddress(userDTO.getAddress().getStreetAddress());
-        address.setCity(userDTO.getAddress().getCity());
-        address.setState(userDTO.getAddress().getState());
-        address.setZip(userDTO.getAddress().getZip());
-        user.setAddress(address);
-        //        sets user's credential
-        Credential credential = new Credential();
-        credential.setUsername(userDTO.getCredential().getUsername());
-        credential.setPassword(userDTO.getCredential().getPassword());
-        user.setCredential(credential);
-
-        UserRole role = userRoleRepository.findUserRoleByTitle("Administrator").orElse(new UserRole("Administrator"));
-
-        user.setRole(role);
-        user.setDateJoined(LocalDate.now());
-
-        String encodedPassword = passwordEncoder.encode(user.getCredential().getPassword());
-        user.getCredential().setPassword(encodedPassword);
-
-        // ADDED TO ENSURE LOGIN
-        user.setActiveStatus(true);
-
-        try {
-            userRepository.save(user);
-        } catch (DataIntegrityViolationException dive) {
-            log.error(dive.getMessage());
-            Throwable thr = dive.getCause();
-            if (thr instanceof ConstraintViolationException) {
-                handleUniqueConstraints(((ConstraintViolationException) thr).getConstraintName());
-            }
-            throw dive;
-        }
-        return user.getId();
-    }
 
     public User userDTOToUser(UserDto userDTO) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         return modelMapper.map(userDTO, User.class);
     }
 
-    public User updateDtoToUser(UpdateProfileDto updateProfileDto) {
+    public UserDto userEntityToDto(User user) {
+        ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+        return modelMapper.map(user, UserDto.class);
+    }
+
+    public User updateDtoToUser(UpdateProfileDto updateProfileDto) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+        modelMapper.typeMap(updateProfileDto.getClass(), User.class).addMappings(mapping -> {
+            mapping.map(UpdateProfileDto::getRole, (destination, value) -> destination.getRole().setTitle(String.valueOf(value)));
+        });
         return modelMapper.map(updateProfileDto, User.class);
     }
 
@@ -216,80 +186,14 @@ public class UserService {
     }
 
 
+    public Integer deactivateUser(Integer id) {
 
+        Optional<User> deactivatedUser = userRepository.findById(id);
 
-
-
-
-    public Integer updateUserDetails(UserDto userDTO) {
-        userDTO.getCredential().setPassword(passwordEncoder.encode(userDTO.getCredential().getPassword()));
-        Optional<User> savedUser = userRepository.findById(userDTO.getId());
-
-        User user = null;
-
-        if(savedUser.isPresent()){
-            user = savedUser.get();
-
-            if(!user.getFirstName().equals(userDTO.getFirstName()) && userDTO.getFirstName() != null){
-                user.setFirstName(userDTO.getFirstName());
-            }
-            if(!user.getLastName().equals(userDTO.getLastName()) && userDTO.getLastName() != null){
-                user.setLastName(userDTO.getLastName());
-            }
-            if(!user.getAddress().equals(userDTO.getAddress()) && userDTO.getAddress() != null){
-                user.setAddress(userDTO.getAddress());
-            }
-            if(!user.getCredential().equals(userDTO.getCredential()) && userDTO.getCredential() != null){
-                user.setCredential(userDTO.getCredential());
-            }
-            if(!user.getDateJoined().equals(userDTO.getDateJoined()) && userDTO.getDateJoined() != null){
-                user.setDateJoined(userDTO.getDateJoined());
-            }
-            if(user.isActiveStatus() != userDTO.isActiveStatus()) {
-                user.setActiveStatus(userDTO.isActiveStatus());
-            }
-            if(!user.getDob().equals(userDTO.getDob()) && userDTO.getDob() != null){
-                user.setDob(userDTO.getDob());
-            }
-
-            if(!user.getEmail().equals(userDTO.getEmail()) && userDTO.getEmail() != null){
-                user.setEmail(userDTO.getEmail());
-            }
-            if(!user.getPhone().equals(userDTO.getPhone()) && userDTO.getPhone() != null){
-                user.setPhone(userDTO.getPhone());
-            }
-            try {
-                userRepository.saveAndFlush(user);
-            } catch(DataIntegrityViolationException dive) {
-                log.error(dive.getMessage());
-                Throwable thr = dive.getCause();
-                if (thr instanceof ConstraintViolationException) {
-                    handleUniqueConstraints(((ConstraintViolationException) thr).getConstraintName());
-                }
-                throw dive;
-            }
-
-        } else {
-            user = new User();
-        }
-        return user.getId();
-
-    }
-
-    public Integer deactivateUser(UserDto userDTO) {
-
-        Optional<User> deactivatedUser = userRepository.findById(userDTO.getId());
-
-        User user = null;
-
-        if(deactivatedUser.isPresent()) {
-            user = deactivatedUser.get();
-
-            user.setActiveStatus(false);
-
-
-            userRepository.saveAndFlush(user);
-        }
+        User user = deactivatedUser.orElseThrow(UserNotFoundException::new);
+        if (!user.isActiveStatus()) throw new UserNotFoundException();
+        user.setActiveStatus(false);
+        userRepository.save(user);
         return user.getId();
     }
 

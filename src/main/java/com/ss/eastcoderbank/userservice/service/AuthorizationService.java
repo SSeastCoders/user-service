@@ -18,14 +18,12 @@ public class AuthorizationService {
     @Autowired
     UserRoleRepository userRoleRepository;
 
-    @Autowired
-    ModelMapper modelMapper;
-
     public void userLogin(LoginDto loginDto) throws Exception {
         User user = loginToUser(loginDto);
     }
 
     private User loginToUser(LoginDto loginDto) {
+        ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         return modelMapper.map(loginDto, User.class);
     }

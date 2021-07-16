@@ -73,7 +73,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 try {
                     User user = userRepository.findById(Integer.valueOf(userName)).orElseThrow(RuntimeException::new);
                     UserPrincipal principal = new UserPrincipal(user);
-                    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userName, null, principal.getAuthorities());
+                    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user.getId(), null, principal.getAuthorities());
                     return auth;
                 } catch (UsernameNotFoundException e) {
                     return null;

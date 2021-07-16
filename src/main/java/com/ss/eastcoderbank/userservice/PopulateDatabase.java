@@ -31,7 +31,7 @@ public class PopulateDatabase implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         UserRole userRoleAdmin = new UserRole();
         userRoleAdmin.setId(1);
-        userRoleAdmin.setTitle("Administrator");
+        userRoleAdmin.setTitle("Admin");
 
         UserRole userRoleCust = new UserRole();
         userRoleCust.setId(2);
