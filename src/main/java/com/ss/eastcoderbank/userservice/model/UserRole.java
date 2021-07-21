@@ -17,7 +17,6 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class UserRole {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)

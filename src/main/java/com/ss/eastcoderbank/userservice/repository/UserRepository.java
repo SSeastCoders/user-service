@@ -17,12 +17,6 @@ public interface UserRepository extends JpaRepository <User, Integer> {
 
     User findUsersByEmailOrCredentialUsername(String email, String Username);
 
-    @Query("FROM User WHERE email = ?1")
-    Optional<User> findByEmail(String email);
-
-    @Query("FROM User WHERE phone = ?1")
-    Optional<User> findByPhone(String phone);
-
     List<User> findUserByRoleTitle(String title);
 
 

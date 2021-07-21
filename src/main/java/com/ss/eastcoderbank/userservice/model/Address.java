@@ -11,7 +11,6 @@ import javax.persistence.Embeddable;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Setter
-@ToString
 public class Address {
     @Column(length = 50)
     private String streetAddress;

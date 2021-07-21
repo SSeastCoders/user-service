@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Setter
-@ToString
 @Table(uniqueConstraints = {
         @UniqueConstraint(name = DbConstraints.EMAILANDUSERNAME, columnNames = {"email", "username"}),
         @UniqueConstraint(name = DbConstraints.EMAIL, columnNames = {"email"}),
