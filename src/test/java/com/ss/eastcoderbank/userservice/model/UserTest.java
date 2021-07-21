@@ -1,13 +1,11 @@
 package com.ss.eastcoderbank.userservice.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UserTest {
     @Test
@@ -53,10 +51,7 @@ public class UserTest {
         assertEquals("4105551212", actualUser.getPhone());
         assertSame(userRole, actualUser.getRole());
         assertTrue(actualUser.isActiveStatus());
-        assertEquals("User(id=1, role=UserRole(id=1, title=Dr, users=[]), firstName=Jane, lastName=Doe, dob=1970-01-02,"
-                + " email=jane.doe@example.org, phone=4105551212, address=Address(streetAddress=42 Main St, city=Oxford,"
-                + " zip=1, state=MD), dataJoined=1970-01-02, activeStatus=true, credential=Credential(username=janedoe,"
-                + " password=iloveyou))", actualUser.toString());
+
     }
 }
 
