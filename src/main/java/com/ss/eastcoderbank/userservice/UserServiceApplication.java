@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 import java.util.Map;
 
-@SpringBootApplication
+@SpringBootApplication //(exclude = {SecurityAutoConfiguration.class})
 @EnableConfigurationProperties
 public class UserServiceApplication {
 
