@@ -12,12 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.Validator;
 import java.util.List;
 
+@CrossOrigin(origins="http://localhost:4200")
 @RestController
 public class UserController {
     @Autowired
