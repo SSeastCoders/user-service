@@ -2,6 +2,9 @@ package com.ss.eastcoderbank.userservice.controller;
 
 import com.ss.eastcoderbank.userservice.service.AuthorizationService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -13,11 +16,9 @@ public class AuthorizationController {
     public AuthorizationController(AuthorizationService authorizationService) {
         this.authorizationService = authorizationService;
     }
-/*
-    @PreAuthorize("permitAll()")
-    @PostMapping("/login")
-    public Integer loginUser() {
-        return 1;
-    }
-*/
+//    @PreAuthorize("permitAll()")
+//    @PostMapping("/login")
+//    public Integer loginUser() {
+//        return 1;
+//    }
 }

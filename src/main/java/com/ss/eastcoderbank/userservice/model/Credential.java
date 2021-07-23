@@ -11,7 +11,6 @@ import javax.persistence.Embeddable;
 @EqualsAndHashCode
 @Setter
 @Getter
-@ToString
 public class Credential {
 
     @Column(nullable = false, length = 50)

@@ -1,31 +1,27 @@
 package com.ss.eastcoderbank.userservice.service;
 
 import com.ss.eastcoderbank.userservice.dto.LoginDto;
+import com.ss.eastcoderbank.userservice.mapper.LoginMapper;
 import com.ss.eastcoderbank.userservice.model.User;
 import com.ss.eastcoderbank.userservice.repository.UserRepository;
 import com.ss.eastcoderbank.userservice.repository.UserRoleRepository;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthorizationService {
-
     @Autowired
-    UserRepository userRepository;
-
+    private UserRepository userRepository;
     @Autowired
-    UserRoleRepository userRoleRepository;
+    private UserRoleRepository userRoleRepository;
+    @Autowired
+    private LoginMapper loginMapper;
+
 
     public void userLogin(LoginDto loginDto) throws Exception {
-        User user = loginToUser(loginDto);
+        User user = loginMapper.mapToEntity(loginDto);
     }
 
-    private User loginToUser(LoginDto loginDto) {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
-        return modelMapper.map(loginDto, User.class);
-    }
 
 }
