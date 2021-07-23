@@ -8,14 +8,15 @@ import com.ss.eastcoderbank.userservice.model.UserRole;
 import com.ss.eastcoderbank.userservice.repository.UserRepository;
 import com.ss.eastcoderbank.userservice.repository.UserRoleRepository;
 import com.ss.eastcoderbank.userservice.service.CustomExceptions.*;
-
 import com.ss.eastcoderbank.userservice.service.constraints.DbConstraints;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -197,6 +198,10 @@ public class UserService {
         return user.getId();
     }
 
+    public Page<User> findPaginated(Integer pageNumber, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        return this.userRepository.findAll(pageable);
+    }
 
 }
 
