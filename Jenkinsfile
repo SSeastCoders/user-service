@@ -9,7 +9,7 @@ pipeline {
     }
     post {
         success {
-            archiveArtifacts artifacts: '.mvn/wrapper/*.jar'
+            archiveArtifacts artifacts: 'build/libs/**/*.jar'
         }
     }
 }
