@@ -4,17 +4,16 @@ package com.ss.eastcoderbank.userservice.controller;
 import com.ss.eastcoderbank.userservice.dto.CreateUserDto;
 import com.ss.eastcoderbank.userservice.dto.UpdateProfileDto;
 import com.ss.eastcoderbank.userservice.dto.UserDto;
-import com.ss.eastcoderbank.userservice.model.User;
 import com.ss.eastcoderbank.userservice.model.UserRole;
 import com.ss.eastcoderbank.userservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.Validator;
@@ -31,10 +30,13 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/users")
-    public List<UserDto> getUsers(@RequestParam(required = false) String role) {
-        // TODO implement pagination
-        if (role != null) return userService.getUsersByRole(role);
-        return userService.getUsers();
+    public Page<UserDto> getUsers(@RequestParam(required = false) String role, Pageable page) {
+
+        if (role != null) return userService.getUsersByRole(role, page);
+
+        Page<UserDto> userPage = userService.getUsers(page);
+
+        return userPage;
     }
 
     //HYPOTHETICAL BASED ON USER ID
@@ -74,13 +76,6 @@ public class UserController {
         return new ResponseEntity<>("User deleted", HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/page/{pageNumber}") // add one more path var {pageSize} if you want to get it from UI
-    public String viewPaginatedUsers(@PathVariable(value = "pageNumber") Integer pageNumber) {
-      Integer pageSize = 10;
-      Page<User> page = userService.findPaginated(pageNumber, pageSize);
-      List<User> listUsers = page.getContent();
-      return null;
 
-    }
 
 }
