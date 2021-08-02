@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -44,8 +44,8 @@ public class UserService {
 
 
 
-    public Page<UserDto> getUsersByRole(String title, Pageable page) {
-        return userRepository.findUserByRoleTitle(title, page).map(user -> userMapper.mapToDto(user));
+    public Page<UserDto> getUsersByRole(String title) {
+        return userRepository.findUserByRoleTitle(title).map(user -> userMapper.mapToDto(user));
 
     }
 
@@ -130,8 +130,8 @@ public class UserService {
         return user.getId();
     }
 
-    public Page<UserDto> getUsers(Pageable page) {
-        return userRepository.findAll(page).map(user -> userMapper.mapToDto(user));
+    public Page<UserDto> getUsers(Integer pageNumber, Integer pageSize) {
+        return userRepository.findAll(PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));
     }
 
     public UserDto getUserById(Integer id) {

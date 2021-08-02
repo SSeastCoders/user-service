@@ -8,7 +8,6 @@ import com.ss.eastcoderbank.userservice.model.UserRole;
 import com.ss.eastcoderbank.userservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,11 +29,11 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/users")
-    public Page<UserDto> getUsers(@RequestParam(required = false) String role, Pageable page) {
+    public Page<UserDto> getUsers(@RequestParam(required = false) String role, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize) {
 
-        if (role != null) return userService.getUsersByRole(role, page);
+        if (role != null) return userService.getUsersByRole(role);
 
-        Page<UserDto> userPage = userService.getUsers(page);
+        Page<UserDto> userPage = userService.getUsers(pageNumber, pageSize);
 
         return userPage;
     }
