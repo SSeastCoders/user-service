@@ -7,7 +7,7 @@
         <artifactId>userservice</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <artifactId>usersapi</artifactId>
+    <artifactId>users-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>usersapi</name>
     <description>Demo project for Spring Boot</description>
