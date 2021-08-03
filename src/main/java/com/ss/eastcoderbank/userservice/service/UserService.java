@@ -18,6 +18,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -44,8 +45,8 @@ public class UserService {
 
 
 
-    public Page<UserDto> getUsersByRole(String title) {
-        return userRepository.findUserByRoleTitle(title).map(user -> userMapper.mapToDto(user));
+    public Page<UserDto> getUsersByRole(String title, Pageable page) {
+        return userRepository.findUserByRoleTitle(title, page).map(user -> userMapper.mapToDto(user));
 
     }
 
