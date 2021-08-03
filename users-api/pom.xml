@@ -6,6 +6,7 @@
         <groupId>com.ss.eastcoderbank</groupId>
         <artifactId>userservice</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>users-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
