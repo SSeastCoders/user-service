@@ -106,7 +106,7 @@
         </dependency>
         <dependency>
             <groupId>com.ss.eastcoderbank</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>core-library</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
