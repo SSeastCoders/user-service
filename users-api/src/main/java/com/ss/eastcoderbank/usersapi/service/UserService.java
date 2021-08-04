@@ -20,6 +20,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -29,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 //import javax.validation.ConstraintViolationException;
 
@@ -45,10 +47,13 @@ public class UserService {
     private UpdateProfileMapper updateProfileMapper;
     private CreateUserMapper createUserMapper;
 
-    public List<UserDto> getUsersByRole(String title) {
-        List<User> users = userRepository.findUserByRoleTitle(title);
-        return users.stream().map(userMapper::mapToDto).collect(Collectors.toList());
+
+
+    public Page<UserDto> getUsersByRole(String title, Pageable page) {
+        return userRepository.findUserByRoleTitle(title, page).map(user -> userMapper.mapToDto(user));
+
     }
+
 
     public Integer createUser(CreateUserDto createUserDto) throws DuplicateConstraintsException {
         createUserDto.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
@@ -130,10 +135,9 @@ public class UserService {
         return user.getId();
     }
 
-    public List<UserDto> getUsers() {
-        return userRepository.findAll().stream().map(user -> userMapper.mapToDto(user)).collect(Collectors.toList());
+    public Page<UserDto> getUsers(Integer pageNumber, Integer pageSize) {
+        return userRepository.findAll(PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));
     }
-
 
     public UserDto getUserById(Integer id) {
         return userMapper.mapToDto(userRepository.findById(id).orElseThrow(UserNotFoundException::new));
