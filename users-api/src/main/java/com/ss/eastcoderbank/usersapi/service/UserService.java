@@ -109,18 +109,17 @@ public class UserService {
         if (convertedUser.getDateJoined() != null ) {
             user.setDateJoined(convertedUser.getDateJoined());
         }
-        if (user.isActiveStatus() != convertedUser.isActiveStatus()) {
-            user.setActiveStatus(convertedUser.isActiveStatus());
-        }
         if (convertedUser.getDob() != null ) {
             user.setDob(convertedUser.getDob());
         }
-
         if (convertedUser.getEmail() != null ) {
             user.setEmail(convertedUser.getEmail());
         }
         if (convertedUser.getPhone() != null ) {
             user.setPhone(convertedUser.getPhone());
+        }
+        if (convertedUser.getActiveStatus() != null) {
+            user.setActiveStatus(convertedUser.getActiveStatus());
         }
         try {
             userRepository.save(user);
@@ -166,7 +165,7 @@ public class UserService {
         Optional<User> deactivatedUser = userRepository.findById(id);
 
         User user = deactivatedUser.orElseThrow(UserNotFoundException::new);
-        if (!user.isActiveStatus()) throw new UserNotFoundException();
+        if (!user.getActiveStatus()) throw new UserNotFoundException();
         user.setActiveStatus(false);
         userRepository.save(user);
         return user.getId();

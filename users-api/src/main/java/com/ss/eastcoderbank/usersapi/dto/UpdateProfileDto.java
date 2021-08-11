@@ -4,9 +4,7 @@ import com.ss.eastcoderbank.usersapi.validation.annotation.ValidPhoneNumber;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Getter
@@ -37,5 +35,5 @@ public class UpdateProfileDto {
 
     private LocalDate dateJoined;
 
-    private boolean activeStatus;
+    private Boolean activeStatus;
 }
