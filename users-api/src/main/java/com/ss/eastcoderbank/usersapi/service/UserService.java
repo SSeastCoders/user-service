@@ -25,10 +25,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -72,66 +70,32 @@ public class UserService {
             if (t instanceof ConstraintViolationException) {
                 handleUniqueConstraints(((ConstraintViolationException) t).getConstraintName());
             }
+            log.info(e.getMessage(), e);
             throw e; // something went wrong.
         }
     }
 
 
-    // TODO implement proper transaction as there are multiple reads
-    @Transactional(propagation = Propagation.NESTED, isolation = Isolation.READ_COMMITTED)
     public Integer updateUser(UpdateProfileDto updateProfileDto, Integer id) {
         if (updateProfileDto.getPassword() != null) {
             updateProfileDto.setPassword(passwordEncoder.encode(updateProfileDto.getPassword()));
         }
-        Optional<User> savedUser = userRepository.findById(id);
-
-        User user = savedUser.orElseThrow(UserNotFoundException::new);
-        User convertedUser = updateProfileMapper.mapToEntity(updateProfileDto);
-
-        if (convertedUser.getFirstName() != null) {
-            user.setFirstName(convertedUser.getFirstName());
-        }
-        if (convertedUser.getRole() != null && convertedUser.getRole().getTitle() != null) {
-            userRoleRepository.findUserRoleByTitle(convertedUser.getRole().getTitle()).ifPresent(user::setRole);
-        }
-        if (convertedUser.getLastName() != null ) {
-            user.setLastName(convertedUser.getLastName());
-        }
-        if (convertedUser.getAddress() != null ) {
-            user.setAddress(convertedUser.getAddress());
-        }
-        if (convertedUser.getCredential() != null ) {
-            if (convertedUser.getCredential().getUsername() != null)
-                user.getCredential().setUsername(convertedUser.getCredential().getUsername());
-            if (convertedUser.getCredential().getPassword() != null)
-            user.getCredential().setPassword(convertedUser.getCredential().getPassword());
-        }
-        if (convertedUser.getDateJoined() != null ) {
-            user.setDateJoined(convertedUser.getDateJoined());
-        }
-        if (convertedUser.getDob() != null ) {
-            user.setDob(convertedUser.getDob());
-        }
-        if (convertedUser.getEmail() != null ) {
-            user.setEmail(convertedUser.getEmail());
-        }
-        if (convertedUser.getPhone() != null ) {
-            user.setPhone(convertedUser.getPhone());
-        }
-        if (convertedUser.getActiveStatus() != null) {
-            user.setActiveStatus(convertedUser.getActiveStatus());
-        }
         try {
+            User user = userRepository.getById(id);
+            updateProfileMapper.updateEntity(updateProfileDto, user);
+            userRoleRepository.findUserRoleByTitle(updateProfileDto.getRole()).ifPresent(user::setRole);
             userRepository.save(user);
+            return user.getId();
+        } catch (EntityNotFoundException e) {
+            throw new UserNotFoundException();
         } catch (DataIntegrityViolationException dive) {
             Throwable thr = dive.getCause();
             if (thr instanceof ConstraintViolationException) {
                 handleUniqueConstraints(((ConstraintViolationException) thr).getConstraintName());
             }
+            log.info(dive.getMessage(), dive);
             throw dive;
         }
-
-        return user.getId();
     }
 
     public Page<UserDto> getUsers(Integer pageNumber, Integer pageSize) {
