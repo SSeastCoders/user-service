@@ -9,7 +9,6 @@ import com.ss.eastcoderbank.usersapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,25 +28,32 @@ public class UserController {
     @Autowired
     private Validator validator;
 
+//    @PreAuthorize("hasAuthority('Admin')")
+//    @GetMapping("/users")
+//    public Page<UserDto> getUsers(@RequestParam(required = false) String role, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, Pageable page) {
+//
+//        if (role != null) return userService.getUsersByRole(role, page);
+//
+//        Page<UserDto> userPage = userService.getUsers(pageNumber, pageSize);
+//
+//        return userPage;
+//    }
+
     @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/users")
-    public Page<UserDto> getUsers(@RequestParam(required = false) String role, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, Pageable page) {
-
+    public Page<UserDto> getSortedUsers(@RequestParam(required = false) String role, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, @RequestParam(value="asc", required = false) boolean asc, Pageable page, String sort) {
+        Page<UserDto> userPage;
         if (role != null) return userService.getUsersByRole(role, page);
 
-        Page<UserDto> userPage = userService.getUsers(pageNumber, pageSize);
+        if (sort != null) {
+            userPage = userService.getSortedUsers(pageNumber, pageSize, asc, sort);
+            System.out.println((userPage));
+        } else {
+            //resultPage = userService.findPaginated(PageRequest.of(page, size, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, sort)), search);
+            userPage = userService.getUsers(pageNumber, pageSize);
+        }
 
-        return userPage;
-    }
-
-    @PreAuthorize("hasAuthority('Admin')")
-    @GetMapping("/users/custom")
-    public Page<UserDto> getSortedUsers(@RequestParam(required = false) String role, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, Pageable page, Sort sort) {
-
-        if (role != null) return userService.getUsersByRole(role, page);
-
-        Page<UserDto> userPage = userService.getSortedUsers(pageNumber, pageSize, sort);
-
+        System.out.println((userPage));
         return userPage;
     }
 

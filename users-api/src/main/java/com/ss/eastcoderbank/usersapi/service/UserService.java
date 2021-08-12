@@ -140,9 +140,9 @@ public class UserService {
         return userRepository.findAll(PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));
     }
 
-    public Page<UserDto> getSortedUsers(Integer pageNumber, Integer pageSize, Sort sort) {
-
-        return userRepository.findAll(PageRequest.of(pageNumber, pageSize, sort)).map(user -> userMapper.mapToDto(user));
+    public Page<UserDto> getSortedUsers(Integer pageNumber, Integer pageSize, boolean asc, String sort) {
+        //resultPage = userService.findPaginated(PageRequest.of(page, size, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, sort)), search);
+        return userRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, sort))).map(user -> userMapper.mapToDto(user));
     }
    // PageRequest.of(0, 3, Sort.by("price").descending());
 
