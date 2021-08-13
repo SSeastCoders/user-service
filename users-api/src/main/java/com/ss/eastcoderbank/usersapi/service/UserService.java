@@ -77,12 +77,9 @@ public class UserService {
 
 
     public Integer updateUser(UpdateProfileDto updateProfileDto, Integer id) {
-        if (updateProfileDto.getPassword() != null) {
-            updateProfileDto.setPassword(passwordEncoder.encode(updateProfileDto.getPassword()));
-        }
         try {
             User user = userRepository.getById(id);
-            updateProfileMapper.updateEntity(updateProfileDto, user);
+            updateProfileMapper.updateEntity(updateProfileDto, user, passwordEncoder);
             userRoleRepository.findUserRoleByTitle(updateProfileDto.getRole()).ifPresent(user::setRole);
             userRepository.save(user);
             return user.getId();
