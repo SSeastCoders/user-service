@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class AuthorizationController {
 
-    AuthService authorizationService;
+    AuthService authService;
 
-    public AuthorizationController(AuthService authorizationService) {
-        this.authorizationService = authorizationService;
+    public AuthorizationController(AuthService authService) {
+        this.authService = authService;
     }
 
 }

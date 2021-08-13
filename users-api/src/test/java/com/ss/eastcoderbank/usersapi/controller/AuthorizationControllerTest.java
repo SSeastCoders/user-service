@@ -1,6 +1,6 @@
 package com.ss.eastcoderbank.usersapi.controller;
 
-import com.ss.eastcoderbank.usersapi.service.AuthorizationService;
+import com.ss.eastcoderbank.usersapi.service.AuthService;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -9,13 +9,13 @@ public class AuthorizationControllerTest {
     @Test
     public void testConstructor() {
         // Arrange
-        AuthorizationService authorizationService = new AuthorizationService();
+        AuthService authService = new AuthService();
 
         // Act
-        AuthorizationController actualAuthorizationController = new AuthorizationController(authorizationService);
+        AuthorizationController actualAuthorizationController = new AuthorizationController(authService);
 
         // Assert
-        assertSame(actualAuthorizationController.authorizationService, authorizationService);
+        assertSame(actualAuthorizationController.authService, authService);
     }
 
 

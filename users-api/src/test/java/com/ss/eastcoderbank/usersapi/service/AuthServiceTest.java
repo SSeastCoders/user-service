@@ -1,9 +1,5 @@
 package com.ss.eastcoderbank.usersapi.service;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.ss.eastcoderbank.core.model.user.Address;
 import com.ss.eastcoderbank.core.model.user.Credential;
 import com.ss.eastcoderbank.core.model.user.User;
@@ -12,10 +8,6 @@ import com.ss.eastcoderbank.core.repository.UserRepository;
 import com.ss.eastcoderbank.core.repository.UserRoleRepository;
 import com.ss.eastcoderbank.usersapi.dto.LoginDto;
 import com.ss.eastcoderbank.usersapi.mapper.LoginMapper;
-
-import java.time.LocalDate;
-import java.util.HashSet;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +15,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ContextConfiguration(classes = {AuthorizationService.class})
+import java.time.LocalDate;
+import java.util.HashSet;
+
+import static org.mockito.Mockito.*;
+
+@ContextConfiguration(classes = {AuthService.class})
 @ExtendWith(SpringExtension.class)
-public class AuthorizationServiceTest {
+public class AuthServiceTest {
     @Autowired
-    private AuthorizationService authorizationService;
+    private AuthService authorizationService;
 
     @MockBean
     private LoginMapper loginMapper;

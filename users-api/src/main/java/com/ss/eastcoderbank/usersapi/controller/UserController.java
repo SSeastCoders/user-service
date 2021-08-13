@@ -6,6 +6,7 @@ import com.ss.eastcoderbank.core.transferdto.UserDto;
 import com.ss.eastcoderbank.usersapi.dto.CreateUserDto;
 import com.ss.eastcoderbank.usersapi.dto.UpdateProfileDto;
 import com.ss.eastcoderbank.usersapi.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 import javax.validation.Validator;
 import java.util.List;
 
+@AllArgsConstructor
 @CrossOrigin
 @RestController
 public class UserController {
@@ -75,7 +77,5 @@ public class UserController {
         userService.deactivateUser(id);
         return new ResponseEntity<>("User deleted", HttpStatus.NO_CONTENT);
     }
-
-
 
 }

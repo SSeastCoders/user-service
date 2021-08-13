@@ -9,9 +9,7 @@ import com.ss.eastcoderbank.core.repository.UserRepository;
 import com.ss.eastcoderbank.core.repository.UserRoleRepository;
 import com.ss.eastcoderbank.core.transferdto.UserDto;
 import com.ss.eastcoderbank.core.transfermapper.UserMapper;
-import com.ss.eastcoderbank.usersapi.dto.AddressDto;
 import com.ss.eastcoderbank.usersapi.dto.CreateUserDto;
-import com.ss.eastcoderbank.usersapi.dto.UpdateProfileDto;
 import com.ss.eastcoderbank.usersapi.mapper.CreateUserMapper;
 import com.ss.eastcoderbank.usersapi.mapper.UpdateProfileMapper;
 import com.ss.eastcoderbank.usersapi.service.CustomExceptions.DuplicateConstraintsException;
@@ -36,13 +34,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {UserService.class})
 @ExtendWith(SpringExtension.class)
@@ -409,138 +401,7 @@ public class UserServiceTest {
         verify(this.createUserMapper).mapToEntity((CreateUserDto) any());
     }
 
-    @Test
-    public void testUpdateUser() {
-        // Arrange
-        UserRole userRole = new UserRole();
-        userRole.setUsers(new HashSet<User>());
-        userRole.setId(1);
-        userRole.setTitle("Dr");
-        Optional<UserRole> ofResult = Optional.<UserRole>of(userRole);
-        when(this.userRoleRepository.findUserRoleByTitle(anyString())).thenReturn(ofResult);
 
-        UserRole userRole1 = new UserRole();
-        userRole1.setUsers(new HashSet<User>());
-        userRole1.setId(1);
-        userRole1.setTitle("Dr");
-
-        Credential credential = new Credential();
-        credential.setPassword("iloveyou");
-        credential.setUsername("janedoe");
-
-        Address address = new Address();
-        address.setZip(1);
-        address.setCity("Oxford");
-        address.setStreetAddress("42 Main St");
-        address.setState("MD");
-
-        User user = new User();
-        user.setLastName("Doe");
-        user.setEmail("jane.doe@example.org");
-        user.setRole(userRole1);
-        user.setDob(LocalDate.ofEpochDay(1L));
-        user.setId(1);
-        user.setActiveStatus(true);
-        user.setPhone("4105551212");
-        user.setCredential(credential);
-        user.setFirstName("Jane");
-        user.setDateJoined(LocalDate.ofEpochDay(1L));
-        user.setAddress(address);
-        Optional<User> ofResult1 = Optional.<User>of(user);
-
-        UserRole userRole2 = new UserRole();
-        userRole2.setUsers(new HashSet<User>());
-        userRole2.setId(1);
-        userRole2.setTitle("Dr");
-
-        Credential credential1 = new Credential();
-        credential1.setPassword("iloveyou");
-        credential1.setUsername("janedoe");
-
-        Address address1 = new Address();
-        address1.setZip(1);
-        address1.setCity("Oxford");
-        address1.setStreetAddress("42 Main St");
-        address1.setState("MD");
-
-        User user1 = new User();
-        user1.setLastName("Doe");
-        user1.setEmail("jane.doe@example.org");
-        user1.setRole(userRole2);
-        user1.setDob(LocalDate.ofEpochDay(1L));
-        user1.setId(1);
-        user1.setActiveStatus(true);
-        user1.setPhone("4105551212");
-        user1.setCredential(credential1);
-        user1.setFirstName("Jane");
-        user1.setDateJoined(LocalDate.ofEpochDay(1L));
-        user1.setAddress(address1);
-        when(this.userRepository.save((User) any())).thenReturn(user1);
-        when(this.userRepository.findById((Integer) any())).thenReturn(ofResult1);
-
-        UserRole userRole3 = new UserRole();
-        userRole3.setUsers(new HashSet<User>());
-        userRole3.setId(1);
-        userRole3.setTitle("Dr");
-
-        Credential credential2 = new Credential();
-        credential2.setPassword("iloveyou");
-        credential2.setUsername("janedoe");
-
-        Address address2 = new Address();
-        address2.setZip(1);
-        address2.setCity("Oxford");
-        address2.setStreetAddress("42 Main St");
-        address2.setState("MD");
-
-        User user2 = new User();
-        user2.setLastName("Doe");
-        user2.setEmail("jane.doe@example.org");
-        user2.setRole(userRole3);
-        user2.setDob(LocalDate.ofEpochDay(1L));
-        user2.setId(1);
-        user2.setActiveStatus(true);
-        user2.setPhone("4105551212");
-        user2.setCredential(credential2);
-        user2.setFirstName("Jane");
-        user2.setDateJoined(LocalDate.ofEpochDay(1L));
-        user2.setAddress(address2);
-        when(this.updateProfileMapper.mapToEntity((UpdateProfileDto) any())).thenReturn(user2);
-        when(this.passwordEncoder.encode((CharSequence) any())).thenReturn("foo");
-
-        AddressDto addressDto = new AddressDto();
-        addressDto.setZip(1);
-        addressDto.setCity("Oxford");
-        addressDto.setStreetAddress("42 Main St");
-        addressDto.setState("MD");
-
-        UpdateProfileDto updateProfileDto = new UpdateProfileDto();
-        updateProfileDto.setLastName("Doe");
-        updateProfileDto.setPassword("iloveyou");
-        updateProfileDto.setEmail("jane.doe@example.org");
-        updateProfileDto.setRole("Role");
-        updateProfileDto.setDob(LocalDate.ofEpochDay(1L));
-        updateProfileDto.setUsername("janedoe");
-        updateProfileDto.setActiveStatus(true);
-        updateProfileDto.setPhone("4105551212");
-        updateProfileDto.setFirstName("Jane");
-        updateProfileDto.setAddress(addressDto);
-        updateProfileDto.setDateJoined(LocalDate.ofEpochDay(1L));
-        int id = 1;
-
-        // Act
-        Integer actualUpdateUserResult = this.userService.updateUser(updateProfileDto, id);
-
-        // Assert
-        assertEquals(1, actualUpdateUserResult.intValue());
-        verify(this.userRoleRepository).findUserRoleByTitle(anyString());
-        verify(this.userRepository).findById((Integer) any());
-        verify(this.userRepository).save((User) any());
-        verify(this.updateProfileMapper).mapToEntity((UpdateProfileDto) any());
-        verify(this.passwordEncoder).encode((CharSequence) any());
-        assertEquals("foo", updateProfileDto.getPassword());
-        assertTrue(this.userService.getRoles().isEmpty());
-    }
 
     @Test
     public void testGetUsers() {
