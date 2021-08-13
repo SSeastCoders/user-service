@@ -13,9 +13,5 @@ public class AuthorizationController {
     public AuthorizationController(AuthorizationService authorizationService) {
         this.authorizationService = authorizationService;
     }
-//    @PreAuthorize("permitAll()")
-//    @PostMapping("/login")
-//    public Integer loginUser() {
-//        return 1;
-//    }
+
 }

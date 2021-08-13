@@ -1,25 +1,33 @@
 package com.ss.eastcoderbank.usersapi.controller;
 
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ss.eastcoderbank.usersapi.dto.CreateUserDto;
+import com.ss.eastcoderbank.core.model.user.Address;
+import com.ss.eastcoderbank.core.model.user.User;
+import com.ss.eastcoderbank.core.model.user.UserRole;
+import com.ss.eastcoderbank.core.transferdto.UserDto;
 import com.ss.eastcoderbank.usersapi.service.UserService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.hamcrest.Matchers.hasKey;
+import javax.validation.Validator;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
+
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
+@ContextConfiguration(classes = {UserController.class})
+@ExtendWith(SpringExtension.class)
 public class UserControllerTest {
     @Autowired
     private UserController userController;
@@ -27,60 +35,113 @@ public class UserControllerTest {
     @MockBean
     private UserService userService;
 
+    @MockBean
+    private Validator validator;
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Test
+    public void testGetUserById() throws Exception {
+        // Arrange
+        UserRole userRole = new UserRole();
+        userRole.setUsers(new HashSet<User>());
+        userRole.setId(1);
+        userRole.setTitle("Dr");
 
+        Address address = new Address();
+        address.setZip(1);
+        address.setCity("Oxford");
+        address.setStreetAddress("42 Main St");
+        address.setState("MD");
 
+        UserDto userDto = new UserDto();
+        userDto.setLastName("Doe");
+        userDto.setEmail("jane.doe@example.org");
+        userDto.setRole(userRole);
+        userDto.setDob(LocalDate.ofEpochDay(1L));
+        userDto.setUsername("janedoe");
+        userDto.setId(1);
+        userDto.setActiveStatus(true);
+        userDto.setPhone("4105551212");
+        userDto.setFirstName("Jane");
+        userDto.setDateJoined(LocalDate.ofEpochDay(1L));
+        userDto.setAddress(address);
+        when(this.userService.getUserById((Integer) any())).thenReturn(userDto);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/users/{id}", 1);
+        MockMvc buildResult = MockMvcBuilders.standaloneSetup(this.userController).build();
 
-    /**
-     * Test to for badquest when validation error is thrown for dto
-     * @throws Exception
-     */
-    @Test void testRegistrationDtoValidation() throws Exception {
-        CreateUserDto createUserDto = new CreateUserDto();
-        createUserDto.setPassword("password");
-        createUserDto.setEmail("lovely");
-        createUserDto.setUsername("tommy");
-        ObjectMapper map = new ObjectMapper();
-        String content = map.writeValueAsString(createUserDto);
+        // Act
+        ResultActions actualPerformResult = buildResult.perform(requestBuilder);
 
-        when(this.userService.createUser(createUserDto)).thenReturn(1);
-        //Bad email must have @ symbol bad request
-        mockMvc.perform(post("/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$").value(hasKey("email")));
-
-        // null username bad request
-        createUserDto.setUsername(null);
-        createUserDto.setEmail("hello@gmail.com");
-        String contentNoUsername = map.writeValueAsString(createUserDto);
-        mockMvc.perform(post("/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(contentNoUsername))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$").value(hasKey("username")));
-
-        // username pattern contains a non Alphanumeric symbol
-        CreateUserDto badUserNameSymbol = new CreateUserDto("gegr&&&", "password", "ss@gmail.com");
-        String contentBadUsernameSymbol = map.writeValueAsString(badUserNameSymbol);
-        mockMvc.perform(post("/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(contentBadUsernameSymbol))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$").value(hasKey("username")));
-
-        // short password test bad request
-        CreateUserDto passwordShort = new CreateUserDto("johnny", "hge", "ss@gmail.com");
-        String contentShortPassword = map.writeValueAsString(passwordShort);
-        mockMvc.perform(post("/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(contentShortPassword))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$").value(hasKey("password")));
+        // Assert
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(
+                                "{\"id\":1,\"role\":{\"id\":1,\"title\":\"Dr\"},\"firstName\":\"Jane\",\"lastName\":\"Doe\",\"dob\":[1970,1,2],\"email\":"
+                                        + "\"jane.doe@example.org\",\"phone\":\"4105551212\",\"address\":{\"streetAddress\":\"42 Main St\",\"city\":\"Oxford\","
+                                        + "\"zip\":1,\"state\":\"MD\"},\"dateJoined\":[1970,1,2],\"activeStatus\":true,\"username\":\"janedoe\"}"));
     }
 
+    @Test
+    public void testGetRoles() throws Exception {
+        // Arrange
+        when(this.userService.getRoles()).thenReturn(new ArrayList<UserRole>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/roles");
+        MockMvc buildResult = MockMvcBuilders.standaloneSetup(this.userController).build();
+
+        // Act
+        ResultActions actualPerformResult = buildResult.perform(requestBuilder);
+
+        // Assert
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
+    }
+
+    @Test
+    public void testGetRoles2() throws Exception {
+        // Arrange
+        when(this.userService.getRoles()).thenReturn(new ArrayList<UserRole>());
+        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/roles");
+        getResult.contentType("Not all who wander are lost");
+        MockMvc buildResult = MockMvcBuilders.standaloneSetup(this.userController).build();
+
+        // Act
+        ResultActions actualPerformResult = buildResult.perform(getResult);
+
+        // Assert
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
+    }
+
+    @Test
+    public void testDeactivateUser() throws Exception {
+        // Arrange
+        when(this.userService.deactivateUser((Integer) any())).thenReturn(1);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/users/{id}", 1);
+        MockMvc buildResult = MockMvcBuilders.standaloneSetup(this.userController).build();
+
+        // Act
+        ResultActions actualPerformResult = buildResult.perform(requestBuilder);
+
+        // Assert
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().isNoContent())
+                .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=ISO-8859-1"))
+                .andExpect(MockMvcResultMatchers.content().string("User deleted"));
+    }
+
+    @Test
+    public void testGetUsers() throws Exception {
+        // Arrange
+        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/users");
+        MockHttpServletRequestBuilder requestBuilder = getResult.param("size", String.valueOf(1));
+        MockMvc buildResult = MockMvcBuilders.standaloneSetup(this.userController).build();
+
+        // Act
+        ResultActions actualPerformResult = buildResult.perform(requestBuilder);
+
+        // Assert
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
+    }
 }
 
