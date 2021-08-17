@@ -17,7 +17,15 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserPrincipalTest {
     @Test
     public void testConstructor() {
-        UserPrincipal actualUserPrincipal = new UserPrincipal(new User());
+        // Arrange
+        User user = new User();
+
+        // Act
+        UserPrincipal actualUserPrincipal = new UserPrincipal(user);
+        UserRole userRole = new UserRole();
+        userRole.setUsers(new HashSet<User>());
+        userRole.setId(1);
+        userRole.setTitle("Dr");
         Credential credential = new Credential();
         credential.setPassword("iloveyou");
         credential.setUsername("janedoe");
@@ -26,28 +34,27 @@ public class UserPrincipalTest {
         address.setCity("Oxford");
         address.setStreetAddress("42 Main St");
         address.setState("MD");
-        UserRole userRole = new UserRole();
-        userRole.setUsers(new HashSet<User>());
-        userRole.setId(1);
-        userRole.setTitle("Dr");
-        User user = new User();
-        user.setLastName("Doe");
-        user.setCredential(credential);
-        user.setEmail("jane.doe@example.org");
-        user.setAddress(address);
-        user.setDob(LocalDate.ofEpochDay(1L));
-        user.setId(1);
-        user.setPhone("4105551212");
-        user.setFirstName("Jane");
-        user.setDateJoined(LocalDate.ofEpochDay(1L));
-        user.setActiveStatus(true);
-        user.setRole(userRole);
-        actualUserPrincipal.setUser(user);
-        assertSame(user, actualUserPrincipal.getUser());
+        User user1 = new User();
+        user1.setLastName("Doe");
+        user1.setEmail("jane.doe@example.org");
+        user1.setRole(userRole);
+        user1.setDob(LocalDate.ofEpochDay(1L));
+        user1.setId(1);
+        user1.setActiveStatus(true);
+        user1.setPhone("4105551212");
+        user1.setCredential(credential);
+        user1.setFirstName("Jane");
+        user1.setDateJoined(LocalDate.ofEpochDay(1L));
+        user1.setAddress(address);
+        actualUserPrincipal.setUser(user1);
+
+        // Assert
+        assertSame(user1, actualUserPrincipal.getUser());
     }
 
     @Test
     public void testGetAuthorities() {
+        // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
         userRole.setId(1);
@@ -55,13 +62,24 @@ public class UserPrincipalTest {
 
         User user = new User();
         user.setRole(userRole);
-        Collection<? extends GrantedAuthority> actualAuthorities = (new UserPrincipal(user)).getAuthorities();
+        UserPrincipal userPrincipal = new UserPrincipal(user);
+
+        // Act
+        Collection<? extends GrantedAuthority> actualAuthorities = userPrincipal.getAuthorities();
+
+        // Assert
         assertEquals(1, actualAuthorities.size());
         assertEquals("Dr", ((List<? extends GrantedAuthority>) actualAuthorities).get(0).getAuthority());
     }
 
     @Test
     public void testGetAuthorities2() {
+        // Arrange
+        UserRole userRole = new UserRole();
+        userRole.setUsers(new HashSet<User>());
+        userRole.setId(1);
+        userRole.setTitle("Dr");
+
         Credential credential = new Credential();
         credential.setPassword("iloveyou");
         credential.setUsername("janedoe");
@@ -72,44 +90,56 @@ public class UserPrincipalTest {
         address.setStreetAddress("42 Main St");
         address.setState("MD");
 
-        UserRole userRole = new UserRole();
-        userRole.setUsers(new HashSet<User>());
-        userRole.setId(1);
-        userRole.setTitle("Dr");
-
         User user = new User();
         user.setLastName("Doe");
-        user.setCredential(credential);
         user.setEmail("jane.doe@example.org");
-        user.setAddress(address);
+        user.setRole(userRole);
         user.setDob(LocalDate.ofEpochDay(1L));
         user.setId(1);
+        user.setActiveStatus(true);
         user.setPhone("4105551212");
+        user.setCredential(credential);
         user.setFirstName("Jane");
         user.setDateJoined(LocalDate.ofEpochDay(1L));
-        user.setActiveStatus(true);
-        user.setRole(userRole);
+        user.setAddress(address);
 
         UserPrincipal userPrincipal = new UserPrincipal(null);
         userPrincipal.setUser(user);
+
+        // Act
         Collection<? extends GrantedAuthority> actualAuthorities = userPrincipal.getAuthorities();
+
+        // Assert
         assertEquals(1, actualAuthorities.size());
         assertEquals("Dr", ((List<? extends GrantedAuthority>) actualAuthorities).get(0).getAuthority());
     }
 
     @Test
     public void testGetPassword() {
+        // Arrange
         Credential credential = new Credential();
         credential.setPassword("iloveyou");
         credential.setUsername("janedoe");
 
         User user = new User();
         user.setCredential(credential);
-        assertEquals("iloveyou", (new UserPrincipal(user)).getPassword());
+        UserPrincipal userPrincipal = new UserPrincipal(user);
+
+        // Act
+        String actualPassword = userPrincipal.getPassword();
+
+        // Assert
+        assertEquals("iloveyou", actualPassword);
     }
 
     @Test
     public void testGetPassword2() {
+        // Arrange
+        UserRole userRole = new UserRole();
+        userRole.setUsers(new HashSet<User>());
+        userRole.setId(1);
+        userRole.setTitle("Dr");
+
         Credential credential = new Credential();
         credential.setPassword("iloveyou");
         credential.setUsername("janedoe");
@@ -120,42 +150,55 @@ public class UserPrincipalTest {
         address.setStreetAddress("42 Main St");
         address.setState("MD");
 
-        UserRole userRole = new UserRole();
-        userRole.setUsers(new HashSet<User>());
-        userRole.setId(1);
-        userRole.setTitle("Dr");
-
         User user = new User();
         user.setLastName("Doe");
-        user.setCredential(credential);
         user.setEmail("jane.doe@example.org");
-        user.setAddress(address);
+        user.setRole(userRole);
         user.setDob(LocalDate.ofEpochDay(1L));
         user.setId(1);
+        user.setActiveStatus(true);
         user.setPhone("4105551212");
+        user.setCredential(credential);
         user.setFirstName("Jane");
         user.setDateJoined(LocalDate.ofEpochDay(1L));
-        user.setActiveStatus(true);
-        user.setRole(userRole);
+        user.setAddress(address);
 
         UserPrincipal userPrincipal = new UserPrincipal(null);
         userPrincipal.setUser(user);
-        assertEquals("iloveyou", userPrincipal.getPassword());
+
+        // Act
+        String actualPassword = userPrincipal.getPassword();
+
+        // Assert
+        assertEquals("iloveyou", actualPassword);
     }
 
     @Test
     public void testGetUsername() {
+        // Arrange
         Credential credential = new Credential();
         credential.setPassword("iloveyou");
         credential.setUsername("janedoe");
 
         User user = new User();
         user.setCredential(credential);
-        assertEquals("janedoe", (new UserPrincipal(user)).getUsername());
+        UserPrincipal userPrincipal = new UserPrincipal(user);
+
+        // Act
+        String actualUsername = userPrincipal.getUsername();
+
+        // Assert
+        assertEquals("janedoe", actualUsername);
     }
 
     @Test
     public void testGetUsername2() {
+        // Arrange
+        UserRole userRole = new UserRole();
+        userRole.setUsers(new HashSet<User>());
+        userRole.setId(1);
+        userRole.setTitle("Dr");
+
         Credential credential = new Credential();
         credential.setPassword("iloveyou");
         credential.setUsername("janedoe");
@@ -166,36 +209,51 @@ public class UserPrincipalTest {
         address.setStreetAddress("42 Main St");
         address.setState("MD");
 
-        UserRole userRole = new UserRole();
-        userRole.setUsers(new HashSet<User>());
-        userRole.setId(1);
-        userRole.setTitle("Dr");
-
         User user = new User();
         user.setLastName("Doe");
-        user.setCredential(credential);
         user.setEmail("jane.doe@example.org");
-        user.setAddress(address);
+        user.setRole(userRole);
         user.setDob(LocalDate.ofEpochDay(1L));
         user.setId(1);
+        user.setActiveStatus(true);
         user.setPhone("4105551212");
+        user.setCredential(credential);
         user.setFirstName("Jane");
         user.setDateJoined(LocalDate.ofEpochDay(1L));
-        user.setActiveStatus(true);
-        user.setRole(userRole);
+        user.setAddress(address);
 
         UserPrincipal userPrincipal = new UserPrincipal(null);
         userPrincipal.setUser(user);
-        assertEquals("janedoe", userPrincipal.getUsername());
+
+        // Act
+        String actualUsername = userPrincipal.getUsername();
+
+        // Assert
+        assertEquals("janedoe", actualUsername);
     }
 
     @Test
     public void testIsAccountNonExpired() {
-        assertFalse((new UserPrincipal(new User())).isAccountNonExpired());
+        // Arrange
+        User user = new User();
+        user.setActiveStatus(true);
+        UserPrincipal userPrincipal = new UserPrincipal(user);
+
+        // Act
+        boolean actualIsAccountNonExpiredResult = userPrincipal.isAccountNonExpired();
+
+        // Assert
+        assertTrue(actualIsAccountNonExpiredResult);
     }
 
     @Test
     public void testIsAccountNonExpired2() {
+        // Arrange
+        UserRole userRole = new UserRole();
+        userRole.setUsers(new HashSet<User>());
+        userRole.setId(1);
+        userRole.setTitle("Dr");
+
         Credential credential = new Credential();
         credential.setPassword("iloveyou");
         credential.setUsername("janedoe");
@@ -206,36 +264,65 @@ public class UserPrincipalTest {
         address.setStreetAddress("42 Main St");
         address.setState("MD");
 
-        UserRole userRole = new UserRole();
-        userRole.setUsers(new HashSet<User>());
-        userRole.setId(1);
-        userRole.setTitle("Dr");
-
         User user = new User();
         user.setLastName("Doe");
-        user.setCredential(credential);
         user.setEmail("jane.doe@example.org");
-        user.setAddress(address);
+        user.setRole(userRole);
         user.setDob(LocalDate.ofEpochDay(1L));
         user.setId(1);
+        user.setActiveStatus(true);
         user.setPhone("4105551212");
+        user.setCredential(credential);
         user.setFirstName("Jane");
         user.setDateJoined(LocalDate.ofEpochDay(1L));
-        user.setActiveStatus(true);
-        user.setRole(userRole);
+        user.setAddress(address);
 
         UserPrincipal userPrincipal = new UserPrincipal(null);
         userPrincipal.setUser(user);
-        assertTrue(userPrincipal.isAccountNonExpired());
+
+        // Act
+        boolean actualIsAccountNonExpiredResult = userPrincipal.isAccountNonExpired();
+
+        // Assert
+        assertTrue(actualIsAccountNonExpiredResult);
+    }
+
+    @Test
+    public void testIsAccountNonExpired3() {
+        // Arrange
+        User user = new User();
+        user.setActiveStatus(false);
+        UserPrincipal userPrincipal = new UserPrincipal(user);
+
+        // Act
+        boolean actualIsAccountNonExpiredResult = userPrincipal.isAccountNonExpired();
+
+        // Assert
+        assertFalse(actualIsAccountNonExpiredResult);
     }
 
     @Test
     public void testIsAccountNonLocked() {
-        assertFalse((new UserPrincipal(new User())).isAccountNonLocked());
+        // Arrange
+        User user = new User();
+        user.setActiveStatus(true);
+        UserPrincipal userPrincipal = new UserPrincipal(user);
+
+        // Act
+        boolean actualIsAccountNonLockedResult = userPrincipal.isAccountNonLocked();
+
+        // Assert
+        assertTrue(actualIsAccountNonLockedResult);
     }
 
     @Test
     public void testIsAccountNonLocked2() {
+        // Arrange
+        UserRole userRole = new UserRole();
+        userRole.setUsers(new HashSet<User>());
+        userRole.setId(1);
+        userRole.setTitle("Dr");
+
         Credential credential = new Credential();
         credential.setPassword("iloveyou");
         credential.setUsername("janedoe");
@@ -246,36 +333,65 @@ public class UserPrincipalTest {
         address.setStreetAddress("42 Main St");
         address.setState("MD");
 
-        UserRole userRole = new UserRole();
-        userRole.setUsers(new HashSet<User>());
-        userRole.setId(1);
-        userRole.setTitle("Dr");
-
         User user = new User();
         user.setLastName("Doe");
-        user.setCredential(credential);
         user.setEmail("jane.doe@example.org");
-        user.setAddress(address);
+        user.setRole(userRole);
         user.setDob(LocalDate.ofEpochDay(1L));
         user.setId(1);
+        user.setActiveStatus(true);
         user.setPhone("4105551212");
+        user.setCredential(credential);
         user.setFirstName("Jane");
         user.setDateJoined(LocalDate.ofEpochDay(1L));
-        user.setActiveStatus(true);
-        user.setRole(userRole);
+        user.setAddress(address);
 
         UserPrincipal userPrincipal = new UserPrincipal(null);
         userPrincipal.setUser(user);
-        assertTrue(userPrincipal.isAccountNonLocked());
+
+        // Act
+        boolean actualIsAccountNonLockedResult = userPrincipal.isAccountNonLocked();
+
+        // Assert
+        assertTrue(actualIsAccountNonLockedResult);
+    }
+
+    @Test
+    public void testIsAccountNonLocked3() {
+        // Arrange
+        User user = new User();
+        user.setActiveStatus(false);
+        UserPrincipal userPrincipal = new UserPrincipal(user);
+
+        // Act
+        boolean actualIsAccountNonLockedResult = userPrincipal.isAccountNonLocked();
+
+        // Assert
+        assertFalse(actualIsAccountNonLockedResult);
     }
 
     @Test
     public void testIsCredentialsNonExpired() {
-        assertFalse((new UserPrincipal(new User())).isCredentialsNonExpired());
+        // Arrange
+        User user = new User();
+        user.setActiveStatus(true);
+        UserPrincipal userPrincipal = new UserPrincipal(user);
+
+        // Act
+        boolean actualIsCredentialsNonExpiredResult = userPrincipal.isCredentialsNonExpired();
+
+        // Assert
+        assertTrue(actualIsCredentialsNonExpiredResult);
     }
 
     @Test
     public void testIsCredentialsNonExpired2() {
+        // Arrange
+        UserRole userRole = new UserRole();
+        userRole.setUsers(new HashSet<User>());
+        userRole.setId(1);
+        userRole.setTitle("Dr");
+
         Credential credential = new Credential();
         credential.setPassword("iloveyou");
         credential.setUsername("janedoe");
@@ -286,36 +402,65 @@ public class UserPrincipalTest {
         address.setStreetAddress("42 Main St");
         address.setState("MD");
 
-        UserRole userRole = new UserRole();
-        userRole.setUsers(new HashSet<User>());
-        userRole.setId(1);
-        userRole.setTitle("Dr");
-
         User user = new User();
         user.setLastName("Doe");
-        user.setCredential(credential);
         user.setEmail("jane.doe@example.org");
-        user.setAddress(address);
+        user.setRole(userRole);
         user.setDob(LocalDate.ofEpochDay(1L));
         user.setId(1);
+        user.setActiveStatus(true);
         user.setPhone("4105551212");
+        user.setCredential(credential);
         user.setFirstName("Jane");
         user.setDateJoined(LocalDate.ofEpochDay(1L));
-        user.setActiveStatus(true);
-        user.setRole(userRole);
+        user.setAddress(address);
 
         UserPrincipal userPrincipal = new UserPrincipal(null);
         userPrincipal.setUser(user);
-        assertTrue(userPrincipal.isCredentialsNonExpired());
+
+        // Act
+        boolean actualIsCredentialsNonExpiredResult = userPrincipal.isCredentialsNonExpired();
+
+        // Assert
+        assertTrue(actualIsCredentialsNonExpiredResult);
+    }
+
+    @Test
+    public void testIsCredentialsNonExpired3() {
+        // Arrange
+        User user = new User();
+        user.setActiveStatus(false);
+        UserPrincipal userPrincipal = new UserPrincipal(user);
+
+        // Act
+        boolean actualIsCredentialsNonExpiredResult = userPrincipal.isCredentialsNonExpired();
+
+        // Assert
+        assertFalse(actualIsCredentialsNonExpiredResult);
     }
 
     @Test
     public void testIsEnabled() {
-        assertFalse((new UserPrincipal(new User())).isEnabled());
+        // Arrange
+        User user = new User();
+        user.setActiveStatus(true);
+        UserPrincipal userPrincipal = new UserPrincipal(user);
+
+        // Act
+        boolean actualIsEnabledResult = userPrincipal.isEnabled();
+
+        // Assert
+        assertTrue(actualIsEnabledResult);
     }
 
     @Test
     public void testIsEnabled2() {
+        // Arrange
+        UserRole userRole = new UserRole();
+        userRole.setUsers(new HashSet<User>());
+        userRole.setId(1);
+        userRole.setTitle("Dr");
+
         Credential credential = new Credential();
         credential.setPassword("iloveyou");
         credential.setUsername("janedoe");
@@ -326,27 +471,41 @@ public class UserPrincipalTest {
         address.setStreetAddress("42 Main St");
         address.setState("MD");
 
-        UserRole userRole = new UserRole();
-        userRole.setUsers(new HashSet<User>());
-        userRole.setId(1);
-        userRole.setTitle("Dr");
-
         User user = new User();
         user.setLastName("Doe");
-        user.setCredential(credential);
         user.setEmail("jane.doe@example.org");
-        user.setAddress(address);
+        user.setRole(userRole);
         user.setDob(LocalDate.ofEpochDay(1L));
         user.setId(1);
+        user.setActiveStatus(true);
         user.setPhone("4105551212");
+        user.setCredential(credential);
         user.setFirstName("Jane");
         user.setDateJoined(LocalDate.ofEpochDay(1L));
-        user.setActiveStatus(true);
-        user.setRole(userRole);
+        user.setAddress(address);
 
         UserPrincipal userPrincipal = new UserPrincipal(null);
         userPrincipal.setUser(user);
-        assertTrue(userPrincipal.isEnabled());
+
+        // Act
+        boolean actualIsEnabledResult = userPrincipal.isEnabled();
+
+        // Assert
+        assertTrue(actualIsEnabledResult);
+    }
+
+    @Test
+    public void testIsEnabled3() {
+        // Arrange
+        User user = new User();
+        user.setActiveStatus(false);
+        UserPrincipal userPrincipal = new UserPrincipal(user);
+
+        // Act
+        boolean actualIsEnabledResult = userPrincipal.isEnabled();
+
+        // Assert
+        assertFalse(actualIsEnabledResult);
     }
 }
 

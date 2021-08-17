@@ -52,8 +52,8 @@ public class ExceptionControllerTest {
         when(methodArgumentNotValidException.getFieldErrors()).thenReturn(new ArrayList<FieldError>());
         ResponseEntity<Map<String, String>> actualUserValidationErrorResult = exceptionController
                 .userValidationError(methodArgumentNotValidException);
-        assertEquals(1, actualUserValidationErrorResult.getBody().size());
-        assertEquals("<400 BAD_REQUEST Bad Request,{status=400 BAD_REQUEST},[]>",
+        assertEquals(2, actualUserValidationErrorResult.getBody().size());
+        assertEquals("<400 BAD_REQUEST Bad Request,{message=, status=400 BAD_REQUEST},[]>",
                 actualUserValidationErrorResult.toString());
         assertTrue(actualUserValidationErrorResult.hasBody());
         assertEquals(HttpStatus.BAD_REQUEST, actualUserValidationErrorResult.getStatusCode());
@@ -71,9 +71,9 @@ public class ExceptionControllerTest {
         when(methodArgumentNotValidException.getFieldErrors()).thenReturn(fieldErrorList);
         ResponseEntity<Map<String, String>> actualUserValidationErrorResult = exceptionController
                 .userValidationError(methodArgumentNotValidException);
-        assertEquals(2, actualUserValidationErrorResult.getBody().size());
-        assertEquals("<400 BAD_REQUEST Bad Request,{Field=Default Message, status=400 BAD_REQUEST},[]>",
-                actualUserValidationErrorResult.toString());
+        assertEquals(3, actualUserValidationErrorResult.getBody().size());
+        assertEquals("<400 BAD_REQUEST Bad Request,{Field=Default Message, message= Default Message, status=400"
+                + " BAD_REQUEST},[]>", actualUserValidationErrorResult.toString());
         assertTrue(actualUserValidationErrorResult.hasBody());
         assertEquals(HttpStatus.BAD_REQUEST, actualUserValidationErrorResult.getStatusCode());
         assertTrue(actualUserValidationErrorResult.getHeaders().isEmpty());
@@ -91,8 +91,10 @@ public class ExceptionControllerTest {
         when(methodArgumentNotValidException.getFieldErrors()).thenReturn(fieldErrorList);
         ResponseEntity<Map<String, String>> actualUserValidationErrorResult = exceptionController
                 .userValidationError(methodArgumentNotValidException);
-        assertEquals(2, actualUserValidationErrorResult.getBody().size());
-        assertEquals("<400 BAD_REQUEST Bad Request,{Field=Default Message, status=400 BAD_REQUEST},[]>",
+        assertEquals(3, actualUserValidationErrorResult.getBody().size());
+        assertEquals(
+                "<400 BAD_REQUEST Bad Request,{Field=Default Message, message= Default Message Default Message, status=400"
+                        + " BAD_REQUEST},[]>",
                 actualUserValidationErrorResult.toString());
         assertTrue(actualUserValidationErrorResult.hasBody());
         assertEquals(HttpStatus.BAD_REQUEST, actualUserValidationErrorResult.getStatusCode());
@@ -118,5 +120,9 @@ public class ExceptionControllerTest {
         verify(fieldError).getDefaultMessage();
         verify(fieldError).getField();
     }
+
+
+
+
 }
 
