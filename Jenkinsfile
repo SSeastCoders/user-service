@@ -32,15 +32,5 @@ pipeline {
                 sh 'java -jar -Dspring.profiles.active=dev users-api/target/users-api-0.0.1-SNAPSHOT.jar'
             }
         }
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-    }
-    post {
-        always {
-            junit 'target/surefire-reports/*.xml'
-        }
     }
 }
