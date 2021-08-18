@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import javax.validation.Validator;
 import java.util.List;
 
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @RestController
 public class UserController {
     @Autowired
@@ -45,6 +45,7 @@ public class UserController {
     public UserDto getUserById(@PathVariable Integer id) {
         return userService.getUserById(id);
     }
+
 
     @PreAuthorize("(principal == #id and hasAuthority('Customer')) or hasAuthority('Admin')")
     @PutMapping("/users/{id}")
