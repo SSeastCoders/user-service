@@ -3,10 +3,10 @@ pipeline {
     stages {
         stage('SonarQube analysis') {
             steps {
-                withSonarQubeEnv(credentialsId: 'sonarqube_token') {
-                    //sh 'cd core-library'
+                withSonarQubeEnv('sonarScanner') {
+                    sh 'cd core-library'
                     sh 'mvn sonar:sonar'
-                }S
+                }
             }
         }
         stage('Quality Gate'){
