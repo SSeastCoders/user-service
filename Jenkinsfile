@@ -10,18 +10,30 @@ pipeline {
                 sh 'mvn -DskipTests clean package'
             }
         }
-        stage('SonarQube analysis') {
-            steps {
-                withSonarQubeEnv('sonarScanner') {
-                    sh 'mvn sonar:sonar'
+        // stage('SonarQube analysis') {
+        //     steps {
+        //         withSonarQubeEnv('sonarScanner') {
+        //             sh 'mvn sonar:sonar'
+        //         }
+        //     }
+        // }
+        // stage('Quality Gate'){
+        //     steps {
+        //         waitForQualityGate abortPipeline: true
+        //     }
+        // }
+        steps{
+            script{
+                withSonarQubeEnv('sonarserver') { 
+                    sh "mvn sonar:sonar"
+                }
+                timeout(time: 1, unit: 'HOURS') {
+                    def qg = waitForQualityGate()
+                    if (qg.status != 'OK') {
+                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                    }
                 }
             }
-        }
-        stage('Quality Gate'){
-            steps {
-                waitForQualityGate abortPipeline: true
-            }
-        } 
         stage('Placing Environmental Variables') {
             steps {
                 sh 'export $(cat .env | xargs)'
