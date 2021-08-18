@@ -2,12 +2,12 @@
 pipeline {
     agent any
     stages {
-        stage('Installing Dependancies') {
+        stage('Clean and Test') {
             steps {
                 sh 'mvn clean test'
             }
         }
-        stage('SonarQube analysis') {
+        stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarScanner') {
                     sh 'mvn sonar:sonar'
