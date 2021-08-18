@@ -5,6 +5,11 @@ pipeline {
             steps {
                 withSonarQubeEnv('sonarScanner') {
                     //sh 'cd core-library'
+                    sh 'cd core-library'
+                    sh 'git submodule update --init --recursive'
+                    sh 'mvn -DskipTests clean package'
+                    sh 'cd ..'
+                    sh 'mvn -DskipTests clean package'
                     sh 'mvn sonar:sonar'
                 }
             }
