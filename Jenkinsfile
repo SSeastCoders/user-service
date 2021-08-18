@@ -1,24 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage('SonarQube analysis') {
-            steps {
-                withSonarQubeEnv('sonarScanner') {
-                    //sh 'cd core-library'
-                    sh 'cd core-library'
-                    sh 'git submodule update --init --recursive'
-                    sh 'mvn -DskipTests clean package'
-                    sh 'cd ..'
-                    sh 'mvn -DskipTests clean package'
-                    sh 'mvn sonar:sonar'
-                }
-            }
-        }
-        stage('Quality Gate'){
-            steps {
-                waitForQualityGate abortPipeline=false
-            }
-        }
         stage('Installing Dependancies') {
             steps {
                 sh 'cd core-library'
@@ -28,6 +10,18 @@ pipeline {
                 sh 'mvn -DskipTests clean package'
             }
         }
+        stage('SonarQube analysis') {
+            steps {
+                withSonarQubeEnv('sonarScanner') {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
+        stage('Quality Gate'){
+            steps {
+                waitForQualityGate abortPipeline= false
+            }
+        } 
         stage('Placing Environmental Variables') {
             steps {
                 sh 'export $(cat .env | xargs)'
