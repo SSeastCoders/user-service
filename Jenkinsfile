@@ -22,6 +22,6 @@ pipeline {
             }
         }
         // Stage Docker image
-        // Stage Deplotment
+        // Stage Deployment
     }
 }
