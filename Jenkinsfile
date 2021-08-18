@@ -10,41 +10,16 @@ pipeline {
                 sh 'mvn -DskipTests clean package'
             }
         }
-        // stage('SonarQube analysis') {
-        //     steps {
-        //         withSonarQubeEnv('sonarScanner') {
-        //             sh 'mvn sonar:sonar'
-        //         }
-        //     }
-        // }
-        // stage('Quality Gate'){
-        //     steps {
-        //         waitForQualityGate abortPipeline: true
-        //     }
-        // }
         stage('SonarQube analysis') {
             steps {
                 withSonarQubeEnv('sonarScanner') {
                     sh 'mvn -DskipTests clean package sonar:sonar'
-                } // SonarQube taskId is automatically attached to the pipeline context
+                }
             }
         }
-        stage("Quality Gate"){
+        stage('Quality Gate'){
             steps {
-                timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
-<<<<<<< HEAD
-                    def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
-                    if (qg.status != 'OK') {
-                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
-=======
-                    steps {
-                        def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
-                        if (qg.status != 'OK') {
-                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                        }
->>>>>>> parent of f1c7203 (pipe ts)
-                    }
-                }
+                waitForQualityGate abortPipeline: true
             }
         }
         stage('Placing Environmental Variables') {
