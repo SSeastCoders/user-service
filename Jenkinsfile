@@ -2,35 +2,26 @@
 pipeline {
     agent any
     stages {
+        stage('Installing Dependancies') {
+            steps {
+                sh 'mvn clean test'
+            }
+        }
         stage('SonarQube analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh "mvn sonar:sonar"
+                withSonarQubeEnv('sonarScanner') {
+                    sh 'mvn sonar:sonar'
                 }
             }
         }
         stage('Quality Gate'){
             steps {
-                waitForQualityGate abortPipeline= true
-            }
-        } 
-        stage('Build') {
-            steps {
-                sh 'mvn -DskipTests clean package'
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
-/*        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-        } */
-    }
-    post {
-/*        always {
-            junit 'target/surefire-reports/*.xml'
-        } */
-        success {
-            archiveArtifacts artifacts: '**/*.jar'
-        }
+        // Stage Docker image
+        // Stage Deplotment
     }
 }
