@@ -4,7 +4,8 @@ pipeline {
         stage('SonarQube analysis') {
             steps {
                 withSonarQubeEnv('sonarScanner') {
-                    sh "mvn sonar:sonar"
+                    sh 'cd core-library'
+                    sh 'mvn sonar:sonar'
                 }
             }
         }
