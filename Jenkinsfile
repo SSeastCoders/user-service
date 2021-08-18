@@ -19,7 +19,9 @@ pipeline {
         }
         stage('Quality Gate'){
             steps {
-                waitForQualityGate()
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
         stage('Placing Environmental Variables') {
