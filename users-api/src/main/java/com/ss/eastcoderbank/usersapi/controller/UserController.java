@@ -28,16 +28,36 @@ public class UserController {
     @Autowired
     private Validator validator;
 
+//    @PreAuthorize("hasAuthority('Admin')")
+//    @GetMapping("/users")
+//    public Page<UserDto> getUsers(@RequestParam(required = false) String role, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, Pageable page) {
+//
+//        if (role != null) return userService.getUsersByRole(role, page);
+//
+//        Page<UserDto> userPage = userService.getUsers(pageNumber, pageSize);
+//
+//        return userPage;
+//    }
+
     @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/users")
-    public Page<UserDto> getUsers(@RequestParam(required = false) String role, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, Pageable page) {
-
+    public Page<UserDto> getUsers(@RequestParam(required = false) String role, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, @RequestParam(value="asc", required = false) boolean asc, Pageable page, String sort) {
+        Page<UserDto> userPage;
         if (role != null) return userService.getUsersByRole(role, page);
 
-        Page<UserDto> userPage = userService.getUsers(pageNumber, pageSize);
+        if (sort != null) {
+            System.out.println("in if statement in getUsers");
+            userPage = userService.getSortedUsers(pageNumber, pageSize, asc, sort);
+
+        } else {
+            //resultPage = userService.findPaginated(PageRequest.of(page, size, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, sort)), search);
+            userPage = userService.getUsers(pageNumber, pageSize);
+        }
 
         return userPage;
     }
+
+
 
     //HYPOTHETICAL BASED ON USER ID
     @PreAuthorize("principal == #id or hasAuthority('Admin')")
