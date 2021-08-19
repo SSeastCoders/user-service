@@ -14,14 +14,18 @@ pipeline {
                 }
             }
         }
-        stage('Quality Gate'){
+        stage('Quality Gate') {
             steps {
-                timeout(time: 5, unit: 'MINUTES') {
+                timeout(time: 10, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
             }
         }
-        // Stage Docker image
+        stage('Docker Image Build') {
+            steps {
+                sh 'sudo docker build -t eastcodersbank/user-service .'
+            }
+        }
         // Stage Deployment
     }
 }
