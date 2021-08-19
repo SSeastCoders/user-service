@@ -46,6 +46,7 @@ public class PopulateDatabase implements ApplicationRunner {
         user.setId(1);
         user.setEmail("hazel@smoothstack.com");
         user.setFirstName("hazel");
+        user.setLastName("hazelsLastName");
         Credential cred = new Credential();
         cred.setUsername("hazel");
         cred.setPassword(passwordEncoder.encode("hazel"));
@@ -60,6 +61,7 @@ public class PopulateDatabase implements ApplicationRunner {
         userCust.setId(2);
         userCust.setEmail("customer@smoothstack.com");
         userCust.setFirstName("customer");
+        userCust.setLastName("customersLastName");
         Credential credCust = new Credential();
         credCust.setUsername("customer");
         credCust.setPassword(passwordEncoder.encode("customer"));

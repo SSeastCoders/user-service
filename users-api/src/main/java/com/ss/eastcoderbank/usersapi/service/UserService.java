@@ -23,6 +23,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -98,6 +99,12 @@ public class UserService {
     public Page<UserDto> getUsers(Integer pageNumber, Integer pageSize) {
         return userRepository.findAll(PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));
     }
+
+    public Page<UserDto> getSortedUsers(Integer pageNumber, Integer pageSize, boolean asc, String sort) {
+        //resultPage = userService.findPaginated(PageRequest.of(page, size, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, sort)), search);
+        return userRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, sort))).map(user -> userMapper.mapToDto(user));
+    }
+   // PageRequest.of(0, 3, Sort.by("price").descending());
 
     public UserDto getUserById(Integer id) {
         return userMapper.mapToDto(userRepository.findById(id).orElseThrow(UserNotFoundException::new));
