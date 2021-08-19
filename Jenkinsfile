@@ -1,25 +1,34 @@
+
 pipeline {
     agent any
     stages {
         stage('SonarQube analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh "mvn sonar:sonar -Dsonar.login=12367eaccd39c2d74a819f9cbaaa2b01db70aaee"
+                    sh "mvn sonar:sonar"
                 }
             }
         }
         stage('Quality Gate'){
             steps {
-                waitForQualityGate abortPipeline: true
+                waitForQualityGate abortPipeline= true
             }
-        }
+        } 
         stage('Build') {
             steps {
                 sh 'mvn -DskipTests clean package'
             }
         }
+/*        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        } */
     }
     post {
+/*        always {
+            junit 'target/surefire-reports/*.xml'
+        } */
         success {
             archiveArtifacts artifacts: '**/*.jar'
         }
