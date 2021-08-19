@@ -1,6 +1,10 @@
 
 pipeline {
     agent any
+    environment {
+        dockerImageName = "eastcodersbank/user-service"
+        dockerImage = ''
+    }
     stages {
         stage('Clean and Test') {
             steps {
@@ -23,7 +27,9 @@ pipeline {
         }
         stage('Docker Image Build') {
             steps {
-                sh 'docker build -t eastcodersbank/user-service .'
+                script {
+                    dockerImage = docker.build dockerImageName
+                }
             }
         }
         // Stage Deployment
