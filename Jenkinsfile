@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Docker Image Build') {
             steps {
-                sh 'sudo docker build -t eastcodersbank/user-service .'
+                sh 'docker build -t eastcodersbank/user-service .'
             }
         }
         // Stage Deployment
