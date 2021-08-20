@@ -25,6 +25,8 @@ pipeline {
                 }
             }
         }
+        // once this is pushed to develop, use 'mvn -P dev clean package'
+        // and remove extra parameter for jar file in Dockerfile 
         stage('Docker Image Build') {
             steps {
                 sh 'mvn clean package'
