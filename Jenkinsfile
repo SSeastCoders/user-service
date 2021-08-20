@@ -40,9 +40,17 @@ pipeline {
         // more reusable for all spring boot services
         stage('ECR Image Push') {
             steps {
-                sh 'aws ecr get-login-password --region ${awsRegion} | docker login --username AWS --password-stdin ${awsAccountID}.dkr.ecr.us-east-1.amazonaws.com'
-                sh 'docker tag user-service:latest ${awsAccountID}.dkr.ecr.us-east-1.amazonaws.com/user-service:latest'
-                sh 'docker push ${awsAccountID}.dkr.ecr.us-east-1.amazonaws.com/user-service:latest'
+                withCredentials([usernameColonPassword(credentialsId: 'awsAccountNumber', variable: 'awsID')]) {
+                    sh '''
+                        aws ecr get-login-password --region ${awsRegion} | docker login --username AWS --password-stdin ${awsID}.dkr.ecr.us-east-1.amazonaws.com
+                        docker tag user-service:latest ${awsID}.dkr.ecr.us-east-1.amazonaws.com/user-service:latest
+                        docker push ${awsID}.dkr.ecr.us-east-1.amazonaws.com/user-service:latest
+                    '''
+                }
+
+                // sh 'aws ecr get-login-password --region ${awsRegion} | docker login --username AWS --password-stdin ${awsAccountID}.dkr.ecr.us-east-1.amazonaws.com'
+                // sh 'docker tag user-service:latest ${awsAccountID}.dkr.ecr.us-east-1.amazonaws.com/user-service:latest'
+                // sh 'docker push ${awsAccountID}.dkr.ecr.us-east-1.amazonaws.com/user-service:latest'
             }
         }
     }
