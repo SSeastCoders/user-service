@@ -40,7 +40,7 @@ pipeline {
         // more reusable for all spring boot services
         stage('ECR Image Push') {
             steps {
-                withCredentials([usernameColonPassword(credentialsId: 'awsAccountNumber', variable: 'awsID')]) {
+                withCredentials([string(credentialsId: 'awsAccountNumber', variable: 'awsID')]) {
                     sh '''
                         aws ecr get-login-password --region ${awsRegion} | docker login --username AWS --password-stdin ${awsID}.dkr.ecr.us-east-1.amazonaws.com
                         docker tag user-service:latest ${awsID}.dkr.ecr.us-east-1.amazonaws.com/user-service:latest
