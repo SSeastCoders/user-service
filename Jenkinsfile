@@ -40,8 +40,8 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry(
-                        "326848027964.dkr.ecr.us-east-1.amazonaws.com/user-service.amazon.com",
-                        "ecr:user-service:AKIAUYGNJDU6GU5N44VT"
+                        'https://326848027964.dkr.ecr.us-east-1.amazonaws.com/user-service',
+                        'ecr:us-east-1:AKIAUYGNJDU6GU5N44VT'
                     )
                     dockerImage.push('latest')
                 }
