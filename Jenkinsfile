@@ -37,9 +37,11 @@ pipeline {
         }
         // Stage Deployment
         stage('ECR Image Push') {
-            sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 326848027964.dkr.ecr.us-east-1.amazonaws.com'
-            sh 'docker tag user-service:latest 326848027964.dkr.ecr.us-east-1.amazonaws.com/user-service:latest'
-            sh 'docker push 326848027964.dkr.ecr.us-east-1.amazonaws.com/user-service:latest'
+            steps {
+                sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 326848027964.dkr.ecr.us-east-1.amazonaws.com'
+                sh 'docker tag user-service:latest 326848027964.dkr.ecr.us-east-1.amazonaws.com/user-service:latest'
+                sh 'docker push 326848027964.dkr.ecr.us-east-1.amazonaws.com/user-service:latest'
+            }
             // steps {
             //     //script {
             //     //    docker.withRegistry('public.ecr.aws/f2j6g2j3/user-service', 'ecr:us-east-1:AKIAUYGNJDU6GU5N44VT')
