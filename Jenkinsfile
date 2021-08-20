@@ -28,6 +28,8 @@ pipeline {
         stage('Docker Image Build') {
             steps {
                 sh 'pwd'
+                sh 'cd users-api/target/'
+                sh 'ls'
                 script {
                     dockerImage = docker.build dockerImageName
                 }
