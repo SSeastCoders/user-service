@@ -28,10 +28,6 @@ pipeline {
         stage('Docker Image Build') {
             steps {
                 sh 'mvn clean package'
-                sh 'pwd'
-                sh 'ls'
-                sh 'ls users-api'
-                sh 'ls users-api/target'
                 script {
                     dockerImage = docker.build dockerImageName
                 }
