@@ -27,6 +27,7 @@ pipeline {
         }
         stage('Docker Image Build') {
             steps {
+                sh 'mvn -P dev clean package'
                 sh 'pwd'
                 sh 'ls target'
                 sh 'ls users-api'
