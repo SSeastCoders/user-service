@@ -2,7 +2,7 @@
 pipeline {
     agent any
     environment {
-        dockerImageName = "eastcodersbank/user-service"
+        dockerImageName = "user-service"
         dockerImage = ''
     }
     stages {
@@ -36,5 +36,17 @@ pipeline {
             }
         }
         // Stage Deployment
+        stage('ECR Image Push') {
+            steps {
+                script {
+                    docker.withRegistry(
+                        '326848027964.dkr.ecr.us-east-1.amazonaws.com/user-service.amazon.com',
+                        'ecr:user-service:AKIAUYGNJDU6GU5N44VT'
+                    )
+                }
+                dockerImage.push('latest')
+                }
+            }
+        }
     }
 }
