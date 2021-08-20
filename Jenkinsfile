@@ -27,6 +27,7 @@ pipeline {
         }
         stage('Docker Image Build') {
             steps {
+                sh 'pwd'
                 script {
                     dockerImage = docker.build dockerImageName
                 }
