@@ -39,7 +39,7 @@ pipeline {
         stage('ECR Image Push') {
             steps {
                 script {
-                    docker.withRegistry('public.ecr.aws/f2j6g2j3/user-service')
+                    docker.withRegistry('public.ecr.aws/f2j6g2j3/user-service', 'ecr:us-east-1')
                     dockerImage.push('latest')
                 }
             }
