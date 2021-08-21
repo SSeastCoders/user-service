@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
-@Profile("h2")
+@Profile({"h2", "mysql"})
 @Component
 public class PopulateDatabase implements ApplicationRunner {
 
