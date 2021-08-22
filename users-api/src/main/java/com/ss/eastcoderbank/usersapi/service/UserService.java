@@ -101,10 +101,10 @@ public class UserService {
     }
 
     public Page<UserDto> getSortedUsers(Integer pageNumber, Integer pageSize, boolean asc, String sort) {
-        //resultPage = userService.findPaginated(PageRequest.of(page, size, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, sort)), search);
+
         return userRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, sort))).map(user -> userMapper.mapToDto(user));
     }
-   // PageRequest.of(0, 3, Sort.by("price").descending());
+
 
     public UserDto getUserById(Integer id) {
         return userMapper.mapToDto(userRepository.findById(id).orElseThrow(UserNotFoundException::new));
