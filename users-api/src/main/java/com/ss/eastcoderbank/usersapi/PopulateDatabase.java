@@ -11,6 +11,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
@@ -51,6 +52,7 @@ public class PopulateDatabase implements ApplicationRunner {
         cred.setPassword(passwordEncoder.encode("hazel"));
         user.setCredential(cred);
         user.setRole(userRoleAdmin);
+        user.setDateJoined(LocalDate.parse("2021-06-01"));
 
         userRepository.save(user);
 
@@ -65,6 +67,7 @@ public class PopulateDatabase implements ApplicationRunner {
         credCust.setPassword(passwordEncoder.encode("customer"));
         userCust.setCredential(credCust);
         userCust.setRole(userRoleCust);
+        userCust.setDateJoined(LocalDate.parse("2021-06-01"));
 
         userRepository.save(userCust);
 
@@ -80,6 +83,7 @@ public class PopulateDatabase implements ApplicationRunner {
                     cred2.setPassword(passwordEncoder.encode("hazelasd"));
                     user2.setCredential(cred2);
                     user2.setRole(userRoleAdmin);
+                    user2.setDateJoined(LocalDate.parse("2021-06-01"));
                     userRepository.save(user2);
                 });
         //(1, TRUE, 'Boston', 'MA', '41 Bothwell Road', 02135, 'tempPass', 'hazel', '2021-07-07', '1996-06-28', 'hazel.baker-harvey@smoothstack.com', 'Hazel', 'Baker-Harvey', '(206) 557-0334', 1);

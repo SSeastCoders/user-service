@@ -1,6 +1,6 @@
 package com.ss.eastcoderbank.usersapi.controller;
 
-import com.ss.eastcoderbank.usersapi.service.AuthorizationService;
+import com.ss.eastcoderbank.usersapi.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -8,14 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class AuthorizationController {
 
-    AuthorizationService authorizationService;
+    AuthService authService;
 
-    public AuthorizationController(AuthorizationService authorizationService) {
-        this.authorizationService = authorizationService;
+    public AuthorizationController(AuthService authService) {
+        this.authService = authService;
     }
-//    @PreAuthorize("permitAll()")
-//    @PostMapping("/login")
-//    public Integer loginUser() {
-//        return 1;
-//    }
+
 }

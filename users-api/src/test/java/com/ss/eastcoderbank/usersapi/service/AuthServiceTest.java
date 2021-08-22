@@ -1,50 +1,42 @@
-package com.ss.eastcoderbank.usersapi.security;
+package com.ss.eastcoderbank.usersapi.service;
 
 import com.ss.eastcoderbank.core.model.user.Address;
 import com.ss.eastcoderbank.core.model.user.Credential;
 import com.ss.eastcoderbank.core.model.user.User;
 import com.ss.eastcoderbank.core.model.user.UserRole;
 import com.ss.eastcoderbank.core.repository.UserRepository;
+import com.ss.eastcoderbank.core.repository.UserRoleRepository;
+import com.ss.eastcoderbank.usersapi.dto.LoginDto;
+import com.ss.eastcoderbank.usersapi.mapper.LoginMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-@ContextConfiguration(classes = {UserPrincipalService.class})
+@ContextConfiguration(classes = {AuthService.class})
 @ExtendWith(SpringExtension.class)
-public class UserPrincipalServiceTest {
+public class AuthServiceTest {
     @Autowired
-    private UserPrincipalService userPrincipalService;
+    private AuthService authorizationService;
+
+    @MockBean
+    private LoginMapper loginMapper;
 
     @MockBean
     private UserRepository userRepository;
 
-    @Test
-    public void testConstructor() {
-        // TODO: This test is incomplete.
-        //   Reason: Nothing to assert: the constructed class does not have observers (e.g. getters or public fields).
-        //   Add observers (e.g. getters or public fields) to the class.
-        //   See https://diff.blue/R002
-
-        // Arrange
-        UserRepository userRepository = mock(UserRepository.class);
-
-        // Act
-        new UserPrincipalService(userRepository);
-    }
+    @MockBean
+    private UserRoleRepository userRoleRepository;
 
     @Test
-    public void testLoadUserByUsername() throws UsernameNotFoundException {
+    public void testUserLogin() throws Exception {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -73,15 +65,17 @@ public class UserPrincipalServiceTest {
         user.setFirstName("Jane");
         user.setDateJoined(LocalDate.ofEpochDay(1L));
         user.setAddress(address);
-        when(this.userRepository.findByCredentialUsername(anyString())).thenReturn(user);
-        String userName = "janedoe";
+        when(this.loginMapper.mapToEntity((LoginDto) any())).thenReturn(user);
+
+        LoginDto loginDto = new LoginDto();
+        loginDto.setPassword("iloveyou");
+        loginDto.setUsername("janedoe");
 
         // Act
-        UserDetails actualLoadUserByUsernameResult = this.userPrincipalService.loadUserByUsername(userName);
+        this.authorizationService.userLogin(loginDto);
 
         // Assert
-        assertEquals("janedoe", actualLoadUserByUsernameResult.getUsername());
-        verify(this.userRepository).findByCredentialUsername(anyString());
+        verify(this.loginMapper).mapToEntity((LoginDto) any());
     }
 }
 
