@@ -78,10 +78,11 @@ public class UserService {
 
 
     public Integer updateUser(UpdateProfileDto updateProfileDto, Integer id) {
+        System.out.println("--------IN UPDATEUSER");
         try {
             User user = userRepository.getById(id);
             updateProfileMapper.updateEntity(updateProfileDto, user, passwordEncoder);
-            userRoleRepository.findUserRoleByTitle(updateProfileDto.getRole()).ifPresent(user::setRole);
+            //userRoleRepository.findUserRoleByTitle(updateProfileDto.getRole()).ifPresent(user::setRole);
             userRepository.save(user);
             return user.getId();
         } catch (EntityNotFoundException e) {

@@ -49,11 +49,9 @@ public class UserController {
         if (role != null) return userService.getUsersByRole(role, page);
 
         if (sort != null) {
-            System.out.println("in if statement in getUsers");
             userPage = userService.getSortedUsers(pageNumber, pageSize, asc, sort);
 
         } else {
-            //resultPage = userService.findPaginated(PageRequest.of(page, size, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, sort)), search);
             userPage = userService.getUsers(pageNumber, pageSize);
         }
 
@@ -73,6 +71,7 @@ public class UserController {
     @PreAuthorize("(principal == #id and hasAuthority('Customer')) or hasAuthority('Admin')")
     @PutMapping("/users/{id}")
     public ResponseEntity<String> updateUserProfile(@Valid @RequestBody UpdateProfileDto updateProfileDto, @PathVariable Integer id) {
+        System.out.println("-------IN CONTROLLER LINE74");
         userService.updateUser(updateProfileDto, id);
         return new ResponseEntity<>("User updated", HttpStatus.PARTIAL_CONTENT);
     }
