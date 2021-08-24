@@ -4,7 +4,7 @@ pipeline {
     environment {
         serviceName = 'user-service'
         awsRegion = 'us-east-1'
-        commitIDShort = sh(returnStdout: true, script: "git rev-parse --short HEAD")
+        commitIDShort = sh(returnStdout: true, script: "git rev-parse --short HEAD").trim()
     }
     stages {
         stage('Clean and Test') {
@@ -46,7 +46,7 @@ pipeline {
     // On pipeline success delete docker images by docker image ID
     post {
         success {
-            sh ''' docker rmi $(docker images -a | grep aws | awk \\'{print $3}\\') '''
+            sh ''' docker rmi $(docker images -a | grep aws | awk '{print $3}') '''
         }
     }
 }
