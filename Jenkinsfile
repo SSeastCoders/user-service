@@ -4,7 +4,7 @@ pipeline {
     environment {
         serviceName = 'user-service'
         awsRegion = 'us-east-1'
-        commitIDShort = sh(returnStdout: true, script: "git rev-parse --short HEAD").trim()
+        commitIDShort = sh(returnStdout: true, script: "git rev-parse --short HEAD")
     }
     stages {
         stage('Clean and Test') {
