@@ -43,5 +43,12 @@ pipeline {
             }
         }
     }
-    // add post stage to delete docker images that are old
+    // On pipeline success delete docker images by docker image ID
+    post {
+        success {
+            steps {
+                sh 'docker rmi $(docker images -a | grep aws | awk '{print $3}')'
+            }
+        }
+    }
 }
