@@ -4,6 +4,7 @@ pipeline {
     environment {
         serviceName = 'user-service'
         awsRegion = 'us-east-1'
+        commitIDShort = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
     }
     stages {
         stage('Clean and Test') {
@@ -35,8 +36,8 @@ pipeline {
                 withCredentials([string(credentialsId: 'awsAccountNumber', variable: 'awsID')]) {
                     sh '''
                         aws ecr get-login-password --region ${awsRegion} | docker login --username AWS --password-stdin ${awsID}.dkr.ecr.${awsRegion}.amazonaws.com
-                        docker build -t ${awsID}.dkr.ecr.us-east-1.amazonaws.com/${serviceName}:latest .
-                        docker push ${awsID}.dkr.ecr.us-east-1.amazonaws.com/${serviceName}:latest
+                        docker build -t ${awsID}.dkr.ecr.us-east-1.amazonaws.com/${serviceName}:${commitIDShort} .
+                        docker push ${awsID}.dkr.ecr.us-east-1.amazonaws.com/${serviceName}:${commitIDShort}
                     '''
                 }
             }
