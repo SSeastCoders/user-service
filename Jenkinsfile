@@ -4,8 +4,10 @@ pipeline {
     environment {
         serviceName = 'user-service'
         awsRegion = 'us-east-1'
-        ecsRepositoryLink = '${awsID}.dkr.ecr.${awsRegion}.amazonaws.com/'
-        ecsRepositoryName = '${ecsRepositoryLink}${serviceName}'
+        withCredentials([string(credentialsId: 'awsAccountNumber', variable: 'awsID')]) {
+            ecsRepositoryLink = '${awsID}.dkr.ecr.${awsRegion}.amazonaws.com/'
+        }
+        ecsRepositoryName = '${{ecsRepositoryLink}+${serviceName}}'
     }
     stages {
         stage('Clean and Test') {
@@ -34,13 +36,11 @@ pipeline {
         }
         stage('Docker Image Build and ECR Image Push') {
             steps {
-                withCredentials([string(credentialsId: 'awsAccountNumber', variable: 'awsID')]) {
-                    sh '''
-                        aws ecr get-login-password --region ${awsRegion} | docker login --username AWS --password-stdin ${ecsRepositoryLink}
-                        docker build -t ${ecsRepositoryName}:latest .
-                        docker push ${ecsRepositoryLink}:latest
-                    '''
-                }
+                sh '''
+                    aws ecr get-login-password --region ${awsRegion} | docker login --username AWS --password-stdin ${ecsRepositoryLink}
+                    docker build -t ${ecsRepositoryName}:latest .
+                    docker push ${ecsRepositoryLink}:latest
+                '''
             }
         }
     }
