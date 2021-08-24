@@ -47,7 +47,7 @@ pipeline {
     post {
         success {
             steps {
-                sh 'docker rmi $(docker images -a | grep aws | awk \'{print $3}\')'
+                docker rmi $(docker images -a | grep aws | awk '{print $3}')
             }
         }
     }
