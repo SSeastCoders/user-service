@@ -4,4 +4,4 @@ USER spring:spring
 ARG JAR_FILE=users-api/target/*.jar
 COPY ${JAR_FILE} app.jar
 # remove spring profile parameter once this is pushed to develop and maven profile is ready
-ENTRYPOINT ["java","-jar", "-Dspring.profiles.active=dev", "/app.jar"]
+ENTRYPOINT ["java","-jar", "/app.jar"]
