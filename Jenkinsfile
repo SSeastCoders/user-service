@@ -4,17 +4,13 @@ pipeline {
     environment {
         serviceName = 'user-service'
         awsRegion = 'us-east-1'
+        mavenProfile = 'dev'
         commitIDShort = sh(returnStdout: true, script: "git rev-parse --short HEAD")
     }
     stages {
         stage('Clean and Test') {
             steps {
                 sh 'mvn clean test'
-            }
-        }
-        stage('Maven Build') {
-            steps {
-                sh 'mvn clean package -P dev -Dskiptests'
             }
         }
         stage('SonarQube Analysis') {
@@ -31,22 +27,30 @@ pipeline {
                 }
             }
         }
+        stage('Maven Build') {
+            steps {
+                sh 'mvn clean package -P ${mavenProfile} -Dskiptests'
+            }
+        }
         stage('Docker Image Build and ECR Image Push') {
             steps {
                 withCredentials([string(credentialsId: 'awsAccountNumber', variable: 'awsID')]) {
                     sh '''
                         aws ecr get-login-password --region ${awsRegion} | docker login --username AWS --password-stdin ${awsID}.dkr.ecr.${awsRegion}.amazonaws.com
+
                         docker build -t ${awsID}.dkr.ecr.us-east-1.amazonaws.com/${serviceName}:${commitIDShort} .
                         docker push ${awsID}.dkr.ecr.us-east-1.amazonaws.com/${serviceName}:${commitIDShort}
+
+                        docker build -t ${awsID}.dkr.ecr.us-east-1.amazonaws.com/${serviceName}:latest .
+                        docker push ${awsID}.dkr.ecr.us-east-1.amazonaws.com/${serviceName}:latest
                     '''
                 }
             }
         }
     }
-    // On pipeline success delete docker images by docker image ID
     post {
         success {
-            sh ''' docker rmi $(docker images -a | grep aws | awk '{print $3}') '''
+            sh 'docker image prune -af'
         }
     }
 }
