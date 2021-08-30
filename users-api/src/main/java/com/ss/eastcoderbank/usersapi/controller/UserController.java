@@ -31,17 +31,6 @@ public class UserController {
     @Autowired
     private Validator validator;
 
-//    @PreAuthorize("hasAuthority('Admin')")
-//    @GetMapping("/users")
-//    public Page<UserDto> getUsers(@RequestParam(required = false) String role, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, Pageable page) {
-//
-//        if (role != null) return userService.getUsersByRole(role, page);
-//
-//        Page<UserDto> userPage = userService.getUsers(pageNumber, pageSize);
-//
-//        return userPage;
-//    }
-
     @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/users")
     public Page<UserDto> getUsers(@RequestParam(required = false) String role, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, @RequestParam(value="asc", required = false) boolean asc, Pageable page, String sort) {
