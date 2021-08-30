@@ -78,7 +78,7 @@ public class UserService {
 
 
     public Integer updateUser(UpdateProfileDto updateProfileDto, Integer id) {
-        System.out.println("--------IN UPDATEUSER");
+
         try {
             User user = userRepository.getById(id);
             updateProfileMapper.updateEntity(updateProfileDto, user, passwordEncoder);
@@ -96,14 +96,23 @@ public class UserService {
             throw dive;
         }
     }
+    /**
+     * This method can be overloaded to take a boolean and a string in addition to pageNumber and PageSize
+     *@param pageNumber the page number
+     *@param pageSize the items per page
+     *@param asc the sort direction
+     *@param sort the property to be sorted by
+     */
+    public Page<UserDto> getUsers(Integer pageNumber, Integer pageSize, boolean asc, String sort) {
+        Page<UserDto> req;
+        if (sort != null) {
 
-    public Page<UserDto> getUsers(Integer pageNumber, Integer pageSize) {
-        return userRepository.findAll(PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));
-    }
+            req = userRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, sort))).map(user -> userMapper.mapToDto(user));
+        } else {
+            req = userRepository.findAll(PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));
 
-    public Page<UserDto> getSortedUsers(Integer pageNumber, Integer pageSize, boolean asc, String sort) {
-        //resultPage = userService.findPaginated(PageRequest.of(page, size, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, sort)), search);
-        return userRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, sort))).map(user -> userMapper.mapToDto(user));
+        }
+        return req;
     }
 
 

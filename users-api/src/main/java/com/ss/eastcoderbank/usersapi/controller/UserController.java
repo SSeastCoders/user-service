@@ -34,17 +34,10 @@ public class UserController {
     @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/users")
     public Page<UserDto> getUsers(@RequestParam(required = false) String role, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, @RequestParam(value="asc", required = false) boolean asc, Pageable page, String sort) {
-        Page<UserDto> userPage;
+
         if (role != null) return userService.getUsersByRole(role, page);
 
-        if (sort != null) {
-            userPage = userService.getSortedUsers(pageNumber, pageSize, asc, sort);
-
-        } else {
-            userPage = userService.getUsers(pageNumber, pageSize);
-        }
-
-        return userPage;
+        return userService.getUsers(pageNumber, pageSize, asc, sort);
     }
 
 
@@ -60,7 +53,7 @@ public class UserController {
     @PreAuthorize("(principal == #id and hasAuthority('Customer')) or hasAuthority('Admin')")
     @PutMapping("/users/{id}")
     public ResponseEntity<String> updateUserProfile(@Valid @RequestBody UpdateProfileDto updateProfileDto, @PathVariable Integer id) {
-        System.out.println("-------IN CONTROLLER LINE74");
+
         userService.updateUser(updateProfileDto, id);
         return new ResponseEntity<>("User updated", HttpStatus.PARTIAL_CONTENT);
     }

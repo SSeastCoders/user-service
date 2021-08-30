@@ -410,9 +410,12 @@ public class UserServiceTest {
                 .thenReturn(new PageImpl<User>(new ArrayList<User>()));
         int pageNumber = 10;
         int pageSize = 3;
+        boolean asc = true;
+        String sort = "username";
+
 
         // Act
-        Page<UserDto> actualUsers = this.userService.getUsers(pageNumber, pageSize);
+        Page<UserDto> actualUsers = this.userService.getUsers(pageNumber, pageSize, true, "username");
 
         // Assert
         assertTrue(actualUsers.toList().isEmpty());
@@ -482,9 +485,10 @@ public class UserServiceTest {
         when(this.userMapper.mapToDto((User) any())).thenReturn(userDto);
         int pageNumber = 10;
         int pageSize = 3;
-
+        boolean asc = true;
+        String sort = "username";
         // Act
-        Page<UserDto> actualUsers = this.userService.getUsers(pageNumber, pageSize);
+        Page<UserDto> actualUsers = this.userService.getUsers(pageNumber, pageSize, true, "username");
 
         // Assert
         assertEquals(1, actualUsers.toList().size());
@@ -584,9 +588,11 @@ public class UserServiceTest {
         when(this.userMapper.mapToDto((User) any())).thenReturn(userDto);
         int pageNumber = 10;
         int pageSize = 3;
-
+        boolean asc = true;
+        String sort = "username";
         // Act
-        Page<UserDto> actualUsers = this.userService.getUsers(pageNumber, pageSize);
+        Page<UserDto> actualUsers = this.userService.getUsers(pageNumber, pageSize, true, "username");
+
 
         // Assert
         assertEquals(2, actualUsers.toList().size());
