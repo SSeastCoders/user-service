@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine
+FROM fabric8/java-alpine-openjdk11-jre
 
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
