@@ -2,18 +2,15 @@ version: "3"
 
 services:
   user-service:
-    restart: always
-    build:
-      context: ../user-service
-      dockerfile: Dockerfile
     image: ${AWS_ID}.dkr.ecr.us-east-1.amazonaws.com/user-service
     environment:
       TWILIO_SID: ${TWILIO_SID}
-      TWILIO_TOKEN: ${TWILIO_TOKEN}x
+      TWILIO_TOKEN: ${TWILIO_TOKEN}
       JWT_SECRET: ${JWT_SECRET}
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
     volumes:
+      - user-service_vol:/opt/user-service/vol
     ports:
       - "8222:8222"
 
