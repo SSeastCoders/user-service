@@ -49,12 +49,13 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to ECS') {
-            steps {
-                sh 'docker context use aws-ecs-deploy'
-                sh 'docker compose up'
-            }
-        }
+        // stage('Deploy to ECS') {
+        //     steps {
+        //         sh 'docker context use aws-ecs-deploy'
+        //         sh 'docker compose up'
+        //         sh 'docker compose ps --format json'
+        //     }
+        // }
     }
     post {
         success {
