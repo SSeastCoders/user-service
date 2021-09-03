@@ -38,6 +38,7 @@ pipeline {
                     sh '''
                         aws ecr get-login-password --region ${awsRegion} | docker login --username AWS --password-stdin ${awsID}.dkr.ecr.${awsRegion}.amazonaws.com
 
+                        docker context list
                         docker context use default
 
                         docker build -t ${awsID}.dkr.ecr.us-east-1.amazonaws.com/${serviceName}:${commitIDShort} .
@@ -52,6 +53,7 @@ pipeline {
         stage('Deploy to ECS') {
             steps {
                 sh '''
+                    docker context list
                     docker context use aws-ecs-deploy
                     docker compose up
                     docker compose ps
