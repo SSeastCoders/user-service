@@ -54,7 +54,7 @@ pipeline {
                 sh '''
                     docker context use aws-ecs-deploy
                     docker compose up
-                    docker compose ps --format json
+                    docker compose ps
                 '''
             }
         }
