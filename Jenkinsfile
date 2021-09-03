@@ -52,7 +52,6 @@ pipeline {
         stage('Deploy to ECS') {
             steps {
                 sh '''
-                    whoami
                     docker context use aws-ecs-deploy
                     docker compose up
                     docker compose ps
