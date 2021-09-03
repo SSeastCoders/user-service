@@ -48,14 +48,14 @@ pipeline {
             }
         }
     }
-    // stage('Deploy to ECS') {
-    //     steps {
-    //         sh '''
-    //             docker context use aws-ecs-deploy
-    //             docker compose up
-    //         '''
-    //     }
-    // }
+    stage('Deploy to ECS') {
+        steps {
+            sh '''
+                docker context use aws-ecs-deploy
+                docker compose up
+            '''
+        }
+    }
     post {
         success {
             sh 'docker image prune -af'
