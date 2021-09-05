@@ -64,7 +64,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('Admin')")
-    @GetMapping("/roles")
+    @GetMapping("/users/roles")
     public List<UserRole> getRoles() {
         // TODO implement pagination
         return userService.getRoles();
