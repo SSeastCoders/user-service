@@ -3,13 +3,12 @@ package com.ss.eastcoderbank.usersapi.service;
 import com.ss.eastcoderbank.core.model.user.User;
 import com.ss.eastcoderbank.core.repository.UserRepository;
 import com.ss.eastcoderbank.core.repository.UserRoleRepository;
-import com.ss.eastcoderbank.usersapi.mapper.LoginMapper;
 import com.ss.eastcoderbank.usersapi.dto.LoginDto;
+import com.ss.eastcoderbank.usersapi.mapper.LoginMapper;
 import com.ss.eastcoderbank.usersapi.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 

@@ -20,8 +20,9 @@ import javax.validation.Valid;
 import javax.validation.Validator;
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @AllArgsConstructor
-@CrossOrigin
+
 @RestController
 public class UserController {
     @Autowired
@@ -32,14 +33,14 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/users")
-    public Page<UserDto> getUsers(@RequestParam(required = false) String role, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, Pageable page) {
+    public Page<UserDto> getUsers(@RequestParam(required = false) String role, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, @RequestParam(value="asc", required = false) boolean asc, Pageable page, String sort) {
 
         if (role != null) return userService.getUsersByRole(role, page);
 
-        Page<UserDto> userPage = userService.getUsers(pageNumber, pageSize);
-
-        return userPage;
+        return userService.getUsers(pageNumber, pageSize, asc, sort);
     }
+
+
 
     //HYPOTHETICAL BASED ON USER ID
     @PreAuthorize("principal == #id or hasAuthority('Admin')")
@@ -48,9 +49,11 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+
     @PreAuthorize("(principal == #id and hasAuthority('Customer')) or hasAuthority('Admin')")
     @PutMapping("/users/{id}")
     public ResponseEntity<String> updateUserProfile(@Valid @RequestBody UpdateProfileDto updateProfileDto, @PathVariable Integer id) {
+
         userService.updateUser(updateProfileDto, id);
         return new ResponseEntity<>("User updated", HttpStatus.PARTIAL_CONTENT);
     }

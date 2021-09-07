@@ -23,6 +23,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -74,6 +75,7 @@ public class UserService {
 
 
     public Integer updateUser(UpdateProfileDto updateProfileDto, Integer id) {
+
         try {
             User user = userRepository.getById(id);
             updateProfileMapper.updateEntity(updateProfileDto, user, passwordEncoder);
@@ -91,10 +93,25 @@ public class UserService {
             throw dive;
         }
     }
+    /**
+     * This method can be overloaded to take a boolean and a string in addition to pageNumber and PageSize
+     *@param pageNumber the page number
+     *@param pageSize the items per page
+     *@param asc the sort direction
+     *@param sort the property to be sorted by
+     */
+    public Page<UserDto> getUsers(Integer pageNumber, Integer pageSize, boolean asc, String sort) {
+        Page<UserDto> req;
+        if (sort != null) {
 
-    public Page<UserDto> getUsers(Integer pageNumber, Integer pageSize) {
-        return userRepository.findAll(PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));
+            req = userRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, sort))).map(user -> userMapper.mapToDto(user));
+        } else {
+            req = userRepository.findAll(PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));
+
+        }
+        return req;
     }
+
 
     public UserDto getUserById(Integer id) {
         return userMapper.mapToDto(userRepository.findById(id).orElseThrow(UserNotFoundException::new));
