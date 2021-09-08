@@ -1,6 +1,7 @@
 package com.ss.eastcoderbank.usersapi.controller;
 
 
+import com.ss.eastcoderbank.core.model.user.User;
 import com.ss.eastcoderbank.core.model.user.UserRole;
 import com.ss.eastcoderbank.core.transferdto.UserDto;
 import com.ss.eastcoderbank.usersapi.dto.CreateUserDto;
@@ -33,12 +34,27 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/users")
-    public Page<UserDto> getUsers(@RequestParam(required = false) String role, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, @RequestParam(value="asc", required = false) boolean asc, Pageable page, String sort) {
 
+    public Page<UserDto> getUsers(@RequestParam(required = false) String role, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, @RequestParam(value="asc", required = false) boolean asc, @RequestParam(value = "sort", required = false) String sort, Pageable page) {
         if (role != null) return userService.getUsersByRole(role, page);
 
         return userService.getUsers(pageNumber, pageSize, asc, sort);
+
     }
+
+    @PreAuthorize("hasAuthority('Admin')")
+    @GetMapping("/users/active")
+    public Page<UserDto> getActiveUsers(@RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize) {
+        return userService.getActiveUsers(pageNumber, pageSize);
+    }
+
+    @PreAuthorize("hasAuthority('Admin')")
+    @GetMapping("/users/inactive")
+    public Page<UserDto> getInactiveUsers(@RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize) {
+        return userService.getInactiveUsers(pageNumber, pageSize);
+    }
+
+
 
 
 
@@ -72,6 +88,8 @@ public class UserController {
         // TODO implement pagination
         return userService.getRoles();
     }
+
+
 
     @PreAuthorize("principal == #id or hasAuthority('Admin')")
     @ResponseStatus(HttpStatus.OK)

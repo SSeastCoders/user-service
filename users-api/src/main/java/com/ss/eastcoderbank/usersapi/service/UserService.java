@@ -96,15 +96,29 @@ public class UserService {
             throw dive;
         }
     }
+
     /**
-     * This method can be overloaded to take a boolean and a string in addition to pageNumber and PageSize
+     *
+     * @param pageNumber
+     * @param pageSize
+     * @return a Page of UserDtos
+     */
+    public Page<UserDto> getUsers(Integer pageNumber, Integer pageSize) {
+
+        Page<UserDto> req = userRepository.findAll(PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));
+        return req;
+    }
+    /**
+     *
      *@param pageNumber the page number
      *@param pageSize the items per page
      *@param asc the sort direction
      *@param sort the property to be sorted by
      */
     public Page<UserDto> getUsers(Integer pageNumber, Integer pageSize, boolean asc, String sort) {
+
         Page<UserDto> req;
+
         if (sort != null) {
 
             req = userRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, sort))).map(user -> userMapper.mapToDto(user));
@@ -115,10 +129,34 @@ public class UserService {
         return req;
     }
 
+    public Page<UserDto> getActiveUsers(Integer pageNumber, Integer pageSize) {
+
+        Page<UserDto> req;
+
+            req = userRepository.findAllByActiveStatusIsTrue(PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));
+
+
+        return req;
+    }
+
+    public Page<UserDto> getInactiveUsers(Integer pageNumber, Integer pageSize) {
+
+        Page<UserDto> req;
+
+        req = userRepository.findAllByActiveStatusIsFalse(PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));
+
+
+        return req;
+    }
+
 
     public UserDto getUserById(Integer id) {
         return userMapper.mapToDto(userRepository.findById(id).orElseThrow(UserNotFoundException::new));
     }
+
+
+
+
 
     public List<UserRole> getRoles() {
         return userRoleRepository.findAll();
