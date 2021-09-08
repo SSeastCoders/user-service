@@ -51,7 +51,7 @@ pipeline {
         }
         stage('Deploy to ECS') {
             steps {
-                sh 'source ~/.bashrc'
+                sh 'source /home/ubuntu/.bashrc'
                 sh 'docker context use aws-ecs-deploy'
                 sh 'docker compose up'
                 sh 'docker compose ps --format json'
