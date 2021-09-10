@@ -49,14 +49,6 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to ECS') {
-            steps {
-                sh 'source /var/lib/jenkins/.bashrc'
-                sh 'docker context use aws-ecs-deploy'
-                sh 'docker compose up'
-                sh 'docker compose ps --format json'
-            }
-        }
     }
     post {
         success {
