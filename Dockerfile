@@ -1,10 +1,7 @@
-FROM openjdk:11-jdk
-
-RUN addgroup -S spring && adduser -S spring -G spring
+FROM openjdk:11
+LABEL maintainer="amanda.rolon@smoothstack.com"
+# RUN addgroup -S spring adduser -S spring -G spring
 USER spring:spring
-
-ARG SERVICE=users-api
-ARG JAR_FILE=${SERVICE}/target/*.jar
+ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar
-
-ENTRYPOINT ["java","-jar", "/app.jar"]
+ENTRYPOINT ["java","-jar","/user-service/users-api/target/*.jar"]
