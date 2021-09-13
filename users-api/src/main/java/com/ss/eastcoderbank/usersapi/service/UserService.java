@@ -46,13 +46,10 @@ public class UserService {
     private UpdateProfileMapper updateProfileMapper;
     private CreateUserMapper createUserMapper;
 
-
-
     public Page<UserDto> getUsersByRole(String title, Pageable page) {
         return userRepository.findUserByRoleTitle(title, page).map(user -> userMapper.mapToDto(user));
 
     }
-
 
     public Integer createUser(CreateUserDto createUserDto) throws DuplicateConstraintsException {
         createUserDto.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
