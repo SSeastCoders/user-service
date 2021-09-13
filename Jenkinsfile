@@ -81,5 +81,5 @@ waitForQualityGate abortPipeline: true
 //             sh 'docker image prune -af'
 //         }
 //     }
-
+}
 }
