@@ -37,7 +37,7 @@ pipeline {
     stages {
         stage('update submodule'){
         steps{
-            sh 'git submodule update --init --recursive'
+            sh 'git status'
         }
         }
         stage('Clean and Test') {
