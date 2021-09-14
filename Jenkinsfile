@@ -28,10 +28,7 @@
 
 pipeline {
     agent any
-        tools {
-            Maven '3.8.2'
-//             jdk 'jdk8'
-        }
+
     environment {
     serviceName = 'user-service'
     //awsRegion = 'us-east-1'
