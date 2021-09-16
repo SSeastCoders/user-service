@@ -15,7 +15,7 @@
     <properties>
         <java.version>11</java.version>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
-        <jacoco.version>0.8.7</jacoco.version>
+        <jacoco.version>0.8.4</jacoco.version>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
@@ -117,11 +117,6 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.8.7</version>
-        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -171,17 +166,17 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.7</version>
+                <version>0.8.4</version>
                 <executions>
                     <execution>
-                        <id>jacoco-initialize</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
+                    <!-- attached to Maven test phase -->
                     <execution>
-                        <id>jacoco-site</id>
-                        <phase>package</phase>
+                        <id>report</id>
+                        <phase>test</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
