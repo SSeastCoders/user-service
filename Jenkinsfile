@@ -2,33 +2,35 @@ pipeline {
     agent any
 
     environment {
-    serviceName = 'user-service'
-    //awsRegion = 'us-east-1'
-    mavenProfile = 'dev'
-    commitIDShort = sh(returnStdout: true, script: "git rev-parse --short HEAD")
+        serviceName = 'user-service'
+        //awsRegion = 'us-east-1'
+        mavenProfile = 'dev'
+        commitIDShort = sh(returnStdout: true, script: "git rev-parse --short HEAD")
     }
 
     stages {
 
         stage('Clean and Test') {
-        steps {
-        sh 'mvn clean test'
-    }
-}
-        stage('SonarQube Analysis') {
-        steps {
-            withSonarQubeEnv('SonarQubeServer') {
-            sh 'mvn sonar:sonar'
+            steps {
+                sh 'mvn clean test'
             }
         }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQubeServer') {
+                    sh 'mvn sonar:sonar'
+                }
+            }
         }
         stage('Quality Gate') {
-        steps {
-            timeout(time: 10, unit: 'MINUTES') {
-            waitForQualityGate abortPipeline: true
+            steps {
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
         }
-        }
-        }
+    }
+}
 // stage('Maven Build') {
 // steps {
 // sh 'mvn clean package -P ${mavenProfile} -Dskiptests'
@@ -56,5 +58,3 @@ pipeline {
 //             sh 'docker image prune -af'
 //         }
 //     }
-}
-}
