@@ -9,8 +9,8 @@
 
 FROM openjdk:11-jdk
 
-RUN adduser --system --group spring
-USER spring:spring
+# RUN adduser --system --group spring
+# USER spring:spring
 
 ARG SERVICE=users-api
 ARG JAR_FILE=${SERVICE}/target/*.jar
