@@ -42,7 +42,7 @@ public class UserController {
 
     }
 
- /*   @PreAuthorize("hasAuthority('Admin')")
+    @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/users/active")
     public Page<UserDto> getActiveUsers(@RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize) {
         return userService.getActiveUsers(pageNumber, pageSize);
@@ -52,10 +52,7 @@ public class UserController {
     @GetMapping("/users/inactive")
     public Page<UserDto> getInactiveUsers(@RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize) {
         return userService.getInactiveUsers(pageNumber, pageSize);
-    }*/
-
-
-
+    }
 
 
     //HYPOTHETICAL BASED ON USER ID

@@ -126,7 +126,7 @@ public class UserService {
         return req;
     }
 
-   /* public Page<UserDto> getActiveUsers(Integer pageNumber, Integer pageSize) {
+    public Page<UserDto> getActiveUsers(Integer pageNumber, Integer pageSize) {
 
         Page<UserDto> req;
 
@@ -134,9 +134,8 @@ public class UserService {
 
 
         return req;
-    }*/
+    }
 
-/*
     public Page<UserDto> getInactiveUsers(Integer pageNumber, Integer pageSize) {
 
         Page<UserDto> req;
@@ -146,7 +145,6 @@ public class UserService {
 
         return req;
     }
-*/
 
 
     public UserDto getUserById(Integer id) {
