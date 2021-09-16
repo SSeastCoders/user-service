@@ -9,11 +9,7 @@ pipeline {
     }
 
     stages {
-        stage('update submodule'){
-        steps{
-            sh 'git status'
-        }
-        }
+
         stage('Clean and Test') {
         steps {
         sh 'mvn clean test'
