@@ -1,7 +1,6 @@
 package com.ss.eastcoderbank.usersapi.controller;
 
 
-import com.ss.eastcoderbank.core.model.user.User;
 import com.ss.eastcoderbank.core.model.user.UserRole;
 import com.ss.eastcoderbank.core.transferdto.UserDto;
 import com.ss.eastcoderbank.usersapi.dto.CreateUserDto;
@@ -32,6 +31,11 @@ public class UserController {
 
     @Autowired
     private Validator validator;
+
+    @PreAuthorize("permitAll()")
+    @GetMapping("/users/health")
+    @ResponseStatus(HttpStatus.OK)
+    public void healthCheck() { }
 
     @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/users")
