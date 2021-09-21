@@ -30,6 +30,11 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            sh 'echo "SUCCESS"'
+        }
+    }
 }
 // stage('Maven Build') {
 // steps {
@@ -53,8 +58,5 @@ pipeline {
 //             }
 //         }
 //     }
-//     post {
-//         success {
-//             sh 'docker image prune -af'
-//         }
+
 //     }
