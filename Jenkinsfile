@@ -57,9 +57,4 @@ pipeline {
             sh 'docker image prune -af'
         }
     }
-    post {
-        success {
-            sh 'echo "SUCCESS"'
-        }
-    }
 }
