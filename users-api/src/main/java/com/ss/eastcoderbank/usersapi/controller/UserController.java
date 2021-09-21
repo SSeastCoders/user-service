@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,12 +35,12 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/users")
+    public ResponseEntity<Page<UserDto>> getUsers(@RequestParam(required = false) String role, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, @RequestParam(value="asc", required = false) boolean asc, @RequestParam(value = "sort", required = false) String sort, Pageable page, @Param("keyword") String keyword) {
 
-    public Page<UserDto> getUsers(@RequestParam(required = false) String role, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, @RequestParam(value="asc", required = false) boolean asc, @RequestParam(value = "sort", required = false) String sort, Pageable page) {
-        if (role != null) return userService.getUsersByRole(role, page);
+        if (role != null) return new ResponseEntity<>(userService.getUsersByRole(role, page), HttpStatus.OK);
+        if (keyword != null) return new ResponseEntity<>(userService.searchUsers(keyword, pageNumber, pageSize), HttpStatus.OK);
 
-        return userService.getUsers(pageNumber, pageSize, asc, sort);
-
+        return new ResponseEntity<>(userService.getUsers(pageNumber, pageSize, asc, sort), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('Admin')")
@@ -54,9 +55,11 @@ public class UserController {
         return userService.getInactiveUsers(pageNumber, pageSize);
     }
 
-
-
-
+/*    @PreAuthorize("hasAuthority('Admin')")
+    @GetMapping("/users/search")
+    public ResponseEntity<List<UserDto>> searchUsers(@Param("keyword") String keyword, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, Pageable page){
+        return new ResponseEntity<>(userService.searchUsers(keyword, pageNumber, pageSize), HttpStatus.OK);
+    }*/
 
     //HYPOTHETICAL BASED ON USER ID
     @PreAuthorize("principal == #id or hasAuthority('Admin')")
@@ -88,8 +91,6 @@ public class UserController {
         // TODO implement pagination
         return userService.getRoles();
     }
-
-
 
     @PreAuthorize("principal == #id or hasAuthority('Admin')")
     @ResponseStatus(HttpStatus.OK)
