@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        PATH="/usr/local/bin:${PATH}"
         serviceName = 'user-service'
         awsRegion = 'us-east-1'
         mavenProfile = 'dev'
@@ -39,7 +40,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'publicNumber', variable: 'awsID')]) {
                     sh '''
-                        PATH=/usr/local/bin aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/f2j6g2j3
+                        aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/f2j6g2j3
 
                         docker build -t public.ecr.aws/f2j6g2j3/dev-${serviceName}:${commitIDShort} .
                         docker push public.ecr.aws/f2j6g2j3/dev-${serviceName}:${commitIDShort}
