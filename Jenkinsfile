@@ -40,8 +40,7 @@ pipeline {
                     sh '''
                         aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin ${awsID}.dkr.ecr.us-east-2.amazonaws.com
 
-                        docker build -t public.ecr.aws/f2j6g2j3/dev-${serviceName}:latest .
-                        docker build -t ${awsID}.dkr.ecr.us-east-2.amazonaws.com/dev-user-service:latest
+                        docker build -t ${awsID}.dkr.ecr.us-east-2.amazonaws.com/dev-user-service:latest .
                         docker push ${awsID}.dkr.ecr.us-east-2.amazonaws.com/dev-user-service:latest
 
                     '''
