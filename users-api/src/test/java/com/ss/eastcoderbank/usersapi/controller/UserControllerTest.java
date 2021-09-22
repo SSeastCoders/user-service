@@ -216,7 +216,7 @@ public class UserControllerTest {
     public void testGetRoles() throws Exception {
         // Arrange
         when(this.userService.getRoles()).thenReturn(new ArrayList<UserRole>());
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/roles");
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/users/roles");
         MockMvc buildResult = MockMvcBuilders.standaloneSetup(this.userController).build();
 
         // Act
@@ -232,7 +232,7 @@ public class UserControllerTest {
     public void testGetRoles2() throws Exception {
         // Arrange
         when(this.userService.getRoles()).thenReturn(new ArrayList<UserRole>());
-        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/roles");
+        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/users/roles");
         getResult.contentType("Not all who wander are lost");
         MockMvc buildResult = MockMvcBuilders.standaloneSetup(this.userController).build();
 
@@ -274,5 +274,8 @@ public class UserControllerTest {
         // Assert
         actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
     }
+
+
+
 }
 

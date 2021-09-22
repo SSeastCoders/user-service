@@ -29,8 +29,11 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 //import javax.validation.ConstraintViolationException;
 
@@ -46,13 +49,10 @@ public class UserService {
     private UpdateProfileMapper updateProfileMapper;
     private CreateUserMapper createUserMapper;
 
-
-
     public Page<UserDto> getUsersByRole(String title, Pageable page) {
         return userRepository.findUserByRoleTitle(title, page).map(user -> userMapper.mapToDto(user));
 
     }
-
 
     public Integer createUser(CreateUserDto createUserDto) throws DuplicateConstraintsException {
         createUserDto.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
@@ -106,15 +106,17 @@ public class UserService {
     public Page<UserDto> getUsers(Integer pageNumber, Integer pageSize, boolean asc, String sort) {
         Page<UserDto> req;
         if (sort != null) {
-
             req = userRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, sort))).map(user -> userMapper.mapToDto(user));
         } else {
             req = userRepository.findAll(PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));
-
         }
         return req;
     }
 
+    public Page<UserDto> searchUsers(String keyword, Integer pageNumber, Integer pageSize){
+        System.out.println(keyword);
+        return userRepository.search(keyword, PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));
+    }
 
     public UserDto getUserById(Integer id) {
         return userMapper.mapToDto(userRepository.findById(id).orElseThrow(UserNotFoundException::new));
@@ -147,6 +149,18 @@ public class UserService {
         user.setActiveStatus(false);
         userRepository.save(user);
         return user.getId();
+    }
+
+    public Page<UserDto> getActiveUsers(Integer pageNumber, Integer pageSize) {
+        Page<UserDto> req;
+        req = userRepository.findAllByActiveStatusIsTrue(PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));
+        return req;
+    }
+
+    public Page<UserDto> getInactiveUsers(Integer pageNumber, Integer pageSize) {
+        Page<UserDto> req;
+        req = userRepository.findAllByActiveStatusIsFalse(PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));
+        return req;
     }
 
 
