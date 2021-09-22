@@ -29,6 +29,7 @@ pipeline {
                 }
             }
         }
+
         stage('Maven Build') {
             steps {
                 sh 'mvn clean package -P ${mavenProfile} -Dskiptests'
@@ -38,7 +39,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'publicNumber', variable: 'awsID')]) {
                     sh '''
-                        aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/f2j6g2j3
+                        PATH=/usr/local/bin aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/f2j6g2j3
 
                         docker build -t public.ecr.aws/f2j6g2j3/dev-${serviceName}:${commitIDShort} .
                         docker push public.ecr.aws/f2j6g2j3/dev-${serviceName}:${commitIDShort}
