@@ -3,8 +3,6 @@ pipeline {
 
     environment {
         PATH="/usr/local/bin:${PATH}"
-        serviceName = 'user-service'
-        awsRegion = 'us-east-1'
         mavenProfile = 'dev'
         commitIDShort = sh(returnStdout: true, script: "git rev-parse --short HEAD")
     }
@@ -40,13 +38,11 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'publicNumber', variable: 'awsID')]) {
                     sh '''
-                        aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/f2j6g2j3
-
-                        docker build -t public.ecr.aws/f2j6g2j3/dev-${serviceName}:${commitIDShort} .
-                        docker push public.ecr.aws/f2j6g2j3/dev-${serviceName}:${commitIDShort}
+                        aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin ${awsID}.dkr.ecr.us-east-2.amazonaws.com
 
                         docker build -t public.ecr.aws/f2j6g2j3/dev-${serviceName}:latest .
-                        docker push public.ecr.aws/f2j6g2j3/dev-${serviceName}:latest
+                        docker build -t ${awsID}.dkr.ecr.us-east-2.amazonaws.com/dev-user-service:latest
+                        docker push ${awsID}.dkr.ecr.us-east-2.amazonaws.com/dev-user-service:latest
 
                     '''
                 }
