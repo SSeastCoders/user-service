@@ -44,8 +44,15 @@ pipeline {
                         docker build -t public.ecr.aws/f2j6g2j3/dev-${serviceName}:${commitIDShort} .
                         docker push public.ecr.aws/f2j6g2j3/dev-${serviceName}:${commitIDShort}
 
+<<<<<<< HEAD
                         docker build -t public.ecr.aws/f2j6g2j3/dev-${serviceName}:latest .
                         docker push public.ecr.aws/f2j6g2j3/dev-${serviceName}:latest
+=======
+                        docker context use default
+
+                        docker build -t ${awsID}.dkr.ecr.us-east-1.amazonaws.com/${serviceName}:${commitIDShort} .
+                        docker push ${awsID}.dkr.ecr.us-east-1.amazonaws.com/${serviceName}:${commitIDShort}
+>>>>>>> 96017675e6b7ec0a6e96bd29952f039e4ca3ce91
 
                     '''
                 }

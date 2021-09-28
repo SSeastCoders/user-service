@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # FROM openjdk:11
 # LABEL maintainer="amanda.rolon@smoothstack.com"
 # RUN adduser --system --group spring
@@ -11,6 +12,12 @@ FROM openjdk:11-jdk
 
 # RUN adduser --system --group spring
 # USER spring:spring
+=======
+FROM openjdk:11-jdk
+
+RUN adduser --system --group spring
+USER spring:spring
+>>>>>>> 96017675e6b7ec0a6e96bd29952f039e4ca3ce91
 
 ARG SERVICE=users-api
 ARG JAR_FILE=${SERVICE}/target/*.jar
