@@ -49,7 +49,6 @@ pipeline {
         stage('Docker Image Build and ECR Image Push') {
             steps {
                 withCredentials([string(credentialsId: 'awsAccountNumber', variable: 'awsID')]) {
-                        sh 'echo "building....."'
                      sh '''
 
 
@@ -73,8 +72,7 @@ pipeline {
     }
     post {
         success {
-            sh 'echo "finished!'''
-            //sh 'docker image prune -af'
+            sh 'docker image prune -af'
         }
     }
 }
