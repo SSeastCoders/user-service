@@ -48,7 +48,7 @@ pipeline {
 //                         docker build -t ${awsID}.dkr.ecr.us-east-2.amazonaws.com/${serviceName}:latest .
 //                         docker push ${awsID}.dkr.ecr.us-east-2.amazonaws.com/${serviceName}:latest
 //                     '''
-//                 }
+                 }
             }
         }
     }
