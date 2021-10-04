@@ -36,12 +36,11 @@ pipeline {
             steps {
               sh '''
                 aws cloudformation deploy \
-                      --stack-name ${SERVICE_NAME}-setup-stack \
+                      --stack-name ${serviceName}-base-stack \
                       --template-file setup-stack.yml \
                       --parameter-overrides \
-                          AppEnv=${APP_ENV} \
-                          AppName=${APP_NAME} \
-                          ServiceName=${SERVICE_NAME} \
+                          AppEnv=${mavenProfile} \
+                          ServiceName=${serviceName} \
                        --capabilities CAPABILITY_NAMED_IAM \
                        --no-fail-on-empty-changeset
               '''
@@ -50,7 +49,7 @@ pipeline {
         stage('Docker Image Build and ECR Image Push') {
             steps {
                 withCredentials([string(credentialsId: 'awsAccountNumber', variable: 'awsID')]) {
-                        echo 'building.....'
+                        sh 'echo "building....."'
                      sh '''
 
 
@@ -74,7 +73,8 @@ pipeline {
     }
     post {
         success {
-            sh 'docker image prune -af'
+            sh 'echo "finished!'''
+            //sh 'docker image prune -af'
         }
     }
 }
