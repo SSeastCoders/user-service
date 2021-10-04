@@ -13,20 +13,20 @@ pipeline {
                 sh 'mvn clean test'
             }
         }
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('sonarScanner') {
-                    sh 'mvn sonar:sonar'
-                }
-            }
-        }
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
+//         stage('SonarQube Analysis') {
+//             steps {
+//                 withSonarQubeEnv('sonarScanner') {
+//                     sh 'mvn sonar:sonar'
+//                 }
+//             }
+//         }
+//         stage('Quality Gate') {
+//             steps {
+//                 timeout(time: 10, unit: 'MINUTES') {
+//                     waitForQualityGate abortPipeline: true
+//                 }
+//             }
+//         }
         stage('Maven Build') {
             steps {
                 sh 'mvn package -P ${mavenProfile} -Dskiptests'
@@ -42,9 +42,11 @@ pipeline {
                       --parameter-overrides \
                           AppEnv=${mavenProfile} \
                           ServiceName=${serviceName} \
+
                        --capabilities CAPABILITY_NAMED_IAM \
                        --no-fail-on-empty-changeset
-              '''
+                       --region us-east-2
+                '''
             }
         }
         stage('Docker Image Build and ECR Image Push') {

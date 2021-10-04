@@ -2056,7 +2056,7 @@ Resources:
     Type: 'AWS::EC2::Instance'
     Properties:
       IamInstanceProfile: !Ref DevJenkinsProfileIAM
-      ImageId: ami-04f133e777f4f1902
+      ImageId: ami-035827670e92602bf
       InstanceType: t2.large
       KeyName: awsKeyAmanda
       SecurityGroupIds: !Ref JenkinsSonarSecurityGroup
