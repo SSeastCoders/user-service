@@ -34,10 +34,11 @@ pipeline {
         }
         stage('call awsBase') {
             steps {
+              echo "...awsBase..."
               sh '''
                 aws cloudformation deploy \
                       --stack-name ${serviceName}-base-stack \
-                      --template-file setup-stack.yml \
+                      --template-file awsBase.yml \
                       --parameter-overrides \
                           AppEnv=${mavenProfile} \
                           ServiceName=${serviceName} \
@@ -49,9 +50,8 @@ pipeline {
         stage('Docker Image Build and ECR Image Push') {
             steps {
                 withCredentials([string(credentialsId: 'awsAccountNumber', variable: 'awsID')]) {
+                     echo "...docker build and ecr push..."
                      sh '''
-
-
 //                         # authenticate aws account
 //                         docker context use myenv
 //                         aws ecr get-login-password --region ${awsRegion} | docker login --username AWS --password-stdin 326848027964.dkr.ecr.${awsRegion}.amazonaws.com
