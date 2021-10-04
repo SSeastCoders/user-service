@@ -35,19 +35,20 @@ pipeline {
         stage('Docker Image Build and ECR Image Push') {
             steps {
                 withCredentials([string(credentialsId: 'awsAccountNumber', variable: 'awsID')]) {
-                    sh '''
-                        # authenticate aws account
-                        aws ecr get-login-password --region ${awsRegion} | docker login --username AWS --password-stdin 326848027964.dkr.ecr.${awsRegion}.amazonaws.com
-
-                        docker context use myenv
-
-                        docker build -t ${awsID}.dkr.ecr.us-east-2.amazonaws.com/${serviceName}:${commitIDShort} .
-                        docker push ${awsID}.dkr.ecr.us-east-2.amazonaws.com/${serviceName}:${commitIDShort}
-
-                        docker build -t ${awsID}.dkr.ecr.us-east-2.amazonaws.com/${serviceName}:latest .
-                        docker push ${awsID}.dkr.ecr.us-east-2.amazonaws.com/${serviceName}:latest
-                    '''
-                }
+                        echo 'building.....'
+//                     sh '''
+//                         # authenticate aws account
+//                         aws ecr get-login-password --region ${awsRegion} | docker login --username AWS --password-stdin 326848027964.dkr.ecr.${awsRegion}.amazonaws.com
+//
+//                         docker context use myenv
+//
+//                         docker build -t ${awsID}.dkr.ecr.us-east-2.amazonaws.com/${serviceName}:${commitIDShort} .
+//                         docker push ${awsID}.dkr.ecr.us-east-2.amazonaws.com/${serviceName}:${commitIDShort}
+//
+//                         docker build -t ${awsID}.dkr.ecr.us-east-2.amazonaws.com/${serviceName}:latest .
+//                         docker push ${awsID}.dkr.ecr.us-east-2.amazonaws.com/${serviceName}:latest
+//                     '''
+//                 }
             }
         }
     }
