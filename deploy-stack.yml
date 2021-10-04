@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: "user service deploy stack"
+Description: "user service stack"
 Parameters:
   AppEnv:
     Type: String
@@ -25,8 +25,8 @@ Resources:
     Type: AWS::ECS::Service
     DependsOn: ApiListener
     Properties:
-      ServiceName: !Sub '${AppName}-${AppEnv}-${ServiceName}'
-      Cluster: !Sub '{{resolve:secretsmanager:${AppName}/${AppEnv}/secrets/resources:SecretString:ClusterName}}'
+      ServiceName: !Sub '${AppEnv}-${ServiceName}'
+      Cluster: !Sub '{{resolve:secretsmanager:SecretString:ClusterName}}'
       TaskDefinition: !Ref ServiceTask
       DeploymentConfiguration:
         MinimumHealthyPercent: 100
@@ -51,16 +51,16 @@ Resources:
   ServiceTask:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Family: !Sub ${AppName}-${AppEnv}
+      Family: !Sub '${AppEnv}-${AppName}'
       RequiresCompatibilities:
         - FARGATE
       Memory: 2048
       Cpu: 512
       NetworkMode: awsvpc
-      ExecutionRoleArn: !Sub '{{resolve:secretsmanager:${AppName}/${AppEnv}/secrets/resources:SecretString:TaskExecutionRole}}'
-      TaskRoleArn: !Sub '{{resolve:secretsmanager:${AppName}/${AppEnv}/secrets/resources:SecretString:ContainerExecutionRole}}'
+      ExecutionRoleArn: !Sub '{{resolve:secretsmanager:SecretString:TaskExecutionRole}}'
+      TaskRoleArn: !Sub '{{resolve:secretsmanager:SecretString:ContainerExecutionRole}}'
       ContainerDefinitions:
-        - Name: !Sub ${AppName}-${AppEnv}-${ServiceName}
+        - Name: !Sub '${AppEnv}-${ServiceName}'
           Image: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${AppName}/${AppEnv}/${ServiceName}:${CommitHash}'
           PortMappings:
             - ContainerPort: !Ref ServicePort
@@ -100,13 +100,13 @@ Resources:
         - Key: deregistration_delay.timeout_seconds
           Value: '60'
       TargetType: ip
-      VpcId: !Sub '{{resolve:secretsmanager:${AppName}/${AppEnv}/secrets/resources:SecretString:VpcId}}'
+      VpcId: !Sub '{{resolve:secretsmanager:SecretString:VpcId}}'
 
   # API Listener
   ApiListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
-      LoadBalancerArn: !Sub '{{resolve:secretsmanager:${AppName}/${AppEnv}/secrets/resources:SecretString:ServiceALB}}'
+      LoadBalancerArn: !Sub '{{resolve:secretsmanager:SecretString:LoadBalancer}}'
       DefaultActions:
         - Type: forward
           TargetGroupArn: !Ref ServiceTargetGroup
