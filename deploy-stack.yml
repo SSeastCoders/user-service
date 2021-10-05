@@ -111,38 +111,3 @@ Resources:
       Port: !Ref ServicePort
       Protocol: HTTP
 
-  DevJenkins:
-    Type: 'AWS::EC2::Instance'
-    Properties:
-      IamInstanceProfile: !Ref DevJenkinsProfileIAM
-      ImageId: ami-035827670e92602bf
-      InstanceType: t2.large
-      KeyName: awsKeyAmanda
-      SecurityGroupIds: !Ref JenkinsSonarSecurityGroup
-      UserData: >-
-        IyEvYmluL2Jhc2gKc3VkbyB5dW0gdXBkYXRlIC15CnN1ZG8gc3lzdGVtY3RsIHN0YXJ0IGplbmtpbnMKc3VkbyBzeXNjdGwgLXcgdm0ubWF4X21hcF9jb3VudD01MjQyODgKc3VkbyBzeXNjdGwgLXcgZnMuZmlsZS1tYXg9MTMxMDcyCnN1ZG8gdWxpbWl0IC11IDgxOTIKc3VkbyBzZXJ2aWNlIGRvY2tlciBzdGFydApzdWRvIGRvY2tlci1jb21wb3NlIHVwIC1k
-
-  JenkinsSonarSecurityGroup:
-    Type: 'AWS::EC2::SecurityGroup'
-    Properties:
-      GroupDescription: 'allows connection to Jenkins and Sonarqube'
-      GroupName: 'JenkinsSonarSecurityGroup'
-      SecurityGroupEgress:
-        - IpProtocol: tcp
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 22
-          ToPort: 22
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 8080
-          ToPort: 8080
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 9000
-          ToPort: 9000
-          CidrIp: 0.0.0.0/0
-      Tags:
-        - Key: jtdo
-          Value: true
-      VpcId: !Sub '{{resolve:secretsmanager:SecretString:VpcId}}'
