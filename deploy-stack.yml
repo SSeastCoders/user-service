@@ -15,9 +15,7 @@ Parameters:
   ServicePort:
     Type: Number
     Description: The service port number
-  CommitHash:
-    Type: String
-    Description: Hash of the most recent code commit (This is the tag for the container)
+
 Resources:
 
   # MicroService
@@ -37,10 +35,10 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           Subnets:
-            - !Sub '{{resolve:secretsmanager:${AppName}/${AppEnv}/secrets/resources:SecretString:PrivateSubnetA}}'
-            - !Sub '{{resolve:secretsmanager:${AppName}/${AppEnv}/secrets/resources:SecretString:PrivateSubnetB}}'
+            - !Sub '{{resolve:secretsmanager:SecretString:PrivateSubnet}}'
+
           SecurityGroups:
-            - !Sub '{{resolve:secretsmanager:${AppName}/${AppEnv}/secrets/resources:SecretString:SecurityGroup}}'
+            - !Sub '{{resolve:secretsmanager:SecretString:SecurityGroup}}'
       LoadBalancers:
         - ContainerName: !Sub '${AppName}-${AppEnv}-${ServiceName}'
           ContainerPort: !Ref ServicePort
@@ -61,7 +59,7 @@ Resources:
       TaskRoleArn: !Sub '{{resolve:secretsmanager:SecretString:ContainerExecutionRole}}'
       ContainerDefinitions:
         - Name: !Sub '${AppEnv}-${ServiceName}'
-          Image: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${AppName}/${AppEnv}/${ServiceName}:${CommitHash}'
+          Image: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${ServiceName}:latest'
           PortMappings:
             - ContainerPort: !Ref ServicePort
           Environment:
@@ -69,13 +67,13 @@ Resources:
             - Name: TWILIO_SID
               Value: '{{resolve:secretsmanager:twilio/sid_token:SecretString:TWILIO_SID}}'
             - Name: TWILIO_TOKEN
-              Value: '{{resolve:secretsmanger:twilio/sid_token:SecretString:TWILIO_TOKEN}}'
+              Value: '{{resolve:secretsmanager:twilio/sid_token:SecretString:TWILIO_TOKEN}}'
             - Name: JWT_SECRET
-              Value: '{{resolve:secretsmanger:jwt/key:JWT_SECRET}}'
+              Value: '{{resolve:secretsmanager:jwt/key:JWT_SECRET}}'
             - Name: DB_USER
-              Value: '{{resolve:secretsmanger:rds/eastcoders-db/login:SecretString:username}}'
+              Value: '{{resolve:secretsmanager:rds/eastcoders-db/login:SecretString:username}}'
             - Name: DB_PASS
-              Value: '{{resolve:secretsmanger:rds/eastcoders-db/login:SecretString:password}}'
+              Value: '{{resolve:secretsmanager:rds/eastcoders-db/login:SecretString:password}}'
           Essential: true
           Memory: 2048
           LogConfiguration:
@@ -112,3 +110,39 @@ Resources:
           TargetGroupArn: !Ref ServiceTargetGroup
       Port: !Ref ServicePort
       Protocol: HTTP
+
+  DevJenkins:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      IamInstanceProfile: !Ref DevJenkinsProfileIAM
+      ImageId: ami-035827670e92602bf
+      InstanceType: t2.large
+      KeyName: awsKeyAmanda
+      SecurityGroupIds: !Ref JenkinsSonarSecurityGroup
+      UserData: >-
+        IyEvYmluL2Jhc2gKc3VkbyB5dW0gdXBkYXRlIC15CnN1ZG8gc3lzdGVtY3RsIHN0YXJ0IGplbmtpbnMKc3VkbyBzeXNjdGwgLXcgdm0ubWF4X21hcF9jb3VudD01MjQyODgKc3VkbyBzeXNjdGwgLXcgZnMuZmlsZS1tYXg9MTMxMDcyCnN1ZG8gdWxpbWl0IC11IDgxOTIKc3VkbyBzZXJ2aWNlIGRvY2tlciBzdGFydApzdWRvIGRvY2tlci1jb21wb3NlIHVwIC1k
+
+  JenkinsSonarSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: 'allows connection to Jenkins and Sonarqube'
+      GroupName: 'JenkinsSonarSecurityGroup'
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 9000
+          ToPort: 9000
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: jtdo
+          Value: true
+      VpcId: !Ref DevVpc
