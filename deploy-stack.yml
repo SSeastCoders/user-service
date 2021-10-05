@@ -145,4 +145,4 @@ Resources:
       Tags:
         - Key: jtdo
           Value: true
-      VpcId: !Ref DevVpc
+      VpcId: !Sub '{{resolve:secretsmanager:SecretString:VpcId}}'
