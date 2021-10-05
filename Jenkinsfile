@@ -44,9 +44,9 @@ pipeline {
                 }
             }
         }
-        stage('Maven Build') {
+        stage('catch me') {
           steps {
-             sh 'mvn package -P ${mavenProfile} -Dskiptests'
+             sh "echo 'after docker'"
             }
           }
         }
