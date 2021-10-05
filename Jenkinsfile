@@ -47,9 +47,9 @@ pipeline {
         stage('catch me') {
           steps {
              sh "echo 'after docker'"
-            }
           }
         }
+
     }
     post {
         success {
