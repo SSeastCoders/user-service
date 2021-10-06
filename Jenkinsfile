@@ -64,10 +64,9 @@ pipeline {
                         ServiceName=${serviceName} \
                         ServicePort=${servicePort} \
                         HealthPath=${healthPath} \
-
                     --capabilities CAPABILITY_NAMED_IAM \
                     --no-fail-on-empty-changeset \
-                    --region us-east-2
+                    --region ${awsRegion}
                     '''
           }
         }
