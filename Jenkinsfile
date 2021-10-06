@@ -69,9 +69,9 @@ pipeline {
                     '''
           }
         }
-        stage('catch me') {
+        stage('after') {
           steps {
-            sh "echo 'after docker'"
+            sh "echo 'after deploy'"
           }
         }
 
