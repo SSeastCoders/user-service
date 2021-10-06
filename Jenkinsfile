@@ -5,10 +5,11 @@ pipeline {
         serviceName = 'dev-user'
         servicePort = 8222
         awsRegion = 'us-east-2'
-        appEnv = 'dev'
-        mavenProfile = 'dev'
+        appEnv = 'jtdo'
+        mavenProfile='dev'
         healthPath = '/users/health'
-        commitIDShort = sh(returnStdout: true, script: "git rev-parse --short HEAD")
+        organizationName = 'SSEastCoders'
+        //commitIDShort = sh(returnStdout: true, script: "git rev-parse --short HEAD")
     }
     stages {
         stage('Clean and Test') {
@@ -41,8 +42,14 @@ pipeline {
                 withCredentials([string(credentialsId: 'awsAccountNumber', variable: 'awsID')]) {
                     sh '''
                         aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin ${awsID}.dkr.ecr.us-east-2.amazonaws.com
-                        docker build -t ${awsID}.dkr.ecr.us-east-2.amazonaws.com/${serviceName}:latest .
-                        docker push ${awsID}.dkr.ecr.us-east-2.amazonaws.com/${serviceName}:latest
+
+                        docker context use default
+
+                        docker build -t ${awsID}.dkr.ecr.${awsRegion}.amazonaws.com/${serviceName}:${commitIDShort} .
+                        docker push ${awsID}.dkr.ecr.${awsRegion}.amazonaws.com/${serviceName}:${commitIDShort}
+
+                        docker build -t ${awsID}.dkr.ecr.${awsRegion}.amazonaws.com/${serviceName}:latest .
+                        docker push ${awsID}.dkr.ecr.${awsRegion}.amazonaws.com/${serviceName}:latest
                     '''
                 }
             }
