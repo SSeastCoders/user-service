@@ -6,6 +6,7 @@ pipeline {
         servicePort = 8222
         awsRegion = 'us-east-2'
         appEnv = 'dev'
+        mavenProfile='dev'
         healthPath = '/users/health'
         commitIDShort = sh(returnStdout: true, script: "git rev-parse --short HEAD")
     }
@@ -54,7 +55,7 @@ pipeline {
         stage('Deploy') {
           steps {
                 sh '''
-                    aws cloudformation --region us-east-2 deploy \
+                    aws cloudformation deploy \
                     --stack-name ${serviceName}-stack \
                     --template-file deploy-stack.yml \
                     --parameter-overrides \
@@ -65,7 +66,8 @@ pipeline {
                         HealthPath=${healthPath} \
 
                     --capabilities CAPABILITY_NAMED_IAM \
-                    --no-fail-on-empty-changeset
+                    --no-fail-on-empty-changeset \
+                    --region us-east-2
                     '''
           }
         }
