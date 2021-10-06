@@ -6,7 +6,7 @@ pipeline {
         servicePort = 8222
         awsRegion = 'us-east-2'
         appEnv = 'dev'
-        mavenProfile='dev'
+        mavenProfile = 'dev'
         healthPath = '/users/health'
         commitIDShort = sh(returnStdout: true, script: "git rev-parse --short HEAD")
     }
