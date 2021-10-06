@@ -3,8 +3,10 @@ pipeline {
     agent any
     environment {
         serviceName = 'dev-user'
+        servicePort = 8222
         awsRegion = 'us-east-2'
-        mavenProfile = 'dev'
+        appEnv = 'dev'
+        healthPath = '/users/health'
         commitIDShort = sh(returnStdout: true, script: "git rev-parse --short HEAD")
     }
     stages {
@@ -47,6 +49,29 @@ pipeline {
         stage('catch me') {
           steps {
              sh "echo 'after docker'"
+          }
+        }
+        stage('Deploy') {
+          steps {
+                sh '''
+                    aws cloudformation --region us-east-2 deploy \
+                    --stack-name ${serviceName}-stack \
+                    --template-file deploy-stack.yml \
+                    --parameter-overrides \
+                        AppEnv=${appEnv} \
+                        AppName=${organizationName} \
+                        ServiceName=${serviceName} \
+                        ServicePort=${servicePort} \
+                        HealthPath=${healthPath} \
+
+                    --capabilities CAPABILITY_NAMED_IAM \
+                    --no-fail-on-empty-changeset
+                    '''
+          }
+        }
+        stage('catch me') {
+          steps {
+            sh "echo 'after docker'"
           }
         }
 

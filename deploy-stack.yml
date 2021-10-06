@@ -1,5 +1,5 @@
-AWSTemplateFormatVersion: "2010-09-09"
-Description: "user service stack"
+AWSTemplateFormatVersion: 2010-09-09
+Description: user service stack
 Parameters:
   AppEnv:
     Type: String
@@ -7,24 +7,26 @@ Parameters:
     Description: The environment profile the app will be deployed in
   AppName:
     Type: String
-    Default: dev-user-service
+    Default: user-service
     Description: The application name
   ServiceName:
     Type: String
+    Default: dev-user-service
     Description: The service name
   ServicePort:
     Type: Number
     Description: The service port number
-
+  HealthPath:
+    Type: String
+    Description: Path for health check
+    Default: /users/health
 Resources:
-
-  # MicroService
   MicroService:
-    Type: AWS::ECS::Service
-    DependsOn: ApiListener
+    Type: 'AWS::ECS::Service'
+    DependsOn: UserListener
     Properties:
-      ServiceName: !Sub '${AppEnv}-${ServiceName}'
-      Cluster: !Sub '{{resolve:secretsmanager:SecretString:ClusterName}}'
+      ServiceName: !Ref ServiceName
+      Cluster: !Sub '{{resolve:secretsmanager:ClusterName:SecretString}}'
       TaskDefinition: !Ref ServiceTask
       DeploymentConfiguration:
         MinimumHealthyPercent: 100
@@ -35,79 +37,77 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           Subnets:
-            - !Sub '{{resolve:secretsmanager:SecretString:PrivateSubnet}}'
-
+            - !Sub '{{resolve:secretsmanager:PrivateSubnet:SecretString}}'
           SecurityGroups:
-            - !Sub '{{resolve:secretsmanager:SecretString:SecurityGroup}}'
+            - !Sub '{{resolve:secretsmanager:SecurityGroup:SecretString}}'
       LoadBalancers:
-        - ContainerName: !Sub '${AppName}-${AppEnv}-${ServiceName}'
+        - ContainerName: !Ref ServiceName
           ContainerPort: !Ref ServicePort
           TargetGroupArn: !Ref ServiceTargetGroup
 
-
-  # Task Definition for the MicroService
   ServiceTask:
-    Type: AWS::ECS::TaskDefinition
+    Type: 'AWS::ECS::TaskDefinition'
     Properties:
-      Family: !Sub '${AppEnv}-${AppName}'
       RequiresCompatibilities:
         - FARGATE
       Memory: 2048
       Cpu: 512
       NetworkMode: awsvpc
-      ExecutionRoleArn: !Sub '{{resolve:secretsmanager:SecretString:TaskExecutionRole}}'
-      TaskRoleArn: !Sub '{{resolve:secretsmanager:SecretString:ContainerExecutionRole}}'
+      ExecutionRoleArn: !Sub '{{resolve:secretsmanager:TaskExecutionRole:SecretString}}'
+      TaskRoleArn: !Sub '{{resolve:secretsmanager:TaskExecutionRole:SecretString}}'
       ContainerDefinitions:
-        - Name: !Sub '${AppEnv}-${ServiceName}'
-          Image: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${ServiceName}:latest'
+        - Name: !Ref ServiceName
+          Image: !Sub >-
+            ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${ServiceName}:latest
           PortMappings:
             - ContainerPort: !Ref ServicePort
           Environment:
-#            environment variables from secrets manager
             - Name: TWILIO_SID
-              Value: '{{resolve:secretsmanager:twilio/sid_token:SecretString:TWILIO_SID}}'
+              Value: >-
+                {{resolve:secretsmanager:twilio/sid_token:SecretString:TWILIO_SID}}
             - Name: TWILIO_TOKEN
-              Value: '{{resolve:secretsmanager:twilio/sid_token:SecretString:TWILIO_TOKEN}}'
+              Value: >-
+                {{resolve:secretsmanager:twilio/sid_token:SecretString:TWILIO_TOKEN}}
             - Name: JWT_SECRET
-              Value: '{{resolve:secretsmanager:jwt/key:JWT_SECRET}}'
+              Value: '{{resolve:secretsmanager:jwt/key:SecretString:JWT_SECRET}}'
             - Name: DB_USER
-              Value: '{{resolve:secretsmanager:rds/eastcoders-db/login:SecretString:username}}'
+              Value: >-
+                {{resolve:secretsmanager:rds/eastcoders-db/login:SecretString:username}}
             - Name: DB_PASS
-              Value: '{{resolve:secretsmanager:rds/eastcoders-db/login:SecretString:password}}'
+              Value: >-
+                {{resolve:secretsmanager:rds/eastcoders-db/login:SecretString:password}}
           Essential: true
           Memory: 2048
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: !Sub ${AppName}/${AppEnv}/${ServiceName}
-              awslogs-region: !Ref AWS::Region
-              awslogs-stream-prefix: !Sub ${ServiceName}-${AppEnv}
+              awslogs-group: !Sub '${AppName}/${AppEnv}/${ServiceName}'
+              awslogs-region: !Ref 'AWS::Region'
+              awslogs-stream-prefix: !Sub '${ServiceName}-${AppEnv}'
               awslogs-create-group: 'true'
 
-  # The TargetGroup for the MicroService
   ServiceTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
     Properties:
       Port: !Ref ServicePort
       HealthCheckIntervalSeconds: 60
-      HealthCheckPath: '/health'
+      HealthCheckPath: !Ref HealthPath
       HealthCheckTimeoutSeconds: 5
-      HealthCheckPort: !Ref ServicePort
       Protocol: HTTP
       TargetGroupAttributes:
         - Key: deregistration_delay.timeout_seconds
           Value: '60'
       TargetType: ip
-      VpcId: !Sub '{{resolve:secretsmanager:SecretString:VpcId}}'
+      Matcher:
+        HttpCode: '200,401'
+      VpcId: !Sub '{{resolve:secretsmanager:Vpc:SecretString}}'
 
-  # API Listener
-  ApiListener:
-    Type: AWS::ElasticLoadBalancingV2::Listener
+  UserListener:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
     Properties:
-      LoadBalancerArn: !Sub '{{resolve:secretsmanager:SecretString:LoadBalancer}}'
+      LoadBalancerArn: !Sub '{{resolve:secretsmanager:LoadBalancer:SecretString}}'
       DefaultActions:
         - Type: forward
           TargetGroupArn: !Ref ServiceTargetGroup
       Port: !Ref ServicePort
       Protocol: HTTP
-
