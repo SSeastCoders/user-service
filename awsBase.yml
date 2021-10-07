@@ -2595,7 +2595,7 @@ Resources:
       KeyName: awsKeyAmanda
       SecurityGroupIds:
         - Ref: 'JenkinsSonarSecurityGroup'
-      SubnetId: !Ref DevPrivateSubnet
+      SubnetId: !Ref DevPublicSubnet
       UserData: >-
         IyEvYmluL2Jhc2gKc3VkbyB5dW0gdXBkYXRlIC15CnN1ZG8gc3lzdGVtY3RsIHN0YXJ0IGplbmtpbnMKc3VkbyBzeXNjdGwgLXcgdm0ubWF4X21hcF9jb3VudD01MjQyODgKc3VkbyBzeXNjdGwgLXcgZnMuZmlsZS1tYXg9MTMxMDcyCnN1ZG8gdWxpbWl0IC11IDgxOTIKc3VkbyBzZXJ2aWNlIGRvY2tlciBzdGFydApzdWRvIGRvY2tlci1jb21wb3NlIHVwIC1k
   JenkinsSonarSecurityGroup:
