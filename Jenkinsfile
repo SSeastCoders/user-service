@@ -48,6 +48,11 @@ pipeline {
                 }
             }
         }
+        stage('Deploy to EKS') {
+            steps {
+                sh 'ansible-playbook deploy-user-service.yml'
+            }
+        }
     }
     post {
         success {
