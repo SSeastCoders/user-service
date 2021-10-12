@@ -3,8 +3,8 @@
   tasks:
   - name: Deploy user-api Service
     shell: |
-      kubectl apply -f user-api-service.yml
-      
+      kubectl apply -f ../kubernetes-resources/user-api-service.yml
+
   - name: Deploy user-api
     shell: |
-      kubectl apply -f user-api-deployment.yml
+      kubectl apply -f ../kubernetes-resources/user-api-deployment.yml
