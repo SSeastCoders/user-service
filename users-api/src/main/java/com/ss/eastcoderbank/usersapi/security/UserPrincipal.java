@@ -1,6 +1,7 @@
 package com.ss.eastcoderbank.usersapi.security;
 
 import com.ss.eastcoderbank.core.model.user.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Slf4j
 public class UserPrincipal implements UserDetails {
 
     private User user;

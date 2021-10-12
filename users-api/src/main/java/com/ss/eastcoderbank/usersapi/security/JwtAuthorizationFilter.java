@@ -3,6 +3,9 @@ package com.ss.eastcoderbank.usersapi.security;
 import com.auth0.jwt.JWT;
 import com.ss.eastcoderbank.core.model.user.User;
 import com.ss.eastcoderbank.core.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,8 +23,10 @@ import java.io.IOException;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
+@Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
     private final String jwtSecret;
     private UserRepository userRepository;
 
@@ -39,6 +44,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
+        LOGGER.trace("JwtAuthorizationFilter.doFilterInternal reached...");
+        LOGGER.info("checking headers for jwt...");
+
         // Read the Authorization header, where the JWT token should be
         String header = request.getHeader(JwtUtil.JWT_UTIL.getHeader());
 
@@ -57,6 +65,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private Authentication getUsernamePasswordAuthentication(HttpServletRequest request) {
+        LOGGER.trace("JwtAuthorizationFilter.getUsernamePasswordAuthentication reached...");
+        LOGGER.info("validating token...");
+
         String token = request.getHeader(JwtUtil.JWT_UTIL.getHeader())
                 .replace(JwtUtil.JWT_UTIL.getTokenPrefix(), "");
 
@@ -66,7 +77,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                     .build()
                     .verify(token)
                     .getSubject();
-
+            LOGGER.info("authenticating...");
             // Search in the DB if we find the user by token subject (username)
             // If so, then grab user details and create spring auth token using username, pass, authorities/roles
             if (userName != null) {
@@ -77,6 +88,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                     return auth;
                 } catch (UsernameNotFoundException e) {
                     return null;
+
                 }
             }
             return null;
