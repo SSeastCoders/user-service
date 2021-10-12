@@ -50,7 +50,7 @@ pipeline {
         }
         stage('Deploy to EKS') {
             steps {
-                sh 'ansible-playbook deploy-user-service.yml'
+                sh 'ansible-playbook playbooks/deploy-user-service.yml'
             }
         }
     }
