@@ -16,6 +16,11 @@ pipeline {
                 sh 'mvn clean test'
             }
         }
+        stage('Checkstyle stage') {
+            steps {
+                sh 'mvn checkstyle:check'
+            }
+        }
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarScanner') {
