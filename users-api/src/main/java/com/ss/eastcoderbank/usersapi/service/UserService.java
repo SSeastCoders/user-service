@@ -55,16 +55,12 @@ public class UserService {
     private CreateUserMapper createUserMapper;
 
     public Page<UserDto> getUsersByRole(String title, Pageable page) {
-        LOGGER.trace("UserService.getUsersByRole reached...");
-        LOGGER.debug("role title: "+ title);
         LOGGER.info("Getting users by role page from User Repository...");
         return userRepository.findUserByRoleTitle(title, page).map(user -> userMapper.mapToDto(user));
 
     }
 
     public Integer createUser(CreateUserDto createUserDto) throws DuplicateConstraintsException {
-        LOGGER.trace("UserService.createUser reached...");
-        LOGGER.debug("DTO: "+ createUserDto);
         LOGGER.info("Creating user profile...");
 
         createUserDto.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
@@ -90,9 +86,7 @@ public class UserService {
 
 
     public Integer updateUser(UpdateProfileDto updateProfileDto, Integer id) {
-        LOGGER.trace("UserService.updateUser");
-        LOGGER.debug("DTO: "+ updateProfileDto +"id: "+ id);
-        LOGGER.info("Updating user profile with id  "+ id + "...");
+        LOGGER.info("Updating user profile...");
         try {
             User user = userRepository.getById(id);
             updateProfileMapper.updateEntity(updateProfileDto, user, passwordEncoder);
@@ -117,8 +111,6 @@ public class UserService {
      *@param sort the property to be sorted by
      */
     public Page<UserDto> getUsers(Integer pageNumber, Integer pageSize, boolean asc, String sort) {
-        LOGGER.trace("UserService.getUsers");
-        LOGGER.debug(" page number: "+ pageNumber +" page size: "+ pageSize + " asc?: "+ asc + " sorted by: "+ sort);
         LOGGER.info("Preparing page request to send to userRepository...");
         Page<UserDto> req;
         if (sort != null) {
@@ -126,32 +118,25 @@ public class UserService {
         } else {
             req = userRepository.findAll(PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));
         }
-        LOGGER.debug(String.valueOf(req));
         return req;
     }
 
     public Page<UserDto> searchUsers(String keyword, Integer pageNumber, Integer pageSize){
-        System.out.println(keyword);
         return userRepository.search(keyword, PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));
     }
 
     public UserDto getUserById(Integer id) {
-        LOGGER.trace("UserService.getUserById");
-        LOGGER.debug("id: "+ id);
-        LOGGER.info("Getting user with id "+ id+ " from userRepository...");
+        LOGGER.info("Getting user by id");
         return userMapper.mapToDto(userRepository.findById(id).orElseThrow(UserNotFoundException::new));
     }
 
     public List<UserRole> getRoles() {
-        LOGGER.trace("UserController.deactivateUser");
-        LOGGER.info("Gettting roles from userRoleRepository.");
         return userRoleRepository.findAll();
     }
 
 
     protected void handleUniqueConstraints(String constraint) {
-        LOGGER.trace("UserService.handleUniqueConstraints");
-        LOGGER.info("Unique constraint being handled....");
+
         String constraintLower = constraint.toLowerCase();
         if (constraintLower.contains(UserConstraints.EMAILANDUSERNAME))
 
@@ -167,9 +152,7 @@ public class UserService {
 
 
     public Integer deactivateUser(Integer id) {
-        LOGGER.trace("UserService.deactivateUser");
-        LOGGER.debug("user id: "+ id);
-        LOGGER.info("Searching for user with id to be deactivated "+ id + "...");
+        LOGGER.info("Searching for user to be deactivated...");
         Optional<User> deactivatedUser = userRepository.findById(id);
 
         User user = deactivatedUser.orElseThrow(UserNotFoundException::new);
@@ -180,8 +163,6 @@ public class UserService {
     }
 
     public Page<UserDto> getActiveUsers(Integer pageNumber, Integer pageSize) {
-        LOGGER.trace("UserService.getActiveUsers");
-        LOGGER.debug("page: "+ pageNumber + " size: "+ pageSize);
         LOGGER.info("Getting page of active users from UserRepository...");
         Page<UserDto> req;
         req = userRepository.findAllByActiveStatusIsTrue(PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));

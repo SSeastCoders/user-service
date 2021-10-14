@@ -24,7 +24,7 @@ public class UserPrincipalService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        LOGGER.trace("UserPrincipalService.loadByUsername reached...");
+        LOGGER.info("Loading user...");
         User user = this.userRepository.findByCredentialUsername(userName);
         UserPrincipal userPrincipal = new UserPrincipal(user);
         return userPrincipal;

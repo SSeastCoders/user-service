@@ -51,16 +51,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        LOGGER.trace("JwtAuthenticationFilter.attemptAuthentication reached...");
         LoginDto credentials = null;
         try {
             credentials = new ObjectMapper().readValue(request.getInputStream(), LoginDto.class);
         } catch (IOException e) {
-            LOGGER.error(e.getMessage());
             throw new RuntimeException(e);
 
         } catch (NullPointerException e) {
-            LOGGER.error(e.getMessage());
             throw new RuntimeException(e);
         }
 
@@ -81,7 +78,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws ServletException, IOException {
-        LOGGER.trace("JwtAuthenticationFilter.successfulAuthentication reached...");
         // Get principal
         try {
             UserPrincipal principal = (UserPrincipal) authResult.getPrincipal();

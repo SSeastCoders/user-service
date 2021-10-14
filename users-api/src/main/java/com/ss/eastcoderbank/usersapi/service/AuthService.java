@@ -33,16 +33,10 @@ public class AuthService {
 
 
     public void userLogin(LoginDto loginDto) throws Exception {
-        LOGGER.trace("AuthService.userLogin reached...");
-        LOGGER.info("Mapping loginDto to user entity...");
         User user = loginMapper.mapToEntity(loginDto);
-        LOGGER.debug(String.valueOf(user));
     }
 
     public UserPrincipal findUser(String s) throws UsernameNotFoundException {
-        LOGGER.trace("AuthService.findUser reached...");
-        LOGGER.debug(s);
-        LOGGER.info("Looking for user by username " + s + "...");
         User user = userRepository.findByCredentialUsername(s);
 
         if (user == null) throw new UsernameNotFoundException(s);

@@ -65,7 +65,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private Authentication getUsernamePasswordAuthentication(HttpServletRequest request) {
-        LOGGER.trace("JwtAuthorizationFilter.getUsernamePasswordAuthentication reached...");
         LOGGER.info("validating token...");
 
         String token = request.getHeader(JwtUtil.JWT_UTIL.getHeader())

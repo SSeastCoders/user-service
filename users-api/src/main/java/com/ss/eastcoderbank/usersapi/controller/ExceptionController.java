@@ -27,15 +27,11 @@ public class ExceptionController {
 
     @ExceptionHandler(DuplicateConstraintsException.class)
     public ResponseEntity<ErrorMessage> duplicateConstraints(DuplicateConstraintsException exception) {
-        LOGGER.trace("ExceptionController.duplicateConstraints reached...");
-        LOGGER.debug(String.valueOf(exception));
-        LOGGER.info("handling duplicate constraint exception...");
         return new ResponseEntity<>(new ErrorMessage(HttpStatus.CONFLICT.toString(), exception.getMessage()), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> userValidationError(MethodArgumentNotValidException exception) {
-        LOGGER.trace("ExceptionController.userValidationError reached...");
         Map<String, String> errors = new HashMap<>();
         errors.put("status", HttpStatus.BAD_REQUEST.toString());
         errors.put("message", "");
@@ -45,7 +41,6 @@ public class ExceptionController {
             errors.put(fieldName, errorMessage);
             errors.put("message", errors.get("message") + " " + errorMessage);
         });
-        LOGGER.info(errors.toString());
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
@@ -58,39 +53,26 @@ public class ExceptionController {
             String errorMessage = fieldError.getMessage();
             errors.put(fieldName, errorMessage);
         });
-        LOGGER.info(errors.toString());
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorMessage> forbidden(AccessDeniedException exception) {
-        LOGGER.trace("ExceptionController.forbidden reached...");
-        LOGGER.debug(String.valueOf(exception));
-        LOGGER.info("handling forbidden exception...");
         return new ResponseEntity<>(new ErrorMessage(HttpStatus.FORBIDDEN.toString(), exception.getMessage()), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(JsonParseException.class)
     public ResponseEntity<ErrorMessage> jsonParseFailure(JsonParseException exception) {
-        LOGGER.trace("ExceptionController.jsonParseFailure reached...");
-        LOGGER.debug(String.valueOf(exception));
-        LOGGER.info("handling json parse exception...");
         return new ResponseEntity<>(new ErrorMessage(HttpStatus.BAD_REQUEST.toString(), "Not valid json. " +  exception.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorMessage> noUserFound(UserNotFoundException exception) {
-        LOGGER.trace("ExceptionController.noUserFound reached...");
-        LOGGER.debug(String.valueOf(exception));
-        LOGGER.info("handling user not found exception...");
         return new ResponseEntity<>(new ErrorMessage(HttpStatus.NOT_FOUND.toString(), exception.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(TokenExpiredException.class)
     public ResponseEntity<ErrorMessage> jwtExpired(TokenExpiredException exception) {
-        LOGGER.trace("ExceptionController.jwtExpired reached...");
-        LOGGER.debug(String.valueOf(exception));
-        LOGGER.info("handling jwt expired exception...");
         return new ResponseEntity<>(new ErrorMessage(HttpStatus.FORBIDDEN.toString(), exception.getMessage()), HttpStatus.FORBIDDEN);
     }
 
