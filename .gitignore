@@ -35,4 +35,8 @@ build/
 
 ### Database
 *.db
+
+
+
+
 /.env
