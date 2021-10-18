@@ -36,3 +36,7 @@ build/
 ### Database
 *.db
 /.env
+
+
+### Logs ###
+/application.log

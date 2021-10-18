@@ -1,6 +1,9 @@
 package com.ss.eastcoderbank.usersapi.security;
 
 import com.ss.eastcoderbank.core.repository.UserRepository;
+import com.ss.eastcoderbank.usersapi.controller.UserController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +28,8 @@ import java.util.Arrays;
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+
+
     private final String jwtSecret;
     private UserRepository userRepository;
     private UserPrincipalService userPrincipalService;
@@ -37,6 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http
                 .cors().configurationSource(corsConfigurationSource()).and()
                 .csrf().disable()
@@ -59,7 +65,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) {
-        //auth.userDetailsService(userPrincipalService);
         auth.authenticationProvider(authenticationProvider());
     }
 

@@ -6,6 +6,8 @@ import com.ss.eastcoderbank.core.exeception.UserNotFoundException;
 import com.ss.eastcoderbank.core.exeception.response.ErrorMessage;
 import com.ss.eastcoderbank.usersapi.service.CustomExceptions.DuplicateConstraintsException;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -21,6 +23,7 @@ import java.util.Map;
 @ControllerAdvice
 public class ExceptionController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionController.class);
 
     @ExceptionHandler(DuplicateConstraintsException.class)
     public ResponseEntity<ErrorMessage> duplicateConstraints(DuplicateConstraintsException exception) {
@@ -38,7 +41,6 @@ public class ExceptionController {
             errors.put(fieldName, errorMessage);
             errors.put("message", errors.get("message") + " " + errorMessage);
         });
-        log.info(errors.toString());
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
@@ -51,7 +53,6 @@ public class ExceptionController {
             String errorMessage = fieldError.getMessage();
             errors.put(fieldName, errorMessage);
         });
-        log.info(errors.toString());
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 

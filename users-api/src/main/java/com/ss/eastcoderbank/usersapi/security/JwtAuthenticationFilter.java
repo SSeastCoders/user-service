@@ -4,9 +4,12 @@ import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ss.eastcoderbank.core.model.user.User;
 import com.ss.eastcoderbank.core.repository.UserRepository;
+import com.ss.eastcoderbank.usersapi.controller.UserController;
 import com.ss.eastcoderbank.usersapi.dto.LoginDto;
 import com.ss.eastcoderbank.usersapi.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,6 +33,8 @@ import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 @Slf4j
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+
     //@Value("${jwt.secret}")
     private final String jwtSecret;
     private AuthenticationManager authenticationManager;
@@ -50,11 +55,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         try {
             credentials = new ObjectMapper().readValue(request.getInputStream(), LoginDto.class);
         } catch (IOException e) {
-            logger.error(e.getMessage());
             throw new RuntimeException(e);
-            //e.printStackTrace();
+
         } catch (NullPointerException e) {
-            logger.error(e.getMessage());
             throw new RuntimeException(e);
         }
 
@@ -92,7 +95,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             response.addHeader(JwtUtil.JWT_UTIL.getHeader(), JwtUtil.JWT_UTIL.getTokenPrefix() + token);
             response.addHeader("id", String.valueOf(principal.getUser().getId()));
         } catch (UsernameNotFoundException e){
-            logger.error("invalid login");
+            LOGGER.error("invalid login");
         }
+
     }
 }
