@@ -1,0 +1,16 @@
+package com.ss.eastcoderbank.usersapi.mapper;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class UpdateProfileMapperTest {
+
+    @Test
+    void updateEntity() {
+    }
+
+    @Test
+    void testUpdateEntity() {
+    }
+}

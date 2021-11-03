@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface CreateUserMapper {
+
     @Mapping(source = "username", target = "credential.username")
     @Mapping(source = "password", target = "credential.password")
     @Mapping(source = "role", target = "role.title")
