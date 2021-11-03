@@ -11,16 +11,17 @@ pipeline {
         organizationName = 'SSEastCoders'
     }
     stages {
+        stage('Checkstyle stage') {
+           steps {
+             sh 'mvn checkstyle:check'
+             }
+        }
         stage('Clean and Test') {
             steps {
                 sh 'mvn clean test'
             }
         }
-        stage('Checkstyle stage') {
-            steps {
-                sh 'mvn checkstyle:check'
-            }
-        }
+
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarScanner') {
@@ -53,11 +54,6 @@ pipeline {
                 }
             }
         }
-        stage('catch me') {
-          steps {
-             sh "echo 'after docker'"
-          }
-        }
         stage('Deploy') {
           steps {
                 sh '''
@@ -74,11 +70,6 @@ pipeline {
                     --no-fail-on-empty-changeset \
                     --region ${awsRegion}
                     '''
-          }
-        }
-        stage('after') {
-          steps {
-            sh "echo 'after deploy'"
           }
         }
 

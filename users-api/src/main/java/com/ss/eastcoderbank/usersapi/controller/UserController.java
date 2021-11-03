@@ -59,12 +59,6 @@ public class UserController {
         return userService.getInactiveUsers(pageNumber, pageSize);
     }
 
-/*    @PreAuthorize("hasAuthority('Admin')")
-    @GetMapping("/users/search")
-    public ResponseEntity<List<UserDto>> searchUsers(@Param("keyword") String keyword, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, Pageable page){
-        return new ResponseEntity<>(userService.searchUsers(keyword, pageNumber, pageSize), HttpStatus.OK);
-    }*/
-
     //HYPOTHETICAL BASED ON USER ID
     @PreAuthorize("principal == #id or hasAuthority('Admin')")
     @GetMapping(value = "/users/{id}")
