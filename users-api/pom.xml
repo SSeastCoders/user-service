@@ -178,6 +178,7 @@
                 <version>0.8.7</version>
                 <configuration>
                     <excludes>
+                        <exclude>**/*.security</exclude>
                     </excludes>
                 </configuration>
                 <executions>

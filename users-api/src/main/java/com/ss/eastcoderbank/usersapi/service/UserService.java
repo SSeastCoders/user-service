@@ -29,13 +29,9 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
-//import javax.validation.ConstraintViolationException;
 
 @Service
 @Slf4j
@@ -61,7 +57,6 @@ public class UserService {
         user.setRole(role);
         user.setDateJoined(LocalDate.now());
 
-        // ADDED TO ENSURE LOGIN
         user.setActiveStatus(true);
         try {
             userRepository.save(user);
@@ -72,7 +67,7 @@ public class UserService {
                 handleUniqueConstraints(((ConstraintViolationException) t).getConstraintName());
             }
             log.info(e.getMessage(), e);
-            throw e; // something went wrong.
+            throw e;
         }
     }
 
@@ -97,7 +92,6 @@ public class UserService {
         }
     }
     /**
-     * This method can be overloaded to take a boolean and a string in addition to pageNumber and PageSize
      *@param pageNumber the page number
      *@param pageSize the items per page
      *@param asc the sort direction
