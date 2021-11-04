@@ -53,7 +53,7 @@ public class ExceptionControllerTest {
         ResponseEntity<Map<String, String>> actualUserValidationErrorResult = exceptionController
                 .userValidationError(methodArgumentNotValidException);
         assertEquals(2, actualUserValidationErrorResult.getBody().size());
-        assertEquals("<400 BAD_REQUEST Bad Request,{=, status=400 BAD_REQUEST},[]>",
+        assertEquals("<400 BAD_REQUEST Bad Request,{message=, status=400 BAD_REQUEST},[]>",
                 actualUserValidationErrorResult.toString());
         assertTrue(actualUserValidationErrorResult.hasBody());
         assertEquals(HttpStatus.BAD_REQUEST, actualUserValidationErrorResult.getStatusCode());
@@ -72,7 +72,7 @@ public class ExceptionControllerTest {
         ResponseEntity<Map<String, String>> actualUserValidationErrorResult = exceptionController
                 .userValidationError(methodArgumentNotValidException);
         assertEquals(3, actualUserValidationErrorResult.getBody().size());
-        assertEquals("<400 BAD_REQUEST Bad Request,{= Default Message, Field=Default Message, status=400"
+        assertEquals("<400 BAD_REQUEST Bad Request,{Field=Default Message, message= Default Message, status=400"
                 + " BAD_REQUEST},[]>", actualUserValidationErrorResult.toString());
         assertTrue(actualUserValidationErrorResult.hasBody());
         assertEquals(HttpStatus.BAD_REQUEST, actualUserValidationErrorResult.getStatusCode());
@@ -93,7 +93,7 @@ public class ExceptionControllerTest {
                 .userValidationError(methodArgumentNotValidException);
         assertEquals(3, actualUserValidationErrorResult.getBody().size());
         assertEquals(
-                "<400 BAD_REQUEST Bad Request,{= Default Message Default Message, Field=Default Message, status=400"
+                "<400 BAD_REQUEST Bad Request,{Field=Default Message, message= Default Message Default Message, status=400"
                         + " BAD_REQUEST},[]>",
                 actualUserValidationErrorResult.toString());
         assertTrue(actualUserValidationErrorResult.hasBody());
