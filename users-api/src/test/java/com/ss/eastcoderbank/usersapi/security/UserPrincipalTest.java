@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class UserPrincipalTest {
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // Arrange
         User user = new User();
 
@@ -53,7 +53,7 @@ public class UserPrincipalTest {
     }
 
     @Test
-    public void testGetAuthorities() {
+    void testGetAuthorities() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -73,7 +73,7 @@ public class UserPrincipalTest {
     }
 
     @Test
-    public void testGetAuthorities2() {
+    void testGetAuthorities2() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -115,7 +115,7 @@ public class UserPrincipalTest {
     }
 
     @Test
-    public void testGetPassword() {
+    void testGetPassword() {
         // Arrange
         Credential credential = new Credential();
         credential.setPassword("iloveyou");
@@ -133,7 +133,7 @@ public class UserPrincipalTest {
     }
 
     @Test
-    public void testGetPassword2() {
+    void testGetPassword2() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -174,7 +174,7 @@ public class UserPrincipalTest {
     }
 
     @Test
-    public void testGetUsername() {
+    void testGetUsername() {
         // Arrange
         Credential credential = new Credential();
         credential.setPassword("iloveyou");
@@ -192,7 +192,7 @@ public class UserPrincipalTest {
     }
 
     @Test
-    public void testGetUsername2() {
+    void testGetUsername2() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -233,7 +233,7 @@ public class UserPrincipalTest {
     }
 
     @Test
-    public void testIsAccountNonExpired() {
+    void testIsAccountNonExpired() {
         // Arrange
         User user = new User();
         user.setActiveStatus(true);
@@ -247,7 +247,7 @@ public class UserPrincipalTest {
     }
 
     @Test
-    public void testIsAccountNonExpired2() {
+    void testIsAccountNonExpired2() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -288,7 +288,7 @@ public class UserPrincipalTest {
     }
 
     @Test
-    public void testIsAccountNonExpired3() {
+    void testIsAccountNonExpired3() {
         // Arrange
         User user = new User();
         user.setActiveStatus(false);
@@ -302,7 +302,7 @@ public class UserPrincipalTest {
     }
 
     @Test
-    public void testIsAccountNonLocked() {
+    void testIsAccountNonLocked() {
         // Arrange
         User user = new User();
         user.setActiveStatus(true);
@@ -316,7 +316,7 @@ public class UserPrincipalTest {
     }
 
     @Test
-    public void testIsAccountNonLocked2() {
+    void testIsAccountNonLocked2() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -357,7 +357,7 @@ public class UserPrincipalTest {
     }
 
     @Test
-    public void testIsAccountNonLocked3() {
+    void testIsAccountNonLocked3() {
         // Arrange
         User user = new User();
         user.setActiveStatus(false);
@@ -371,7 +371,7 @@ public class UserPrincipalTest {
     }
 
     @Test
-    public void testIsCredentialsNonExpired() {
+    void testIsCredentialsNonExpired() {
         // Arrange
         User user = new User();
         user.setActiveStatus(true);
@@ -385,7 +385,7 @@ public class UserPrincipalTest {
     }
 
     @Test
-    public void testIsCredentialsNonExpired2() {
+    void testIsCredentialsNonExpired2() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -426,7 +426,7 @@ public class UserPrincipalTest {
     }
 
     @Test
-    public void testIsCredentialsNonExpired3() {
+    void testIsCredentialsNonExpired3() {
         // Arrange
         User user = new User();
         user.setActiveStatus(false);
@@ -440,7 +440,7 @@ public class UserPrincipalTest {
     }
 
     @Test
-    public void testIsEnabled() {
+    void testIsEnabled() {
         // Arrange
         User user = new User();
         user.setActiveStatus(true);
@@ -454,7 +454,7 @@ public class UserPrincipalTest {
     }
 
     @Test
-    public void testIsEnabled2() {
+    void testIsEnabled2() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -495,7 +495,7 @@ public class UserPrincipalTest {
     }
 
     @Test
-    public void testIsEnabled3() {
+    void testIsEnabled3() {
         // Arrange
         User user = new User();
         user.setActiveStatus(false);
