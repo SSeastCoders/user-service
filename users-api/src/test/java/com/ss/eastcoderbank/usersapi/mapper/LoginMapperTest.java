@@ -16,7 +16,7 @@ class LoginMapperTest {
 
 
     @Test
-    public void shouldInit() {
+    void shouldInit() {
         LoginMapper fakeInstance = Mappers.getMapper( LoginMapper.class );
         assertTrue(fakeInstance instanceof LoginMapper );
 

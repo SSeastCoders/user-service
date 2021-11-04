@@ -13,12 +13,12 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class JwtAuthenticationFilterTest {
+class JwtAuthenticationFilterTest {
 
     private AuthenticationManager manager;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         ArrayList<AuthenticationProvider> authenticationProviderList = new ArrayList<AuthenticationProvider>();
         authenticationProviderList.add(new RunAsImplAuthenticationProvider());
         JwtAuthenticationFilter actualJwtAuthenticationFilter = new JwtAuthenticationFilter(
@@ -31,7 +31,7 @@ public class JwtAuthenticationFilterTest {
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         ArrayList<AuthenticationProvider> authenticationProviderList = new ArrayList<AuthenticationProvider>();
         authenticationProviderList.add(new RunAsImplAuthenticationProvider());
         JwtAuthenticationFilter actualJwtAuthenticationFilter = new JwtAuthenticationFilter(
@@ -44,12 +44,12 @@ public class JwtAuthenticationFilterTest {
     }
 
     @Test
-    public void testStartupDetectsMissingSecret() {
+    void testStartupDetectsMissingSecret() {
         assertThatIllegalArgumentException().isThrownBy(() -> new BasicAuthenticationFilter(this.manager, null));
     }
 
     @Test
-    public void testStartupDetectsMissingAuthenticationManager() {
+    void testStartupDetectsMissingAuthenticationManager() {
         assertThatIllegalArgumentException().isThrownBy(() -> new BasicAuthenticationFilter(null));
     }
 

@@ -10,9 +10,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
-public class SecurityConfigurationTest {
+class SecurityConfigurationTest {
     @Test
-    public void testAuthenticationProvider() {
+    void testAuthenticationProvider() {
         // Arrange
         UserRepository userRepository = mock(UserRepository.class);
         SecurityConfiguration securityConfiguration = new SecurityConfiguration(userRepository,
@@ -29,7 +29,7 @@ public class SecurityConfigurationTest {
     }
 
     @Test
-    public void testCorsConfigurationSource() {
+    void testCorsConfigurationSource() {
 
         // Arrange
         UserRepository userRepository = mock(UserRepository.class);
@@ -43,7 +43,7 @@ public class SecurityConfigurationTest {
     }
 
     @Test
-    public void testCorsConfigurationSource2() {
+    void testCorsConfigurationSource2() {
         // Arrange
         UserRepository userRepository = mock(UserRepository.class);
         SecurityConfiguration securityConfiguration = new SecurityConfiguration(userRepository,
@@ -61,7 +61,7 @@ public class SecurityConfigurationTest {
     }
 
     @Test
-    public void testPasswordEncoder() {
+    void testPasswordEncoder() {
         // TODO: This test is incomplete.
         //   Reason: Nothing to assert: neither the return value type of the method under test nor the types of its parameters have observers (e.g. getters or public fields).
         //   Add observers (e.g. getters or public fields) to the declaring class

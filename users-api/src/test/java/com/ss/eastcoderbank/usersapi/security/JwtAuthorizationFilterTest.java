@@ -18,9 +18,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class JwtAuthorizationFilterTest {
+class JwtAuthorizationFilterTest {
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         ArrayList<AuthenticationProvider> authenticationProviderList = new ArrayList<AuthenticationProvider>();
         authenticationProviderList.add(new RunAsImplAuthenticationProvider());
         ProviderManager providerManager = new ProviderManager(authenticationProviderList);
@@ -37,7 +37,7 @@ public class JwtAuthorizationFilterTest {
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         ArrayList<AuthenticationProvider> authenticationProviderList = new ArrayList<AuthenticationProvider>();
         authenticationProviderList.add(new RunAsImplAuthenticationProvider());
         ProviderManager providerManager = new ProviderManager(authenticationProviderList);
@@ -54,7 +54,7 @@ public class JwtAuthorizationFilterTest {
     }
 
     @Test
-    public void testDoFilterInternal() throws IOException, ServletException {
+    void testDoFilterInternal() throws IOException, ServletException {
         ArrayList<AuthenticationProvider> authenticationProviderList = new ArrayList<AuthenticationProvider>();
         authenticationProviderList.add(new RunAsImplAuthenticationProvider());
         JwtAuthorizationFilter jwtAuthorizationFilter = new JwtAuthorizationFilter(

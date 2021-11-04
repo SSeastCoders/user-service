@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {UserPrincipalService.class})
 @ExtendWith(SpringExtension.class)
-public class UserPrincipalServiceTest {
+class UserPrincipalServiceTest {
     @Autowired
     private UserPrincipalService userPrincipalService;
 
@@ -30,7 +30,7 @@ public class UserPrincipalServiceTest {
     private UserRepository userRepository;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // TODO: This test is incomplete.
         //   Reason: Nothing to assert: the constructed class does not have observers (e.g. getters or public fields).
         //   Add observers (e.g. getters or public fields) to the class.
@@ -44,7 +44,7 @@ public class UserPrincipalServiceTest {
     }
 
     @Test
-    public void testLoadUserByUsername() throws UsernameNotFoundException {
+    void testLoadUserByUsername() throws UsernameNotFoundException {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());

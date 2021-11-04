@@ -8,13 +8,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class CreateUserMapperTest {
 
     @Test
-    public void shouldInit() {
+    void shouldInit() {
         CreateUserMapper fakeInstance = Mappers.getMapper( CreateUserMapper.class );
         assertTrue(fakeInstance instanceof CreateUserMapper );
 
     }
-    @Test
-    void mapToEntity() {
 
-    }
 }

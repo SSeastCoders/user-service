@@ -38,7 +38,7 @@ import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {UserService.class})
 @ExtendWith(SpringExtension.class)
-public class UserServiceTest {
+class UserServiceTest {
     @MockBean
     private CreateUserMapper createUserMapper;
 
@@ -61,7 +61,7 @@ public class UserServiceTest {
     private UserService userService;
 
     @Test
-    public void testGetUsersByRole() {
+    void testGetUsersByRole() {
         // Arrange
         when(this.userRepository.findUserByRoleTitle(anyString(), (org.springframework.data.domain.Pageable) any()))
                 .thenReturn(new PageImpl<User>(new ArrayList<User>()));
@@ -78,7 +78,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetUsersByRole2() {
+    void testGetUsersByRole2() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -152,7 +152,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetUsersByRole3() {
+    void testGetUsersByRole3() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -255,7 +255,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testCreateUser() throws DuplicateConstraintsException {
+    void testCreateUser() throws DuplicateConstraintsException {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -345,7 +345,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testCreateUser2() throws DuplicateConstraintsException {
+    void testCreateUser2() throws DuplicateConstraintsException {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -404,7 +404,7 @@ public class UserServiceTest {
 
 
     @Test
-    public void testGetUsers() {
+    void testGetUsers() {
         // Arrange
         when(this.userRepository.findAll((org.springframework.data.domain.Pageable) any()))
                 .thenReturn(new PageImpl<User>(new ArrayList<User>()));
@@ -424,7 +424,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetUsers2() {
+    void testGetUsers2() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -498,7 +498,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetUsers3() {
+    void testGetUsers3() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -602,7 +602,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetUserById() {
+    void testGetUserById() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -671,7 +671,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetRoles() {
+    void testGetRoles() {
         // Arrange
         ArrayList<UserRole> userRoleList = new ArrayList<UserRole>();
         when(this.userRoleRepository.findAll()).thenReturn(userRoleList);
@@ -686,7 +686,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testHandleUniqueConstraints() {
+    void testHandleUniqueConstraints() {
         // Arrange
         String constraint = "Constraint";
 
@@ -698,7 +698,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testHandleUniqueConstraints2() {
+    void testHandleUniqueConstraints2() {
         // Arrange
         String constraint = "emailandusernameconstraint";
 
@@ -707,7 +707,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testHandleUniqueConstraints3() {
+    void testHandleUniqueConstraints3() {
         // Arrange
         String constraint = "emailconstraint";
 
@@ -716,7 +716,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testHandleUniqueConstraints4() {
+    void testHandleUniqueConstraints4() {
         // Arrange
         String constraint = "usernameconstraint";
 
@@ -725,7 +725,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testDeactivateUser() {
+    void testDeactivateUser() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -798,7 +798,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testDeactivateUser2() {
+     void testDeactivateUser2() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());

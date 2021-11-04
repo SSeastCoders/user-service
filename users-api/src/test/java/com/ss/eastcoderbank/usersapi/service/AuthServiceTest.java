@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {AuthService.class})
 @ExtendWith(SpringExtension.class)
-public class AuthServiceTest {
+class AuthServiceTest {
     @Autowired
     private AuthService authorizationService;
 
@@ -36,7 +36,7 @@ public class AuthServiceTest {
     private UserRoleRepository userRoleRepository;
 
     @Test
-    public void testUserLogin() throws Exception {
+    void testUserLogin() throws Exception {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());

@@ -43,7 +43,7 @@ import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {UserController.class})
 @ExtendWith(SpringExtension.class)
-public class UserControllerTest {
+class UserControllerTest {
     @Autowired
     private UserController userController;
 
@@ -55,7 +55,7 @@ public class UserControllerTest {
     private Validator validator;
 
     @Test
-    public void testGetUserById() throws Exception {
+    void testGetUserById() throws Exception {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -100,7 +100,7 @@ public class UserControllerTest {
 
 
     @Test
-    public void testUpdateUserProfile() {
+    void testUpdateUserProfile() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -213,7 +213,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetRoles() throws Exception {
+    void testGetRoles() throws Exception {
         // Arrange
         when(this.userService.getRoles()).thenReturn(new ArrayList<UserRole>());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/users/roles");
@@ -229,7 +229,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetRoles2() throws Exception {
+    void testGetRoles2() throws Exception {
         // Arrange
         when(this.userService.getRoles()).thenReturn(new ArrayList<UserRole>());
         MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/users/roles");
@@ -246,7 +246,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testDeactivateUser() throws Exception {
+    void testDeactivateUser() throws Exception {
         // Arrange
         when(this.userService.deactivateUser((Integer) any())).thenReturn(1);
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/users/{id}", 1);
@@ -262,7 +262,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetUsers() throws Exception {
+    void testGetUsers() throws Exception {
         // Arrange
         MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/users");
         MockHttpServletRequestBuilder requestBuilder = getResult.param("size", String.valueOf(1));

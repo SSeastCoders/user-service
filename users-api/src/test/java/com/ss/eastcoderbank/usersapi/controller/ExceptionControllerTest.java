@@ -14,9 +14,9 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class ExceptionControllerTest {
+class ExceptionControllerTest {
     @Test
-    public void testDuplicateContraints() {
+    void testDuplicateContraints() {
         ExceptionController exceptionController = new ExceptionController();
         ResponseEntity<ErrorMessage> actualDuplicateContraintsResult = exceptionController
                 .duplicateConstraints(new DuplicateConstraintsException("An error occurred"));
@@ -29,7 +29,7 @@ public class ExceptionControllerTest {
     }
 
     @Test
-    public void testDuplicateContraints2() {
+    void testDuplicateContraints2() {
         ExceptionController exceptionController = new ExceptionController();
 
         DuplicateConstraintsException duplicateConstraintsException = new DuplicateConstraintsException(
@@ -46,7 +46,7 @@ public class ExceptionControllerTest {
     }
 
     @Test
-    public void testUserValidationError() {
+    void testUserValidationError() {
         ExceptionController exceptionController = new ExceptionController();
         MethodArgumentNotValidException methodArgumentNotValidException = mock(MethodArgumentNotValidException.class);
         when(methodArgumentNotValidException.getFieldErrors()).thenReturn(new ArrayList<FieldError>());
@@ -62,7 +62,7 @@ public class ExceptionControllerTest {
     }
 
     @Test
-    public void testUserValidationError2() {
+    void testUserValidationError2() {
         ExceptionController exceptionController = new ExceptionController();
 
         ArrayList<FieldError> fieldErrorList = new ArrayList<FieldError>();
@@ -81,7 +81,7 @@ public class ExceptionControllerTest {
     }
 
     @Test
-    public void testUserValidationError3() {
+    void testUserValidationError3() {
         ExceptionController exceptionController = new ExceptionController();
 
         ArrayList<FieldError> fieldErrorList = new ArrayList<FieldError>();
@@ -103,7 +103,7 @@ public class ExceptionControllerTest {
     }
 
     @Test
-    public void testUserValidationError4() {
+    void testUserValidationError4() {
         ExceptionController exceptionController = new ExceptionController();
         FieldError fieldError = mock(FieldError.class);
         when(fieldError.getDefaultMessage()).thenThrow(new DuplicateConstraintsException("An error occurred"));

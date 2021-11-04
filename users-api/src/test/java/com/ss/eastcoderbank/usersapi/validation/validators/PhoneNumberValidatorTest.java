@@ -11,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
-public class PhoneNumberValidatorTest {
+class PhoneNumberValidatorTest {
     @Test
-    public void testIsValid() {
+    void testIsValid() {
         // Arrange
         PhoneNumberValidator phoneNumberValidator = new PhoneNumberValidator();
         String s = "(";
@@ -30,7 +30,7 @@ public class PhoneNumberValidatorTest {
     }
 
     @Test
-    public void testIsValid2() {
+    void testIsValid2() {
         // Arrange
         PhoneNumberValidator phoneNumberValidator = new PhoneNumberValidator();
         String s = null;
@@ -47,7 +47,7 @@ public class PhoneNumberValidatorTest {
     }
 
     @Test
-    public void testIsValid3() {
+    void testIsValid3() {
         // Arrange
         PhoneNumberValidator phoneNumberValidator = new PhoneNumberValidator();
         String s = "";

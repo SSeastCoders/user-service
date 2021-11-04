@@ -6,11 +6,4 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UpdateProfileMapperTest {
 
-    @Test
-    void updateEntity() {
-    }
-
-    @Test
-    void testUpdateEntity() {
-    }
 }
