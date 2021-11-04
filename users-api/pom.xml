@@ -180,6 +180,7 @@
                     <excludes>
                         <exclude>**/PopulateDatabase.*</exclude>
                         <exclude>**/mapper/*</exclude>
+                        <exclude>**/dto/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
