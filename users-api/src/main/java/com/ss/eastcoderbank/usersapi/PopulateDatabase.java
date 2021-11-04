@@ -25,6 +25,9 @@ public class PopulateDatabase implements ApplicationRunner {
     private UserRoleRepository userRoleRepository;
     private PasswordEncoder passwordEncoder;
 
+    private String adminUsername = "hazel";
+    private String joinDate = "2021-06-01";
+    private String fakeCustomer = "customer";
     @Autowired
     public PopulateDatabase(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -47,14 +50,14 @@ public class PopulateDatabase implements ApplicationRunner {
         user.setActiveStatus(true);
         user.setId(1);
         user.setEmail("hazel@smoothstack.com");
-        user.setFirstName("hazel");
+        user.setFirstName(adminUsername);
         user.setLastName("hazelsLastName");
         Credential cred = new Credential();
-        cred.setUsername("hazel");
+        cred.setUsername(adminUsername);
         cred.setPassword(passwordEncoder.encode("hazel"));
         user.setCredential(cred);
         user.setRole(userRoleAdmin);
-        user.setDateJoined(LocalDate.parse("2021-06-01"));
+        user.setDateJoined(LocalDate.parse(joinDate));
 
         userRepository.save(user);
 
@@ -62,14 +65,14 @@ public class PopulateDatabase implements ApplicationRunner {
         userCust.setActiveStatus(true);
         userCust.setId(2);
         userCust.setEmail("customer@smoothstack.com");
-        userCust.setFirstName("customer");
+        userCust.setFirstName(fakeCustomer);
         userCust.setLastName("customersLastName");
         Credential credCust = new Credential();
-        credCust.setUsername("customer");
+        credCust.setUsername(fakeCustomer);
         credCust.setPassword(passwordEncoder.encode("customer"));
         userCust.setCredential(credCust);
         userCust.setRole(userRoleCust);
-        userCust.setDateJoined(LocalDate.parse("2021-06-01"));
+        userCust.setDateJoined(LocalDate.parse(joinDate));
 
         userRepository.save(userCust);
 
@@ -85,11 +88,9 @@ public class PopulateDatabase implements ApplicationRunner {
                     cred2.setPassword(passwordEncoder.encode("hazelasd"));
                     user2.setCredential(cred2);
                     user2.setRole(userRoleAdmin);
-                    user2.setDateJoined(LocalDate.parse("2021-06-01"));
+                    user2.setDateJoined(LocalDate.parse(joinDate));
                     userRepository.save(user2);
                 });
-        //(1, TRUE, 'Boston', 'MA', '41 Bothwell Road', 02135, 'tempPass', 'hazel', '2021-07-07', '1996-06-28', 'hazel.baker-harvey@smoothstack.com', 'Hazel', 'Baker-Harvey', '(206) 557-0334', 1);
-
 
     }
 }
