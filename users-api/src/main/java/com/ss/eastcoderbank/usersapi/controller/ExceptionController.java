@@ -21,7 +21,7 @@ import java.util.Map;
 @ControllerAdvice
 public class ExceptionController {
 
-
+    private String message = "message";
     @ExceptionHandler(DuplicateConstraintsException.class)
     public ResponseEntity<ErrorMessage> duplicateConstraints(DuplicateConstraintsException exception) {
         return new ResponseEntity<>(new ErrorMessage(HttpStatus.CONFLICT.toString(), exception.getMessage()), HttpStatus.CONFLICT);
@@ -31,12 +31,12 @@ public class ExceptionController {
     public ResponseEntity<Map<String, String>> userValidationError(MethodArgumentNotValidException exception) {
         Map<String, String> errors = new HashMap<>();
         errors.put("status", HttpStatus.BAD_REQUEST.toString());
-        errors.put("message", "");
+        errors.put(message, "");
         exception.getFieldErrors().forEach(fieldError -> {
             String fieldName = fieldError.getField();
             String errorMessage = fieldError.getDefaultMessage();
             errors.put(fieldName, errorMessage);
-            errors.put("message", errors.get("message") + " " + errorMessage);
+            errors.put(message, errors.get(message) + " " + errorMessage);
         });
         log.info(errors.toString());
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
