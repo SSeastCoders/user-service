@@ -179,6 +179,7 @@
                 <configuration>
                     <excludes>
                         <exclude>**/PopulateDatabase.*</exclude>
+                        <exclude>**/mapper/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
