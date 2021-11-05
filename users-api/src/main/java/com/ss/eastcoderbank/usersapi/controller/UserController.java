@@ -35,7 +35,9 @@ public class UserController {
     @PreAuthorize("permitAll()")
     @GetMapping("/users/health")
     @ResponseStatus(HttpStatus.OK)
-    public void healthCheck() { }
+    public void healthCheck() {
+
+    }
 
     @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/users")

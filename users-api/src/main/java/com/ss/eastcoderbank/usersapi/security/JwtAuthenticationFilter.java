@@ -49,11 +49,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         LoginDto credentials = null;
         try {
             credentials = new ObjectMapper().readValue(request.getInputStream(), LoginDto.class);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-            throw new RuntimeException(e);
-            //e.printStackTrace();
-        } catch (NullPointerException e) {
+        } catch (IOException | NullPointerException e) {
             logger.error(e.getMessage());
             throw new RuntimeException(e);
         }

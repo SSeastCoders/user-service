@@ -30,7 +30,7 @@ public class CreateUserDto {
     @ValidPhoneNumber
     private String phone;
 
-    private String Role;
+    private String role;
 
     private String firstName;
 
