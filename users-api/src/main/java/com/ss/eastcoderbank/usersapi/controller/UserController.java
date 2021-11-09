@@ -32,13 +32,6 @@ public class UserController {
     @Autowired
     private Validator validator;
 
-    @PreAuthorize("permitAll()")
-    @GetMapping("/users/health")
-    @ResponseStatus(HttpStatus.OK)
-    public void healthCheck() {
-
-    }
-
     @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/users")
     public ResponseEntity<Page<UserDto>> getUsers(@RequestParam(required = false) String role, @RequestParam(name="page") Integer pageNumber, @RequestParam(name="size") Integer pageSize, @RequestParam(value="asc", required = false) boolean asc, @RequestParam(value = "sort", required = false) String sort, Pageable page, @Param("keyword") String keyword) {
