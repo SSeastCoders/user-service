@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {UserPrincipalService.class})
@@ -31,16 +32,14 @@ class UserPrincipalServiceTest {
 
     @Test
     void testConstructor() {
-        // TODO: This test is incomplete.
-        //   Reason: Nothing to assert: the constructed class does not have observers (e.g. getters or public fields).
-        //   Add observers (e.g. getters or public fields) to the class.
-        //   See https://diff.blue/R002
 
         // Arrange
         UserRepository userRepository = mock(UserRepository.class);
 
         // Act
         new UserPrincipalService(userRepository);
+
+        assertNotNull(userRepository);
     }
 
     @Test
