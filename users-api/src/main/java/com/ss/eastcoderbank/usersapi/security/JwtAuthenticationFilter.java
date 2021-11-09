@@ -47,18 +47,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         LoginDto credentials = null;
-        try {
-            credentials = new ObjectMapper().readValue(request.getInputStream(), LoginDto.class);
-        } catch (IOException | NullPointerException e) {
-            logger.error(e.getMessage());
-        }
 
         try {
+            credentials = new ObjectMapper().readValue(request.getInputStream(), LoginDto.class);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     credentials.getUsername(),
                     credentials.getPassword());
            return authenticationManager.authenticate(authenticationToken);
-        } catch(NullPointerException e){
+        } catch(IOException | NullPointerException e) {
+            logger.error(e.getMessage());
             throw new BadCredentialsException("Bad Credentials");
         }
     }
