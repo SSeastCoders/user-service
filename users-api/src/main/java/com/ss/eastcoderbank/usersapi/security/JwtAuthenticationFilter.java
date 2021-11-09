@@ -53,14 +53,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             logger.error(e.getMessage());
         }
 
-        // Create login token
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                credentials.getUsername(),
-                credentials.getPassword(),
-                new ArrayList<>());
-
-        // Authenticate user
         try {
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    credentials.getUsername(),
+                    credentials.getPassword());
            return authenticationManager.authenticate(authenticationToken);
         } catch(NullPointerException e){
             throw new BadCredentialsException("Bad Credentials");
