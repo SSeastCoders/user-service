@@ -1,14 +1,18 @@
 package com.ss.eastcoderbank.usersapi.security;
 
 import com.ss.eastcoderbank.core.repository.UserRepository;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 class SecurityConfigurationTest {
     @Test
@@ -40,6 +44,12 @@ class SecurityConfigurationTest {
         CorsConfigurationSource actualCorsConfigurationSourceResult = securityConfiguration.corsConfigurationSource();
         MockHttpServletRequest param0 = new MockHttpServletRequest();
         actualCorsConfigurationSourceResult.getCorsConfiguration(param0);
+
+        // Assert
+        assertNotNull(userRepository);
+        assertNotNull(securityConfiguration);
+        assertNotNull(actualCorsConfigurationSourceResult);
+        assertNotNull(param0);
     }
 
     @Test
@@ -58,16 +68,14 @@ class SecurityConfigurationTest {
 
         // Assert
         assertNull(actualCorsConfiguration);
+        assertNotNull(userRepository);
+        assertNotNull(securityConfiguration);
+        assertNotNull(actualCorsConfigurationSourceResult);
+        assertNotNull(param0);
     }
 
     @Test
     void testPasswordEncoder() {
-        // TODO: This test is incomplete.
-        //   Reason: Nothing to assert: neither the return value type of the method under test nor the types of its parameters have observers (e.g. getters or public fields).
-        //   Add observers (e.g. getters or public fields) to the declaring class
-        //   of the method under test, its return type or any of its parameter
-        //   types.
-        //   See https://diff.blue/R003
 
         // Arrange
         UserRepository userRepository = mock(UserRepository.class);
@@ -75,7 +83,11 @@ class SecurityConfigurationTest {
                 new UserPrincipalService(mock(UserRepository.class)), "Jwt Secret");
 
         // Act
-        securityConfiguration.passwordEncoder();
+        PasswordEncoder passwordencoder = securityConfiguration.passwordEncoder();
+
+
+        //Assert
+        assertNotNull(passwordencoder);
     }
 }
 
