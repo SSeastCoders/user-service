@@ -39,7 +39,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Autowired
     private AuthService authService;
 
-    //@Autowired
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, @Value("${jwt.secret}") String jwtSecret) {
         this.authenticationManager = authenticationManager;
         this.jwtSecret = jwtSecret;
@@ -62,8 +61,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // Authenticate user
         try {
-            Authentication auth = authenticationManager.authenticate(authenticationToken);
-            return auth;
+           return authenticationManager.authenticate(authenticationToken);
         } catch(NullPointerException e){
             throw new BadCredentialsException("Bad Credentials");
         }
