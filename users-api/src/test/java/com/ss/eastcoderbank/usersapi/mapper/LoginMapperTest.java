@@ -12,9 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LoginMapperTest {
 
-    private LoginDto mockloginDto;
-
-
     @Test
     void shouldInit() {
         LoginMapper fakeInstance = Mappers.getMapper( LoginMapper.class );
