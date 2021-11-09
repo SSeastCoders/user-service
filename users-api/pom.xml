@@ -189,7 +189,7 @@
                 <version>0.8.7</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/PopulateDatabase.*</exclude>
+
                         <exclude>**/mapper/*</exclude>
                         <exclude>**/dto/*</exclude>
                     </excludes>
