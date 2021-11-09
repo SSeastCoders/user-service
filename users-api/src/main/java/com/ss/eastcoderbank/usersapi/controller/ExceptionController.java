@@ -4,7 +4,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.ss.eastcoderbank.core.exeception.UserNotFoundException;
 import com.ss.eastcoderbank.core.exeception.response.ErrorMessage;
-import com.ss.eastcoderbank.usersapi.service.CustomExceptions.DuplicateConstraintsException;
+import com.ss.eastcoderbank.usersapi.service.customexceptions.DuplicateConstraintsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

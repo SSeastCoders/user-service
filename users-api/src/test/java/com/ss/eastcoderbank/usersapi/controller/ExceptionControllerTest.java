@@ -1,7 +1,7 @@
 package com.ss.eastcoderbank.usersapi.controller;
 
 import com.ss.eastcoderbank.core.exeception.response.ErrorMessage;
-import com.ss.eastcoderbank.usersapi.service.CustomExceptions.DuplicateConstraintsException;
+import com.ss.eastcoderbank.usersapi.service.customexceptions.DuplicateConstraintsException;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
