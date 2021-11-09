@@ -25,7 +25,7 @@ public class AuthService {
     private LoginMapper loginMapper;
 
 
-    public void userLogin(LoginDto loginDto) throws RuntimeException {
+    public void userLogin(LoginDto loginDto) {
         loginMapper.mapToEntity(loginDto);
     }
 
