@@ -14,7 +14,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserPrincipalTest {
+class UserPrincipalTest {
     @Test
     void testConstructor() {
         // Arrange
