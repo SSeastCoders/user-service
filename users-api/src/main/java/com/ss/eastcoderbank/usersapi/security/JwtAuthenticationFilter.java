@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -51,7 +52,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             credentials = new ObjectMapper().readValue(request.getInputStream(), LoginDto.class);
         } catch (IOException | NullPointerException e) {
             logger.error(e.getMessage());
-            throw new RuntimeException(e);
         }
 
         // Create login token
