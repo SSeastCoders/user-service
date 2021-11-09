@@ -54,13 +54,11 @@ public class UserController {
         return userService.getInactiveUsers(pageNumber, pageSize);
     }
 
-    //HYPOTHETICAL BASED ON USER ID
     @PreAuthorize("principal == #id or hasAuthority('Admin')")
     @GetMapping(value = "/users/{id}")
     public UserDto getUserById(@PathVariable Integer id) {
         return userService.getUserById(id);
     }
-
 
     @PreAuthorize("(principal == #id and hasAuthority('Customer')) or hasAuthority('Admin')")
     @PutMapping("/users/{id}")
@@ -81,7 +79,6 @@ public class UserController {
     @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/users/roles")
     public List<UserRole> getRoles() {
-        // TODO implement pagination
         return userService.getRoles();
     }
 

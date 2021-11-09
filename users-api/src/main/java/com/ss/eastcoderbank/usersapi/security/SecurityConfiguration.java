@@ -59,7 +59,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) {
-        //auth.userDetailsService(userPrincipalService);
         auth.authenticationProvider(authenticationProvider());
     }
 
@@ -86,8 +85,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        //int strength = 10;
-        return new BCryptPasswordEncoder();//strength, new SecureRandom());
+        return new BCryptPasswordEncoder();
     }
 
 }

@@ -25,8 +25,8 @@ public class AuthService {
     private LoginMapper loginMapper;
 
 
-    public void userLogin(LoginDto loginDto) throws Exception {
-        User user = loginMapper.mapToEntity(loginDto);
+    public void userLogin(LoginDto loginDto) throws RuntimeException {
+        loginMapper.mapToEntity(loginDto);
     }
 
     public UserPrincipal findUser(String s) throws UsernameNotFoundException {
