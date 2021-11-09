@@ -60,6 +60,38 @@ class UserServiceTest {
     @Autowired
     private UserService userService;
 
+    private User fakeUser(Integer id) {
+        UserRole userRole = new UserRole();
+        userRole.setUsers(new HashSet<User>());
+        userRole.setId(1);
+        userRole.setTitle("Admin");
+
+        Credential credential = new Credential();
+        credential.setPassword("iloveyou");
+        credential.setUsername("janedoe");
+
+        Address address = new Address();
+        address.setZip(1);
+        address.setCity("Oxford");
+        address.setStreetAddress("42 Main St");
+        address.setState("MD");
+
+        User user = new User();
+        user.setLastName("Doe");
+        user.setEmail("jane.doe@example.org");
+        user.setRole(userRole);
+        user.setDob(LocalDate.ofEpochDay(1L));
+        user.setId(id);
+        user.setActiveStatus(true);
+        user.setPhone("4105551212");
+        user.setCredential(credential);
+        user.setFirstName("Jane");
+        user.setDateJoined(LocalDate.ofEpochDay(1L));
+        user.setAddress(address);
+
+        return user;
+    }
+
     @Test
     void testGetUsersByRole() {
         // Arrange
@@ -263,71 +295,17 @@ class UserServiceTest {
         userRole.setTitle("Dr");
         Optional<UserRole> ofResult = Optional.<UserRole>of(userRole);
 
-        UserRole userRole1 = new UserRole();
-        userRole1.setUsers(new HashSet<User>());
-        userRole1.setId(1);
-        userRole1.setTitle("Dr");
-        when(this.userRoleRepository.getById((Integer) any())).thenReturn(userRole1);
+        when(this.userRoleRepository.getById((Integer) any())).thenReturn(userRole);
         when(this.userRoleRepository.findUserRoleByTitle(anyString())).thenReturn(ofResult);
 
-        UserRole userRole2 = new UserRole();
-        userRole2.setUsers(new HashSet<User>());
-        userRole2.setId(1);
-        userRole2.setTitle("Dr");
 
-        Credential credential = new Credential();
-        credential.setPassword("iloveyou");
-        credential.setUsername("janedoe");
 
-        Address address = new Address();
-        address.setZip(1);
-        address.setCity("Oxford");
-        address.setStreetAddress("42 Main St");
-        address.setState("MD");
+        User user = fakeUser(1);
 
-        User user = new User();
-        user.setLastName("Doe");
-        user.setEmail("jane.doe@example.org");
-        user.setRole(userRole2);
-        user.setDob(LocalDate.ofEpochDay(1L));
-        user.setId(1);
-        user.setActiveStatus(true);
-        user.setPhone("4105551212");
-        user.setCredential(credential);
-        user.setFirstName("Jane");
-        user.setDateJoined(LocalDate.ofEpochDay(1L));
-        user.setAddress(address);
         when(this.userRepository.save((User) any())).thenReturn(user);
         when(this.passwordEncoder.encode((CharSequence) any())).thenReturn("foo");
 
-        UserRole userRole3 = new UserRole();
-        userRole3.setUsers(new HashSet<User>());
-        userRole3.setId(1);
-        userRole3.setTitle("Dr");
-
-        Credential credential1 = new Credential();
-        credential1.setPassword("iloveyou");
-        credential1.setUsername("janedoe");
-
-        Address address1 = new Address();
-        address1.setZip(1);
-        address1.setCity("Oxford");
-        address1.setStreetAddress("42 Main St");
-        address1.setState("MD");
-
-        User user1 = new User();
-        user1.setLastName("Doe");
-        user1.setEmail("jane.doe@example.org");
-        user1.setRole(userRole3);
-        user1.setDob(LocalDate.ofEpochDay(1L));
-        user1.setId(1);
-        user1.setActiveStatus(true);
-        user1.setPhone("4105551212");
-        user1.setCredential(credential1);
-        user1.setFirstName("Jane");
-        user1.setDateJoined(LocalDate.ofEpochDay(1L));
-        user1.setAddress(address1);
-        when(this.createUserMapper.mapToEntity((CreateUserDto) any())).thenReturn(user1);
+        when(this.createUserMapper.mapToEntity((CreateUserDto) any())).thenReturn(user);
         CreateUserDto createUserDto = new CreateUserDto("janedoe", "iloveyou", "jane.doe@example.org");
 
         // Act
@@ -346,7 +324,7 @@ class UserServiceTest {
 
     @Test
     void testCreateUser2() throws DuplicateConstraintsException {
-        // Arrange
+
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
         userRole.setId(1);
@@ -401,7 +379,10 @@ class UserServiceTest {
         verify(this.createUserMapper).mapToEntity((CreateUserDto) any());
     }
 
+    @Test
+    void testUpdateUser() {
 
+    }
 
     @Test
     void testGetUsers() {
