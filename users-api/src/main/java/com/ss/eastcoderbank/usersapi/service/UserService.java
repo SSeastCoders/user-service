@@ -108,7 +108,7 @@ public class UserService {
     }
 
     public Page<UserDto> searchUsers(String keyword, Integer pageNumber, Integer pageSize){
-        System.out.println(keyword);
+        log.info(keyword);
         return userRepository.search(keyword, PageRequest.of(pageNumber, pageSize)).map(user -> userMapper.mapToDto(user));
     }
 
