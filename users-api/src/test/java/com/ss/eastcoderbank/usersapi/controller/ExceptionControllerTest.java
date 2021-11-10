@@ -121,6 +121,25 @@ class ExceptionControllerTest {
         verify(fieldError).getField();
     }
 
+    @Test
+    void testConstraintValidation() {
+        ExceptionController exceptionController = new ExceptionController();
+        FieldError fieldError = mock(FieldError.class);
+        when(fieldError.getDefaultMessage()).thenThrow(new DuplicateConstraintsException("An error occurred"));
+        when(fieldError.getField()).thenReturn("foo");
+
+        ArrayList<FieldError> fieldErrorList = new ArrayList<FieldError>();
+        fieldErrorList.add(fieldError);
+        fieldErrorList.add(null);
+        MethodArgumentNotValidException methodArgumentNotValidException = mock(MethodArgumentNotValidException.class);
+        when(methodArgumentNotValidException.getFieldErrors()).thenReturn(fieldErrorList);
+        assertThrows(DuplicateConstraintsException.class,
+                () -> exceptionController.userValidationError(methodArgumentNotValidException));
+        verify(methodArgumentNotValidException).getFieldErrors();
+        verify(fieldError).getDefaultMessage();
+        verify(fieldError).getField();
+    }
+
 
 
 
