@@ -9,10 +9,12 @@ import com.ss.eastcoderbank.core.repository.UserRoleRepository;
 import com.ss.eastcoderbank.core.transferdto.UserDto;
 import com.ss.eastcoderbank.core.transfermapper.UserMapper;
 import com.ss.eastcoderbank.usersapi.dto.AddressDto;
+import com.ss.eastcoderbank.usersapi.dto.CreateUserDto;
 import com.ss.eastcoderbank.usersapi.dto.UpdateProfileDto;
 import com.ss.eastcoderbank.usersapi.mapper.CreateUserMapper;
 import com.ss.eastcoderbank.usersapi.mapper.UpdateProfileMapper;
 import com.ss.eastcoderbank.usersapi.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,17 +37,18 @@ import javax.validation.Validator;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {UserController.class})
 @ExtendWith(SpringExtension.class)
 class UserControllerTest {
+
     @Autowired
-    private UserController userController;
+    UserController userController;
 
     @MockBean
     private UserService userService;
@@ -53,6 +56,17 @@ class UserControllerTest {
 
     @MockBean
     private Validator validator;
+
+    @Test
+    void testRegistration() {
+        //List userArr = new ArrayList<User>();
+        CreateUserDto newUser = new CreateUserDto();
+        Integer id = userService.createUser(newUser);
+        when(this.userService.createUser((CreateUserDto) any())).thenReturn(1);
+        assertEquals(1, 1);
+        //assertFalse(this.userService.getUsers(1,10,false, "sort").isEmpty());
+    }
+
 
     @Test
     void testGetUserById() throws Exception {

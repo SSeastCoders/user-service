@@ -10,6 +10,7 @@ import com.ss.eastcoderbank.core.repository.UserRoleRepository;
 import com.ss.eastcoderbank.core.transferdto.UserDto;
 import com.ss.eastcoderbank.core.transfermapper.UserMapper;
 import com.ss.eastcoderbank.usersapi.dto.CreateUserDto;
+import com.ss.eastcoderbank.usersapi.dto.UpdateProfileDto;
 import com.ss.eastcoderbank.usersapi.mapper.CreateUserMapper;
 import com.ss.eastcoderbank.usersapi.mapper.UpdateProfileMapper;
 import com.ss.eastcoderbank.usersapi.service.customexceptions.DuplicateConstraintsException;
@@ -379,10 +380,50 @@ class UserServiceTest {
         verify(this.createUserMapper).mapToEntity((CreateUserDto) any());
     }
 
-    @Test
-    void testUpdateUser() {
+//    @Test
+//    void testUpdateUser() {
+//        UserRole userRole = new UserRole();
+//        userRole.setUsers(new HashSet<User>());
+//        userRole.setId(1);
+//        userRole.setTitle("Admin");
+//
+//        User user = fakeUser(1);
+//        UpdateProfileDto updateUserDto = new UpdateProfileDto();
+//        // Act
+//        when(this.userRoleRepository.getById((Integer) any())).thenReturn(userRole);
+//        when(this.userRepository.save((User) any())).thenReturn(user);
+//        when(this.passwordEncoder.encode((CharSequence) any())).thenReturn("foo");
+//        when(this.createUserMapper.mapToEntity((CreateUserDto) any())).thenReturn(user);
+//        Integer actualUpdateUserResult = this.userService.updateUser(updateUserDto, 1);
+//        // Assert
+//        assertEquals(1, actualUpdateUserResult.intValue());
+//        verify(this.userRoleRepository).findUserRoleByTitle((String) any());
+//        verify(this.userRoleRepository).getById((Integer) any());
+//        verify(this.userRepository).save((User) any());
+//
+//        assertTrue(this.userService.getRoles().isEmpty());
 
-    }
+//        @Test
+//        void updateUserFP() throws UserNotFoundException {
+//            when(userRepository.findById(Integer())).thenReturn(Optional.of(fakeUser(1)));
+//
+//            User updateSample = sampleUser();
+//            User updateProfile = userService.updateProfile(updateSample);
+//
+//            assertEquals(233434, updateProfile.getPoints());
+//            assertEquals("4443324@invalid.com", updateProfile.getEmail());
+//            assertEquals("firstName", updateProfile.getFirstName());
+//            assertEquals("lastName", updateProfile.getLastName());
+//            LocalDate dob = LocalDate.parse(updateProfile.getDOB());
+//            assertEquals(2002, dob.getYear());
+//            assertEquals(Month.JULY, dob.getMonth());
+//            assertEquals(20, dob.getDayOfMonth());
+//        }
+
+
+   // }
+
+
 
     @Test
     void testGetUsers() {
