@@ -14,13 +14,14 @@ import com.ss.eastcoderbank.usersapi.dto.UpdateProfileDto;
 import com.ss.eastcoderbank.usersapi.mapper.CreateUserMapper;
 import com.ss.eastcoderbank.usersapi.mapper.UpdateProfileMapper;
 import com.ss.eastcoderbank.usersapi.service.UserService;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
@@ -33,10 +34,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.beanvalidation.CustomValidatorBean;
 
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Validator;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -57,14 +61,27 @@ class UserControllerTest {
     @MockBean
     private Validator validator;
 
+
+
+
     @Test
     void testRegistration() {
-        //List userArr = new ArrayList<User>();
+        HttpServletResponse res = new MockHttpServletResponse();
         CreateUserDto newUser = new CreateUserDto();
+        List users = new ArrayList();
+        newUser.setEmail("email@email.com");
+        newUser.setPassword("testpass");
+        newUser.setUsername("testUsername");
+
+        when(userService.createUser(newUser)).thenReturn(1);
+        users.add(newUser);
         Integer id = userService.createUser(newUser);
-        when(this.userService.createUser((CreateUserDto) any())).thenReturn(1);
-        assertEquals(1, 1);
-        //assertFalse(this.userService.getUsers(1,10,false, "sort").isEmpty());
+        userService.createUser(newUser);
+        res.addHeader("id",String.valueOf(id));
+        verify(userService, atLeastOnce()).createUser(newUser);
+        assertEquals(1, id);
+        assertNotNull(res.getHeaders("id"));
+        assertFalse(users.isEmpty());
     }
 
 
@@ -229,7 +246,8 @@ class UserControllerTest {
     @Test
     void testGetRoles() throws Exception {
         // Arrange
-        when(this.userService.getRoles()).thenReturn(new ArrayList<UserRole>());
+
+        when(this.userService.getRoles()).thenReturn(new ArrayList<>());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/users/roles");
         MockMvc buildResult = MockMvcBuilders.standaloneSetup(this.userController).build();
 
@@ -240,6 +258,8 @@ class UserControllerTest {
         actualPerformResult.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
                 .andExpect(MockMvcResultMatchers.content().string("[]"));
+
+
     }
 
     @Test
@@ -288,6 +308,7 @@ class UserControllerTest {
         // Assert
         actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
     }
+
 
 
 
