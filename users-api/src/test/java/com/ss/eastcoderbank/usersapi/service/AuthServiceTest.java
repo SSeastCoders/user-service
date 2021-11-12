@@ -8,7 +8,7 @@ import com.ss.eastcoderbank.core.repository.UserRepository;
 import com.ss.eastcoderbank.core.repository.UserRoleRepository;
 import com.ss.eastcoderbank.usersapi.dto.LoginDto;
 import com.ss.eastcoderbank.usersapi.mapper.LoginMapper;
-import com.ss.eastcoderbank.usersapi.security.UserPrincipal;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,11 +100,8 @@ class AuthServiceTest {
     @Test
     void testFindUser()  {
         User user = fakeUser();
-        //users.add(user);
-
         userRepository.save(user);
         String username = fakeUser().getCredential().getUsername();
-        User login = userRepository.findByCredentialUsername(username);
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         SimpleGrantedAuthority role = new SimpleGrantedAuthority(user.getRole().getTitle());
@@ -116,19 +113,11 @@ class AuthServiceTest {
 
     @Test
     void testFindUserFP()  {
-        User user = fakeUser();
         String username = fakeUser().getCredential().getUsername();
-        User login = userRepository.findByCredentialUsername(username);
 
-        //if (user == null) throw new UsernameNotFoundException(s);
+        when(userRepository.findByCredentialUsername(null)).thenThrow(new UsernameNotFoundException(username));
 
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        SimpleGrantedAuthority role = new SimpleGrantedAuthority(user.getRole().getTitle());
-        authorities.add(role);
-        when(userRepository.findByCredentialUsername(username)).thenReturn(user);
-        //assertThrows(UsernameNotFoundException)
-
-//        return new UserPrincipal(user);
+        assertThrows(UsernameNotFoundException.class, ()->  userRepository.findByCredentialUsername(null));
     }
 
 
