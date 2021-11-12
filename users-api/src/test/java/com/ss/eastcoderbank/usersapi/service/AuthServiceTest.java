@@ -8,17 +8,25 @@ import com.ss.eastcoderbank.core.repository.UserRepository;
 import com.ss.eastcoderbank.core.repository.UserRoleRepository;
 import com.ss.eastcoderbank.usersapi.dto.LoginDto;
 import com.ss.eastcoderbank.usersapi.mapper.LoginMapper;
+import com.ss.eastcoderbank.usersapi.security.UserPrincipal;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 
 @ContextConfiguration(classes = {AuthService.class})
 @ExtendWith(SpringExtension.class)
@@ -35,8 +43,7 @@ class AuthServiceTest {
     @MockBean
     private UserRoleRepository userRoleRepository;
 
-    @Test
-    void testUserLogin() throws Exception {
+    private User fakeUser() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setUsers(new HashSet<User>());
@@ -71,11 +78,59 @@ class AuthServiceTest {
         loginDto.setPassword("iloveyou");
         loginDto.setUsername("janedoe");
 
+        return user;
+    }
+    @Test
+    void testUserLogin() throws Exception {
+        // Arrange
+        User user = fakeUser();
+        when(this.loginMapper.mapToEntity((LoginDto) any())).thenReturn(user);
+
+        LoginDto loginDto = new LoginDto();
+        loginDto.setPassword("iloveyou");
+        loginDto.setUsername("janedoe");
+
         // Act
         this.authorizationService.userLogin(loginDto);
 
         // Assert
         verify(this.loginMapper).mapToEntity((LoginDto) any());
     }
+
+    @Test
+    void testFindUser()  {
+        User user = fakeUser();
+        //users.add(user);
+
+        userRepository.save(user);
+        String username = fakeUser().getCredential().getUsername();
+        User login = userRepository.findByCredentialUsername(username);
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        SimpleGrantedAuthority role = new SimpleGrantedAuthority(user.getRole().getTitle());
+        authorities.add(role);
+        when(userRepository.findByCredentialUsername(username)).thenReturn(user);
+        assertSame(user, userRepository.findByCredentialUsername(username));
+        assertFalse(authorities.isEmpty());
+    }
+
+    @Test
+    void testFindUserFP()  {
+        User user = fakeUser();
+        String username = fakeUser().getCredential().getUsername();
+        User login = userRepository.findByCredentialUsername(username);
+
+        //if (user == null) throw new UsernameNotFoundException(s);
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        SimpleGrantedAuthority role = new SimpleGrantedAuthority(user.getRole().getTitle());
+        authorities.add(role);
+        when(userRepository.findByCredentialUsername(username)).thenReturn(user);
+        //assertThrows(UsernameNotFoundException)
+
+//        return new UserPrincipal(user);
+    }
+
+
 }
 
