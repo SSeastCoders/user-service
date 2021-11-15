@@ -21,6 +21,11 @@ pipeline {
 //                 sh 'mvn clean -Dskiptests'
 //             }
 //         }
+        stage('Maven Build') {
+            steps {
+                sh 'mvn package -P ${mavenProfile} -DskipTests'
+                }
+            }
 
         stage('SonarQube Analysis') {
             steps {
@@ -38,7 +43,7 @@ pipeline {
         }
         stage('Maven Build') {
             steps {
-                sh 'mvn package -P ${mavenProfile} -Dskiptests'
+                sh 'mvn package -P ${mavenProfile} -DskipTests'
             }
         }
 
