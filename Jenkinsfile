@@ -16,11 +16,11 @@ pipeline {
              sh 'mvn checkstyle:check'
              }
         }
-        stage('Clean and Test') {
-            steps {
-                sh 'mvn clean -Dskiptests'
-            }
-        }
+//         stage('Clean and Test') {
+//             steps {
+//                 sh 'mvn clean -Dskiptests'
+//             }
+//         }
 
         stage('SonarQube Analysis') {
             steps {
