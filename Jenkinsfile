@@ -21,7 +21,7 @@ pipeline {
 //                 sh 'mvn clean -Dskiptests'
 //             }
 //         }
-        stage('Maven Build') {
+        stage('Pre Build for testing') {
             steps {
                 sh 'mvn package -P ${mavenProfile} -DskipTests'
                 }
