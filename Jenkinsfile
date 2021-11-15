@@ -7,7 +7,7 @@ pipeline {
         awsRegion = 'us-east-2'
         appEnv = 'jtdo'
         mavenProfile='dev'
-        healthPath = '/users/health'
+        healthPath = '/users/actuator/health'
         organizationName = 'SSEastCoders'
     }
     stages {
