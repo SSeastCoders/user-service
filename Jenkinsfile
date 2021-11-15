@@ -11,11 +11,11 @@ pipeline {
         organizationName = 'SSEastCoders'
     }
     stages {
-        stage('Checkstyle stage') {
-           steps {
-             sh 'mvn checkstyle:check'
-             }
-        }
+//         stage('Checkstyle stage') {
+//            steps {
+//              sh 'mvn checkstyle:check'
+//              }
+//         }
 //         stage('Clean and Test') {
 //             steps {
 //                 sh 'mvn clean -Dskiptests'
