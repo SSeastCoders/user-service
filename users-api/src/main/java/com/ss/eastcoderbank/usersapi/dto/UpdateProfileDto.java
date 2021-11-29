@@ -1,5 +1,6 @@
 package com.ss.eastcoderbank.usersapi.dto;
 
+import com.ss.eastcoderbank.core.model.user.Address;
 import com.ss.eastcoderbank.usersapi.validation.annotation.ValidPhoneNumber;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,4 +39,5 @@ public class UpdateProfileDto {
     private LocalDate dateJoined;
 
     private Boolean activeStatus;
+
 }

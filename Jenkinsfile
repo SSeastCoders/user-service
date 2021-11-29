@@ -11,21 +11,17 @@ pipeline {
         organizationName = 'SSEastCoders'
     }
     stages {
-//         stage('Checkstyle stage') {
-//            steps {
-//              sh 'mvn checkstyle:check'
-//              }
-//         }
-//         stage('Clean and Test') {
-//             steps {
-//                 sh 'mvn clean -Dskiptests'
-//             }
-//         }
-        stage('Pre Build for testing') {
+        stage('Checkstyle stage') {
+           steps {
+             sh 'mvn checkstyle:check'
+             }
+        }
+        stage('Clean and Test') {
             steps {
-                sh 'mvn package -P ${mavenProfile} -DskipTests'
-                }
+                sh 'mvn clean -Dskiptests'
             }
+        }
+
 
         stage('SonarQube Analysis') {
             steps {

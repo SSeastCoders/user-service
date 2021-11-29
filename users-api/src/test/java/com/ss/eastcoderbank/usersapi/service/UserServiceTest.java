@@ -9,6 +9,7 @@ import com.ss.eastcoderbank.core.repository.UserRepository;
 import com.ss.eastcoderbank.core.repository.UserRoleRepository;
 import com.ss.eastcoderbank.core.transferdto.UserDto;
 import com.ss.eastcoderbank.core.transfermapper.UserMapper;
+import com.ss.eastcoderbank.usersapi.dto.AddressDto;
 import com.ss.eastcoderbank.usersapi.dto.CreateUserDto;
 import com.ss.eastcoderbank.usersapi.dto.UpdateProfileDto;
 import com.ss.eastcoderbank.usersapi.mapper.CreateUserMapper;
@@ -16,6 +17,7 @@ import com.ss.eastcoderbank.usersapi.mapper.UpdateProfileMapper;
 import com.ss.eastcoderbank.usersapi.service.customexceptions.DuplicateConstraintsException;
 import com.ss.eastcoderbank.usersapi.service.customexceptions.DuplicateEmailException;
 import com.ss.eastcoderbank.usersapi.service.customexceptions.DuplicateUsernameException;
+import com.ss.eastcoderbank.usersapi.validation.annotation.ValidPhoneNumber;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +60,7 @@ class UserServiceTest {
     @MockBean
     private UserRoleRepository userRoleRepository;
 
-    @Autowired
+    @MockBean
     private UserService userService;
 
     private User fakeUser(Integer id) {
@@ -93,6 +95,58 @@ class UserServiceTest {
         return user;
     }
 
+    @Test
+    void testUpdateUser() {
+
+        UserRole userRole = new UserRole();
+        userRole.setUsers(new HashSet<User>());
+        userRole.setId(1);
+        userRole.setTitle("Admin");
+
+        User user = fakeUser(1);
+
+        List<User> users = new ArrayList<>();
+        users.add(user);
+        this.userRepository.save(user);
+        // new userdto
+        UpdateProfileDto updateUserDto = new UpdateProfileDto();
+        //setting the vals
+        updateUserDto.setFirstName("testname");
+        updateUserDto.setLastName("newname");
+        updateUserDto.setUsername("username");
+        updateUserDto.setEmail("email@email.com");
+        updateUserDto.setPhone("413-532-4040");
+        updateUserDto.setRole(userRole.getTitle());
+        updateUserDto.setDob(user.getDob());
+        updateUserDto.setDateJoined(user.getDateJoined());
+        updateUserDto.setActiveStatus(user.getActiveStatus());
+        updateUserDto.setAddress(new AddressDto(user.getAddress()));
+
+
+
+        when(this.userService.updateUser(updateUserDto, 1)).thenReturn(1);
+        when(this.userRoleRepository.getById((Integer) any())).thenReturn(userRole);
+        when(this.userRepository.save((User) any())).thenReturn(user);
+        Integer actualUpdateUserResult = this.userService.updateUser(updateUserDto, 1);
+        verify(this.userRepository).save((User) any());
+
+
+        assertEquals(1, actualUpdateUserResult.intValue());
+
+    }
+//    @Test
+//    void updateUserFP() throws UserNotFoundException {
+//        when(userRepository.findById(Integer())).thenReturn(Optional.of(fakeUser(1)));
+//
+//        User updateSample = sampleUser();
+//        User updateProfile = userService.updateProfile(updateSample);
+//
+//
+//        assertEquals("4443324@invalid.com", updateProfile.getEmail());
+//        assertEquals("firstName", updateProfile.getFirstName());
+//        assertEquals("lastName", updateProfile.getLastName());
+//
+//    }
     @Test
     void testGetUsersByRole() {
         // Arrange
@@ -380,48 +434,10 @@ class UserServiceTest {
         verify(this.createUserMapper).mapToEntity((CreateUserDto) any());
     }
 
-//    @Test
-//    void testUpdateUser() {
-//        UserRole userRole = new UserRole();
-//        userRole.setUsers(new HashSet<User>());
-//        userRole.setId(1);
-//        userRole.setTitle("Admin");
-//
-//        User user = fakeUser(1);
-//        UpdateProfileDto updateUserDto = new UpdateProfileDto();
-//        // Act
-//        when(this.userRoleRepository.getById((Integer) any())).thenReturn(userRole);
-//        when(this.userRepository.save((User) any())).thenReturn(user);
-//        when(this.passwordEncoder.encode((CharSequence) any())).thenReturn("foo");
-//        when(this.createUserMapper.mapToEntity((CreateUserDto) any())).thenReturn(user);
-//        Integer actualUpdateUserResult = this.userService.updateUser(updateUserDto, 1);
-//        // Assert
-//        assertEquals(1, actualUpdateUserResult.intValue());
-//        verify(this.userRoleRepository).findUserRoleByTitle((String) any());
-//        verify(this.userRoleRepository).getById((Integer) any());
-//        verify(this.userRepository).save((User) any());
-//
-//        assertTrue(this.userService.getRoles().isEmpty());
-
-//        @Test
-//        void updateUserFP() throws UserNotFoundException {
-//            when(userRepository.findById(Integer())).thenReturn(Optional.of(fakeUser(1)));
-//
-//            User updateSample = sampleUser();
-//            User updateProfile = userService.updateProfile(updateSample);
-//
-//            assertEquals(233434, updateProfile.getPoints());
-//            assertEquals("4443324@invalid.com", updateProfile.getEmail());
-//            assertEquals("firstName", updateProfile.getFirstName());
-//            assertEquals("lastName", updateProfile.getLastName());
-//            LocalDate dob = LocalDate.parse(updateProfile.getDOB());
-//            assertEquals(2002, dob.getYear());
-//            assertEquals(Month.JULY, dob.getMonth());
-//            assertEquals(20, dob.getDayOfMonth());
-//        }
 
 
-   // }
+
+
 
 
 
